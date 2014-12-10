@@ -1,0 +1,103 @@
+{u'search_metadata': 
+	{u'count': 1, 
+	u'completed_in': 0.012, 
+	u'max_id_str': u'523629685260189696', 
+	u'since_id_str': u'0', 
+	u'next_results': u'?max_id=523629685260189695&q=aristotle&count=1&include_entities=1', 
+	u'refresh_url': u'?since_id=523629685260189696&q=aristotle&include_entities=1', 
+	u'since_id': 0, 
+	u'query': u'aristotle', 
+	u'max_id': 523629685260189696L
+	}, 
+u'statuses': 
+	[
+	{u'contributors': None, 
+	u'truncated': False, 
+	u'text': u'a good life is the rational activity of the soul, performed in an excellent &amp; virtuous way, over the course of a complete life. - Aristotle', 
+	u'in_reply_to_status_id': None, 
+	u'id': 523629685260189696L, 
+	u'favorite_count': 0, 
+	u'source': u'<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>', 
+	u'retweeted': False, 
+	u'coordinates': None, 
+	u'entities': 
+		{u'symbols': [], 
+		u'user_mentions': [], 
+		u'hashtags': [], 
+		u'urls': []
+		}, 
+	u'in_reply_to_screen_name': None, 
+	u'in_reply_to_user_id': None, 
+	u'retweet_count': 0, 
+	u'id_str': u'523629685260189696', 
+	u'favorited': False, 
+	u'user': 
+		{u'follow_request_sent': False, 
+		u'profile_use_background_image': True, 
+		u'profile_text_color': u'333333', 
+		u'default_profile_image': False, 
+		u'id': 344946424, 
+		u'profile_background_image_url_https': u'https://pbs.twimg.com/profile_background_images/507329872776011777/3cS47GOL.jpeg', 
+		u'verified': False, 
+		u'profile_location': None, 
+		u'profile_image_url_https': u'https://pbs.twimg.com/profile_images/497939541211111424/qfK8dQCi_normal.jpeg', 
+		u'profile_sidebar_fill_color': u'F6F6F6', 
+		u'entities': 
+			{u'url': 
+				{u'urls': 
+					[
+					{u'url': u'http://t.co/lH9p2og9Ju', 
+					u'indices': [0, 22], 
+					u'expanded_url': u'http://facebook.com/gyps3t', 
+					u'display_url': u'facebook.com/gyps3t'
+					}
+					]
+				}, 
+				u'description': 
+					{u'urls': []
+					}
+			}, 
+		u'followers_count': 120, 
+		u'profile_sidebar_border_color': u'000000', 
+		u'id_str': u'344946424', 
+		u'profile_background_color': u'022330', 
+		u'listed_count': 1, 
+		u'is_translation_enabled': False, 
+		u'utc_offset': -14400, 
+		u'statuses_count': 5181, 
+		u'description': u"they say time is money, but really it's not. if we ever go broke, then time is all we got & you can't make that back.", 
+		u'friends_count': 145, 
+		u'location': u'Brooklyn, NYC', 
+		u'profile_link_color': u'0EF2B1', 
+		u'profile_image_url': u'http://pbs.twimg.com/profile_images/497939541211111424/qfK8dQCi_normal.jpeg', 
+		u'following': False, 
+		u'geo_enabled': True, 
+		u'profile_banner_url': u'https://pbs.twimg.com/profile_banners/344946424/1412559525', 
+		u'profile_background_image_url': u'http://pbs.twimg.com/profile_background_images/507329872776011777/3cS47GOL.jpeg', 
+		u'name': u'\u043a\u043c\u0432\u0259 \u30c4', 
+		u'lang': u'en', 
+		u'profile_background_tile': True, 
+		u'favourites_count': 230, 
+		u'screen_name': u'_kmbe', 
+		u'notifications': False, 
+		u'url': u'http://t.co/lH9p2og9Ju', 
+		u'created_at': u'Fri Jul 29 20:49:49 +0000 2011', 
+		u'contributors_enabled': False, 
+		u'time_zone': u'Eastern Time (US & Canada)', 
+		u'protected': False, 
+		u'default_profile': False, 
+		u'is_translator': False
+		}, 
+	u'geo': None, 
+	u'in_reply_to_user_id_str': None, 
+	u'lang': u'en', 
+	u'created_at': u'Sun Oct 19 00:20:20 +0000 2014', 
+	u'in_reply_to_status_id_str': None, 
+	u'place': None, 
+	u'metadata': 
+		{u'iso_language_code': u'en', 
+		u'result_type': u'recent'
+		}
+	}
+	]
+}

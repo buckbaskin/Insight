@@ -1,0 +1,17 @@
+The main display window:
+Displays data on 4 axis (x,y,z,color)
+x = ? (tweet descriptor based on user) ex. # of followers
+y = ? (tweet descriptor based on user) ex. # of followed
+z = time (display depth of one hour, tweets fading out from current time (a=1) to 1 hour old (a=0), also visually fading towards a distant point
+color = ? (analyzed tweet content?) ex. use of a key word, etc.
+
+overlaying the main display window:
+search:
+	small window for characters that expands passed minimum for longer queries (most shouldn't expand?)
+	located upper left, white box with a thin black line below
+	faded text above line: 'search...'
+options:
+	small options item to click on that expands down from the search
+time display:
+	displays a diagram of the total number of tweets per unit time over the last 24 hours for the given search
+	click to select the latest point in the window of time to view
