@@ -8,10 +8,14 @@ from user_mapping.UserNode import User
 from user_mapping.Network import SimpleDirectedNetwork
 
 class BFS_Mapper(object):
+    '''Maps twitter users to a SimpleDirectedNetwork via breadth first search
+    
+    Note: takes advantage of Twitter's API structure for batch retrieving users, followers, etc.
+    '''
     pass
 
 class DFS_Mapper(object):
-    '''Maps twitter users to a SimpleDirectedNetwork
+    '''Maps twitter users to a SimpleDirectedNetwork via depth first search
     '''
     
     def __init__(self, net, max_depth):

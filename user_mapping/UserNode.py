@@ -36,6 +36,10 @@ class Node(object):
     
 class User(object):
     ''' Wrapper class for User properties
+    atributes:
+    unique_id: https://twitter.com/[username]
+    user_name: First Last
+    properties: arbitrary dict of properties that loosely follows user queries from API
     '''
     
     def __init__(self, unique_id, user_name, properties=None):
