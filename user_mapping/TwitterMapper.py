@@ -33,8 +33,9 @@ class BFS_Mapper(object):
             return -1
 
         while(0 < len(node_pile)):
-			if node_pile[0] is Node:
+	    if isinstance(node_pile[0], Node):
                 self.explore_node(node_pile[0],node_pile)
+                del node_pile[0]
             else:
                 return -1 # only nodes should be added to the node_pile
     
