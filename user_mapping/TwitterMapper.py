@@ -10,9 +10,52 @@ from user_mapping.Network import SimpleDirectedNetwork
 class BFS_Mapper(object):
     '''Maps twitter users to a SimpleDirectedNetwork via breadth first search
     
-    Note: takes advantage of Twitter's API structure for batch retrieving users, followers, etc.
+    Note: takes advantage of Twitter's API structure for batch retrieving 
+		users, followers, etc.
     '''
-    pass
+    def __init__(self, net, max_depth):
+        global max_depth
+        max_depth = 10
+        if max_depth and not max_depth < 0:
+            max_depth = max_depth
+        global network
+        if isinstance(net, SimpleDirecterNetwork):
+            network = net
+
+    def explore(self, source):
+        depth = 0
+        node_pile = []
+        if source is Node:
+            self.explore_node(source,node_pile)
+		elif isinstance(source,basestring):
+            self.explore_twitter(source,node_pile)
+		else:
+            return -1
+
+        while(0 < len(node_pile)):
+			if node_pile[0] is Node:
+                self.explore_node(node_pile[0],node_pile)
+            else:
+                return -1 # only nodes should be added to the node_pile
+    
+    def explore_node(self, node, expansion_queue):
+        global max_depth
+        if node.depth is not None and node.depth < max_depth:
+            # Node has connection lists
+            # so get the information, make nodes for all of the connections that aren't already nodes
+            # if they already have depths assigned, do nothing.
+            # else assign them depth+1 and add those nodes to the node pile
+            pass
+
+    def explore_twitter(self, node, expansion_queue, depth):
+		global max_depth
+        if node.depth is not None and node.depth < max_depth:
+            # get connections from twitter
+            # make myself into a node ( assign the connections as others are built)
+            # make connections into nodes (this will only be called first)           
+			# Node has connection lists
+            # assign them depth = 1 and add those nodes to the node pile
+            pass
 
 class DFS_Mapper(object):
     '''Maps twitter users to a SimpleDirectedNetwork via depth first search
