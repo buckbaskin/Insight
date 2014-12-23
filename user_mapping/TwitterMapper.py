@@ -19,7 +19,7 @@ class BFS_Mapper(object):
         if max_depth and not max_depth < 0:
             max_depth = max_depth
         global network
-        if isinstance(net, SimpleDirecterNetwork):
+        if isinstance(net, SimpleDirectedNetwork):
             network = net
 
     def explore(self, source):
@@ -27,9 +27,9 @@ class BFS_Mapper(object):
         node_pile = []
         if source is Node:
             self.explore_node(source,node_pile)
-		elif isinstance(source,basestring):
+        elif isinstance(source,basestring):
             self.explore_twitter(source,node_pile)
-		else:
+        else:
             return -1
 
         while(0 < len(node_pile)):
@@ -49,12 +49,12 @@ class BFS_Mapper(object):
             pass
 
     def explore_twitter(self, node, expansion_queue, depth):
-		global max_depth
+        global max_depth
         if node.depth is not None and node.depth < max_depth:
             # get connections from twitter
             # make myself into a node ( assign the connections as others are built)
             # make connections into nodes (this will only be called first)           
-			# Node has connection lists
+            # Node has connection lists
             # assign them depth = 1 and add those nodes to the node pile
             pass
 
