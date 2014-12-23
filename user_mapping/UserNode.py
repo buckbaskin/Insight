@@ -3,7 +3,6 @@ Created on Dec 10, 2014
 
 @author: buck
 '''
-from oneconf.networksync.fake_webcatalog_silo import network_delay
 
 class Node(object):
     

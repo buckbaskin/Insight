@@ -1,4 +1,5 @@
 from data_collection import TwitterSearchInterface
+from PTTInterface import PTTInterface
 import collections
 import os
 
