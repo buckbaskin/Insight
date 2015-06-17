@@ -1,0 +1,18 @@
+robotics|600
+ai|100
+artificial|125
+intelligence|125
+expert|102
+system|102
+systems|107
+machine|25
+learning|25
+robot|100
+robots|150
+abb|3
+fetch|90
+mechanical|80
+engineering|80
+silicon valley|70
+chinese|60
+first|50
