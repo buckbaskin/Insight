@@ -5,11 +5,9 @@ Created on Dec 10, 2014
 
 Twitter API: https://github.com/sixohsix/twitter
 '''
+
 from twitter import *
 import os
-import sys
-import operator
-import re
 
 '''
 Currently generates a list of associated words (some are relevant)
@@ -20,13 +18,15 @@ Todo: increase relevant word count
  - score words based on distance from the search word in the tweet
 '''
 
-class WordAssociation(object):
-    def __init__(self):
+class AssociationLookup(object):
+    def __init__(self, debug=False):
         f = open('simile.smile','r')
         self.twitter_object = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline())
-        print 'begin access test'
+        if debug:
+            print 'begin access test'
         self.twitter_object.test()
-        print 'end access test'
+        if debug:
+            print 'end access test'
     
     def collect_one(self, term): # process one term
         # process in previous data for that term
@@ -44,7 +44,6 @@ class WordAssociation(object):
         tweets = t.search.tweets(q=str(term), lang="en", count=100)['statuses']
         # iterate through data, merging with existing data
         for tweet in tweets:
-            content = tweet['text']
             for item in tweet['text'].split():
                 self.add_content(item, 1, content_dict)
         # write the data out to the file
@@ -52,7 +51,7 @@ class WordAssociation(object):
         self.write_out(content_dict, content_file)
         content_file.close()
         
-        print "Done with search for "+term
+        # print "Done with search for "+term
         
     def read_in(self, open_file):
         data = dict()
@@ -61,7 +60,7 @@ class WordAssociation(object):
             # print line
             try:
                 word, count = line.split('|')
-            except ValueError as ve:
+            except ValueError:
                 print "failed to include line: "+str(line).rstrip("\n")+" split: "+str(line.split('|'))
             data[word] = int(count.rstrip('\n'))
         # print "read in ended"
@@ -89,49 +88,6 @@ class WordAssociation(object):
     def write_out(self, data, open_file):
         for key in iter(data):
             open_file.write(str(key)+'|'+str(data[key])+'\n')
-            
-    def search(self, text, max_items=100):
-        tokens = text.split() # tokens in search
-        terms = dict()
-        for token in tokens:
-            terms[token]=1
-        # print 'begin processing search'
-        for item in tokens:
-            for association in self.process_one(item, max_items):
-                # print "association: "+str(association)
-                self.add_content(association[0],association[1], terms)
-        for i in xrange(0,len(tokens)-2):
-            pair = tokens[i]+" "+tokens[i+1]
-            for association in self.process_one(pair, max_items):
-                self.add_content(association[0],association[1], terms)
-        
-        for token in tokens:
-            del terms[token]
-        # print 'end processing search'
-        sorted= self.dict_by_value(terms)
-        for item in sorted:
-            if(len(item[0])>3):
-                tokens.append(item)
-        # add everything back to the tokens list
-        
-        # list is sorted by terms, and then most associated terms
-        if len(tokens) > max_items:
-            return tokens[0:100]
-        else:
-            return tokens
-    
-    def process_one(self, term, max_items=100):
-        try:
-            f = open(self.full_file_path(term),'r')
-        except IOError:
-            f = open(self.full_file_path(term),'w')
-            f.close()
-            f = open(self.full_file_path(term),'r')
-        associations = self.dict_by_value(self.read_in(f))
-        if len(associations) > max_items:
-            return associations[0:100]
-        else:
-            return associations
             
     def dict_by_value(self, dictionary):
         sorted_dict = sorted(dictionary.items(), key=lambda x: x[1], reverse=True) # sorts on the second item (value)
@@ -163,8 +119,9 @@ class WordAssociation(object):
         
 class Twitter_Handler(object):
     
-    def __init__(self,consumerKey,consumerSecret,accessToken,accessTokenSecret):
-        print 'created handler object'
+    def __init__(self,consumerKey,consumerSecret,accessToken,accessTokenSecret, debug=False):
+        if(debug):
+            print 'created handler object'
         global consumer_key
         consumer_key = consumerKey
         #print consumer_key
@@ -203,7 +160,8 @@ class Twitter_Handler(object):
             print 'Twitter HTTP Error: '
             print e
             print 'end Twitter HTTP Error'
-        print 'end create twitter object'
+        if(debug):
+            print 'end create twitter object'
     
     def test(self):
         global twitter_access

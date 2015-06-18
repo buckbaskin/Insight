@@ -1,9 +1,18 @@
-from Collector import WordAssociation
+from Search import AssociationSearch
+import sys
 
-wa = WordAssociation()
+augment = (not(not(input("Augment search with new results? "))))
+if augment:
+    augment_depth = int(input("Number of augmentations: "))
+else:
+    augment_depth = 0
 
-# f = open(wa.full_file_path('robotics'),'r')
-for i in range(0,10):
-    wa.collect_one('robotics')
+results = int(input("Number of results: "))
 
-print "results:\n"+str(wa.search('robotics'))+"\nend results"
+ass = AssociationSearch(augment, augment_depth)
+
+while(True):
+    a = raw_input("search: ")
+    if str(a) is str("exit"):
+        sys.exit(0)
+    print "results:\n"+str(ass.search(a, results))+"\nend results"
