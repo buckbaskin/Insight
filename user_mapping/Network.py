@@ -9,13 +9,22 @@ from user_mapping.UserNode import Node
 
 class SimpleDirectedNetwork(object):
     
-    def __init__(self):
+    def __init__(self, idear=-1):
         global nodes
         nodes = []
+        global idea
+        idea = idear
+    
+    def idea(self):
+        global idea
+        return idea
     
     def add_node(self, new_node):
         ''' Adds in a new node and updates references/connections
         '''
+        if new_node in nodes:
+            print 'failure, preexisting node'
+            return -1  
         nodes.append(new_node)
         new_node.set_network(self)
         for existing_node in nodes:

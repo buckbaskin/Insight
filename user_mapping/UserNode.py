@@ -3,17 +3,18 @@ Created on Dec 10, 2014
 
 @author: buck
 '''
-from oneconf.networksync.fake_webcatalog_silo import network_delay
 
 class Node(object):
     
-    def __init__(self, user):
+    def __init__(self, user, dep=None):
         global connect_out
         connect_out = []
         global connect_in
         connect_in = []
         global usr
         usr = user
+        global depth
+        depth = dep
         global network
         network = None
     
