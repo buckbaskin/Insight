@@ -1,13 +1,15 @@
 from mongothon import Schema, Mixed, Array
+from mongothon import create_model
 from dbus.exceptions import ValidationException
+import datetime
 
 class SchemaGenerator(object):
-    def __init__(self):
+    def __init__(self, db, collection):
         self.tweet_schema = Schema({
                                     "created": {"type":datetime }
                                     ,"favorite_count": {"type":int }
-                                    ,"favorited": {"type": boolean }
-                                    ,"filter": {"type":basestring, "validates": one_of("none", "low", "medium", "high") }
+                                    ,"favorited": {"type": bool }
+                                    ,"filter": {"type":basestring }
                                     ,"t_id": {"type":int}
                                     ,"replied_to_by_id": {"type":int}
                                     ,"retweet_count": {"type":int}
@@ -17,7 +19,7 @@ class SchemaGenerator(object):
                               ### TWITTER PROFILE INFORMATION
                               # identifying information
                               "t_user_id": {"type":int, "required": True}
-                              ,"full_user": {"type":boolean, "required":True}
+                              ,"full_user": {"type":bool, "required":True}
                               
                               # hydrated user content from https://api.twitter.com/1.1/users/show.json
                               #      in bulk: https://api.twitter.com/1.1/users/lookup.json
@@ -25,7 +27,7 @@ class SchemaGenerator(object):
                               ,"name": {"type": basestring}
                               ,"created": {"type":datetime }
                               ,"description": {"type": basestring }
-                              ,"following": {"type":boolean}
+                              ,"following": {"type":bool}
                               ,"friend_count": {"type":int}
                               
                               # separate request https://api.twitter.com/1.1/friends/ids.json
@@ -45,7 +47,7 @@ class SchemaGenerator(object):
         return self.model
         
     def init_user(self, t_user_id, db, collection):
-        user = (user_model())({
+        user = (self.user_model())({
                                "t_user_id": t_user_id
                                ,"full_user": True
                                })
@@ -58,7 +60,7 @@ class SchemaGenerator(object):
         return None
     
     def fill_user(self, t_user_id, screen_name, name, created, description, following, friend_count):
-        user = User.find_one({'t_user_id': t_user_id})
+        user = (self.user_model()).find_one({'t_user_id': t_user_id})
         if user is None:
             return None
         if screen_name is not None:
@@ -82,11 +84,11 @@ class SchemaGenerator(object):
         return None
             
         
-    def update_user(selfs, t_user_id, property, value):
-        user = User.find_one({'t_user_id': t_user_id})
+    def update_user(self, t_user_id, key, value):
+        user = (self.user_model()).find_one({'t_user_id': t_user_id})
         if user is None:
             return None
-        user[property] = value
+        user[key] = value
         
         try:
             if user.validate():

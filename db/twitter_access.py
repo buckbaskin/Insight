@@ -35,3 +35,5 @@ class access(object):
             
     def stream(self, keywords,tags=list(),users=list()):
         pass
+    
+    def explore(self, t_user_id):
