@@ -3,7 +3,16 @@ from dbus.exceptions import ValidationException
 
 class SchemaGenerator(object):
     def __init__(self):
-        self.tweet_schema = Schema({})
+        self.tweet_schema = Schema({
+                                    "created": {"type":datetime }
+                                    ,"favorite_count": {"type":int }
+                                    ,"favorited": {"type": boolean }
+                                    ,"filter": {"type":basestring, "validates": one_of("none", "low", "medium", "high") }
+                                    ,"t_id": {"type":int}
+                                    ,"replied_to_by_id": {"type":int}
+                                    ,"retweet_count": {"type":int}
+                                    ,"text": {"type":basestring, "required": True }
+                                    })
         self.user_schema = Schema({
                               ### TWITTER PROFILE INFORMATION
                               # identifying information
@@ -24,7 +33,7 @@ class SchemaGenerator(object):
                               # separate request https://api.twitter.com/1.1/followers/ids.json
                               ,"followers_by_id": {type:Array(int)}
                               
-                              # statuses request
+                              # statuses request https://api.twitter.com/1.1/statuses/user_timeline.json
                               ,"tweets": {type:Array(self.tweet_schema)}
                               })
         self.model = create_model(self.user_schema, db[collection])
