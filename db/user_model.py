@@ -50,9 +50,9 @@ class SchemaGenerator(object):
                                ,"full_user": True
                                })
         try:
-            user.validate()
-            user.save()
-            return user
+            if user.validate():
+                user.save()
+                return user
         except ValidationException:
             pass
         return None
@@ -73,6 +73,26 @@ class SchemaGenerator(object):
             user['following'] = following
         if friend_count is not None:
             user['friend_count'] = friend_count
+        try:
+            if user.validate():
+                user.save()
+                return user
+        except ValidationException:
+            pass
+        return None
+            
         
+    def update_user(selfs, t_user_id, property, value):
+        user = User.find_one({'t_user_id': t_user_id})
+        if user is None:
+            return None
+        user[property] = value
         
+        try:
+            if user.validate():
+                user.save()
+                return user
+        except ValidationException:
+            pass
+        return None
     
