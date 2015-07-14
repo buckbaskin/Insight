@@ -1,6 +1,5 @@
-from twitter import *
+from twitter import oauth_dance, OAuth, Twitter, TwitterStream
 import os
-import collections
 
 class access(object):
     def __init__(self,consumerKey,consumerSecret,accessToken,accessTokenSecret):
