@@ -49,7 +49,7 @@ class SchemaGenerator(object):
     def init_user(self, t_user_id, db, collection):
         user = (self.user_model())({
                                "t_user_id": t_user_id
-                               ,"full_user": True
+                               ,"full_user": False
                                })
         try:
             if user.validate():
@@ -59,7 +59,7 @@ class SchemaGenerator(object):
             pass
         return None
     
-    def fill_user(self, t_user_id, screen_name, name, created, description, following, friend_count):
+    def hydrate_user(self, t_user_id, screen_name, name, created, description, following, friend_count):
         user = (self.user_model()).find_one({'t_user_id': t_user_id})
         if user is None:
             return None
@@ -77,12 +77,18 @@ class SchemaGenerator(object):
             user['friend_count'] = friend_count
         try:
             if user.validate():
+                user['full_user'] = True
                 user.save()
                 return user
         except ValidationException:
             pass
         return None
-            
+
+    def friends(self, t_user_id, list):
+        self.update_user(t_user_id, 'following_by_id', list)
+    
+    def followers(self, t_user_id, list):
+        self.update_user(t_user_id, 'followers_by_id', list)
         
     def update_user(self, t_user_id, key, value):
         user = (self.user_model()).find_one({'t_user_id': t_user_id})
@@ -98,3 +104,8 @@ class SchemaGenerator(object):
             pass
         return None
     
+    def get_user(self, t_user_id, db, collection):
+        user = (self.user_model()).find_one({'t_user_id': t_user_id})
+        if user is None:
+            return self.init_user(t_user_id, db, collection)
+        return user
