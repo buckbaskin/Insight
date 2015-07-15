@@ -50,7 +50,7 @@ class access(object):
         # list of user ids to create
         plus_one = []
         while (limit > 0):
-            for i in xrange(0,len(level)):
+            for _ in xrange(0,len(level)):
                 user = level.pop()
                 limit -= 1
                 if not user['full_user']:
@@ -70,7 +70,16 @@ class access(object):
                 plus_one = []
                 
     def get_friend_ids(self, t_user_id):
-        pass #TODO(buckbaskin)
+        t = self.twitter_object
+        friends = []
+        result = t.friends.ids(user_id=t_user_id)
+        friends.extend(result['ids'])
+        
+        while(result['next_cursor'] != 0):
+            result = t.friends.ids(user_id=t_user_id,cursor=result['next_cursor'])
+            friends.extend(result['ids'])
+            
+        return friends
     
     ### WRAP SCHEMA FUNCTIONS
     
@@ -78,7 +87,35 @@ class access(object):
         return SchemaGenerator.get_user(t_user_id, self.db, self.collection)
     
     def hydrate_user(self, t_user_id):
-        pass #TODO(buckbaskin)
+        t = self.twitter_object
+        result = t.users.show(user_id=t_user_id)
+        user = SchemaGenerator.hydrate_user(self, t_user_id, result['screen_name'], 
+                                            result['name'], result['created_at'], 
+                                            result['description'], result['following'],
+                                             result['friend_count'])
+        if user is None:
+            print('HYDRATE USER FAILED')
     
-    def bulk_init(self, id_list):
-        pass #TODO(buckbaskin)
+    def bulk_hydrate(self, id_list):
+        t = self.twitter_object
+        users = []
+        result = t.users.lookup(user_id=id_list)
+        for user in result:
+            local_user = SchemaGenerator.hydrate_user(self, user['id'], user['screen_name'], 
+                                            user['name'], user['created_at'], 
+                                            user['description'], user['following'],
+                                             user['friend_count'])
+            if local_user is not None:
+                users.append(local_user)
+        
+        while(result['next_cursor'] != 0):
+            result = t.friends.ids(user_id=id_list,cursor=result['next_cursor'])
+            for user in result:
+                local_user = SchemaGenerator.hydrate_user(self, user['id'], user['screen_name'], 
+                                            user['name'], user['created_at'], 
+                                            user['description'], user['following'],
+                                             user['friend_count'])
+                if local_user is not None:
+                    users.append(local_user)
+            
+        return users
