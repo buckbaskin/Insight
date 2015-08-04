@@ -22,13 +22,19 @@ def list_to_dict(l):
 class FollowTree(object):
     def __init__(self, root_id):
         self.access = TwitterAccess()
+        print 'followTree: twitter access equiped'
         self.root = FollowNode(root_id, self.access)
+        print 'followTree: root created'
     
     def build(self):
         def _build(root):
+            counter = 0
             interests = root.follows()
             for user_id in interests:
+                counter += 1
+                print 'adding node '+str(counter)+' to root'
                 self._add(FollowNode(user_id, self.access))
+        print 'build thread.start_new_thread'
         thread.start_new_thread(_build, (self.root, )) 
         
     def _add(self, element):
@@ -38,6 +44,7 @@ class FollowTree(object):
                 if element.followed_by(node_id):
                     element.add_follower(self.root.tree_followers[node_id])
                     del self.root.tree_followers[node_id]
+        print 'adding element '+element.user+' to '+self.root.user
         self.root.tree_followers[element.user] = element
 
 class FollowNode(object):
@@ -45,6 +52,7 @@ class FollowNode(object):
         self.user = str(user_id)
         self.followers = list_to_dict(access.get_followers_ids(self.user))
         self.friends = list_to_dict(access.get_friends_ids(self.user))
+        print 'user '+str(user_id)+' has '+str(len(self.followers))+' follwers and '+str(len(self.friends))+' friends'
         self.tree_followers = dict()
         
     def follows(self, user_id=False):
