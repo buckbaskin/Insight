@@ -13,6 +13,7 @@ import twitter as it
 # import twitter.oauth_dance as oauth_dance
 import os
 import time
+import datetime
 from twitter.api import TwitterHTTPError
 
 '''
@@ -43,6 +44,7 @@ class TwitterAccess(object):
         except TwitterHTTPError as the:
                 print the
                 print 'probably terminated because of rate limit'
+                print str(datetime.datetime.now())
                 time.sleep(15*60)
                 print 'end rate limit sleep'
         ids.extend(followed['ids'])
@@ -52,6 +54,7 @@ class TwitterAccess(object):
             except TwitterHTTPError as the:
                 print the
                 print 'probably terminated because of rate limit'
+                print str(datetime.datetime.now())
                 time.sleep(15*60)
                 print 'end rate limit sleep'
             ids.extend(followed['ids'])
@@ -65,6 +68,7 @@ class TwitterAccess(object):
         except TwitterHTTPError as the:
             print the
             print 'probably terminated because of rate limit'
+            print str(datetime.datetime.now())
             time.sleep(15*60)
             print 'end rate limit sleep'
         ids.extend(follows['ids'])
@@ -74,6 +78,7 @@ class TwitterAccess(object):
             except TwitterHTTPError as the:
                 print the
                 print 'probably terminated because of rate limit'
+                print str(datetime.datetime.now())
                 time.sleep(15*60)
                 print 'end rate limit sleep'
             ids.extend(follows['ids'])

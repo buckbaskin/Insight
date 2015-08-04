@@ -7,7 +7,9 @@ Twitter API: https://github.com/sixohsix/twitter
 '''
 
 from insight_apis.twitter_access import TwitterAccess
-import thread
+import threading
+import time
+import sys
 
 '''
 creates a data structure for analyzing the time based expansion of interests on Twitter
@@ -22,7 +24,7 @@ def list_to_dict(l):
 class FollowTree(object):
     def __init__(self, root_id):
         self.access = TwitterAccess()
-        print 'followTree: twitter access equiped'
+        print 'followTree: twitter access equipped'
         self.root = FollowNode(root_id, self.access)
         print 'followTree: root created'
     
@@ -30,12 +32,20 @@ class FollowTree(object):
         def _build(root):
             counter = 0
             interests = root.follows()
+            sys.stdout.write('got interests:')
             for user_id in interests:
                 counter += 1
-                print 'adding node '+str(counter)+' to root'
+                sys.stdout.write('adding node '+str(counter)+' to root')
                 self._add(FollowNode(user_id, self.access))
-        print 'build thread.start_new_thread'
-        thread.start_new_thread(_build, (self.root, )) 
+                self.traverse(self.root, 'interest path after build: ')
+                time.sleep(60)
+        
+#         thread = FollowThread(_build, (self.root,))
+#         print 'build thread.start_new_thread'
+#         thread.start()
+#         print 'build thread.end'
+        print 'blocking build:'
+        _build(self.root)
         
     def _add(self, element):
         if(len(self.root.tree_followers)):
@@ -46,6 +56,14 @@ class FollowTree(object):
                     del self.root.tree_followers[node_id]
         print 'adding element '+element.user+' to '+self.root.user
         self.root.tree_followers[element.user] = element
+        
+    def traverse(self, root, string, new_print):
+        if(len(root.tree_followers)):
+            for child_id in root.tree_followers:
+                child = root.tree_followers[child_id]
+                self.traverse(child, string+' '+root.user)
+        else:
+            new_print(string+' end '+root.user)
 
 class FollowNode(object):
     def __init__(self, user_id, access):
@@ -76,3 +94,13 @@ class FollowNode(object):
             if(node.height()>max_height):
                 max_height = node.height  
         return max_height
+
+class FollowThread(threading.Thread):
+    def __init__ (self, function, arg):
+        threading.Thread.__init__(self)
+        self.f = function
+        self.a = arg
+
+    def run(self):
+        self.f(self.a)
+    
