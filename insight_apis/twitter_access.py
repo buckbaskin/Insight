@@ -12,6 +12,7 @@ import twitter as it
 # import twitter.TwitterHTTPError as TwitterHTTPError
 # import twitter.oauth_dance as oauth_dance
 import os
+from twitter.api import TwitterHTTPError
 
 '''
 creates a custom Python access portal that automates a lot of the access portion
@@ -36,23 +37,41 @@ class TwitterAccess(object):
     def get_friends_ids(self, user_id):
         a = self.api
         ids = []
-        followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=-1)
-        ids.extend(followed)
+        try:
+            followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=-1)
+        except TwitterHTTPError as the:
+                print the
+                print 'probably terminated because of rate limit'
+                exit()
+        ids.extend(followed['ids'])
         while(followed['next_cursor']!=0):
-            followed = a.friends.list(user_id=str(user_id), count=5000, skip_stus='t', cursor=followed['next_cursor'])
-            ids.extend(followed)
+            try:
+                followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=followed['next_cursor'])
+            except TwitterHTTPError as the:
+                print the
+                print 'probably terminated because of rate limit'
+                exit()
+            ids.extend(followed['ids'])
         return ids
     
     def get_followers_ids(self, user_id):
         a = self.api
         ids = []
-        import inspect
-        print inspect.getmembers(a.__class__, predicate=inspect.ismethod)
-        following = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
-        ids.extend(following)
-        while(following['next_cursor']!=0):
-            following = a.followers.list(user_id=str(user_id), count=5000, skip_stus='t', cursor=following['next_cursor'])
-            ids.extend(following)
+        try:
+            follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
+        except TwitterHTTPError as the:
+            print the
+            print 'probably terminated because of rate limit'
+            exit()
+        ids.extend(follows['ids'])
+        while(follows['next_cursor']!=0):
+            try:
+                follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=follows['next_cursor'])
+            except TwitterHTTPError as the:
+                print the
+                print 'probably terminated because of rate limit'
+                exit()
+            ids.extend(follows['ids'])
         return ids
         
 class Twitter_Handler(object):

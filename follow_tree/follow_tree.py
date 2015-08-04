@@ -15,7 +15,7 @@ creates a data structure for analyzing the time based expansion of interests on 
 def list_to_dict(l):
     d = dict()
     for element in l:
-        d[element.user] = element
+        d[int(element)] = 'exists'
     return d
 
 class FollowTree(object):
@@ -24,7 +24,7 @@ class FollowTree(object):
         self.root = FollowNode(root_id, self.access)
     
     def build(self):
-        interests = self.root_node.follows()
+        interests = self.root.follows()
         for user_id in interests:
             self._add(FollowNode(user_id, self.access))
         
@@ -44,7 +44,7 @@ class FollowNode(object):
         self.friends = list_to_dict(access.get_friends_ids(self.user))
         self.tree_followers = dict()
         
-    def follows(self, user_id):
+    def follows(self, user_id=False):
         if(user_id):
             return user_id in self.friends
         else:

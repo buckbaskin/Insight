@@ -11,7 +11,9 @@ def traverse(root, string):
 def main():
     f = FollowTree('1463250931')
     f.build()
+    print ' >>> traverse started: '
     traverse(f.root, 'interest path: ')
+    print ' <<< end traverse'
     exit()
 
 if __name__ == '__main__':
