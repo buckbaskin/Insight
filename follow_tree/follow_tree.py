@@ -7,6 +7,7 @@ Twitter API: https://github.com/sixohsix/twitter
 '''
 
 from insight_apis.twitter_access import TwitterAccess
+import thread
 
 '''
 creates a data structure for analyzing the time based expansion of interests on Twitter
@@ -24,9 +25,11 @@ class FollowTree(object):
         self.root = FollowNode(root_id, self.access)
     
     def build(self):
-        interests = self.root.follows()
-        for user_id in interests:
-            self._add(FollowNode(user_id, self.access))
+        def _build(root):
+            interests = root.follows()
+            for user_id in interests:
+                self._add(FollowNode(user_id, self.access))
+        thread.start_new_thread(_build, (self.root, )) 
         
     def _add(self, element):
         if(len(self.root.tree_followers)):
