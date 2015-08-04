@@ -1,5 +1,5 @@
 
-import follow_tree.FollowTree as FollowTree
+from follow_tree import FollowTree
 
 def traverse(root, string):
     if(len(root.tree_followers)):

@@ -6,7 +6,7 @@ Created on Aug 3, 2015
 Twitter API: https://github.com/sixohsix/twitter
 '''
 
-import insight_apis.twitter_access.TwitterAccess as TwitterAccess
+from insight_apis.twitter_access import TwitterAccess
 
 '''
 creates a data structure for analyzing the time based expansion of interests on Twitter
