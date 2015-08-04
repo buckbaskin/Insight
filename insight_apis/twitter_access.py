@@ -21,8 +21,7 @@ ex. streaming large datasets, maximizing data returned per API call
 class TwitterAccess(object):
     def __init__(self):
         f = open('../insight_apis/simile.smile','r')
-        self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline())
-        self.api.test()
+        self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
         
     def get_friends_iter(self, user_id, callback):
         a = self.api
@@ -47,6 +46,8 @@ class TwitterAccess(object):
     def get_followers_ids(self, user_id):
         a = self.api
         ids = []
+        import inspect
+        print inspect.getmembers(a.__class__, predicate=inspect.ismethod)
         following = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
         ids.extend(following)
         while(following['next_cursor']!=0):
