@@ -6,7 +6,11 @@ Created on Aug 3, 2015
 Twitter API: https://github.com/sixohsix/twitter
 '''
 
-from twitter import oauth_dance, OAuth, Twitter, TwitterStream, TwitterHTTPError
+import twitter as it
+# import twitter.Twitter as Twitter
+# import twitter.OAuth as OAuth
+# import twitter.TwitterHTTPError as TwitterHTTPError
+# import twitter.oauth_dance as oauth_dance
 import os
 
 '''
@@ -14,9 +18,9 @@ creates a custom Python access portal that automates a lot of the access portion
 ex. streaming large datasets, maximizing data returned per API call
 '''
 
-class Twitter(object):
+class TwitterAccess(object):
     def __init__(self):
-        f = open('simile.smile','r')
+        f = open('../insight_apis/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline())
         self.api.test()
         
@@ -60,7 +64,7 @@ class Twitter_Handler(object):
         
         if (os.path.isfile('simile2.smile'))==False:
             print('oauth_dance')
-            token,token_key = oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
+            token,token_key = it.oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
             '''testing'''
             with open('simile2.smile','r') as f:
                 token2 = f.readline()[:-1]
@@ -74,16 +78,20 @@ class Twitter_Handler(object):
             with open('simile2.smile','r') as f:
                 token = f.readline()[:-1]
                 token_key = f.readline()[:-1]
-        global twitter_access
         try:
-            twitter_access = Twitter(auth=OAuth(token, token_key, 
+            self.twitter_access = it.Twitter(auth=it.OAuth(token, token_key, 
                                             self.consumer_key, self.consumer_secret))
             self.test()
-        except TwitterHTTPError as e:
+        except it.TwitterHTTPError as e:
             print 'Twitter HTTP Error: '
             print e
             print 'end Twitter HTTP Error'
     
     def test(self):
-        global twitter_access
-        twitter_access.search.tweets(q='test')
+        self.twitter_access.search.tweets(q='test')
+        
+def main():
+    ta = TwitterAccess()
+    
+if __name__ == '__main__':
+    main()

@@ -6,7 +6,7 @@ Created on Aug 3, 2015
 Twitter API: https://github.com/sixohsix/twitter
 '''
 
-from api.twitter import Twitter
+import insight_apis.twitter_access.TwitterAccess as TwitterAccess
 
 '''
 creates a data structure for analyzing the time based expansion of interests on Twitter
@@ -19,9 +19,9 @@ def list_to_dict(l):
     return d
 
 class FollowTree(object):
-    def __init__(self, root_node):
-        self.root = root_node
-        self.access = Twitter()
+    def __init__(self, root_id):
+        self.access = TwitterAccess()
+        self.root = FollowNode(root_id, self.access)
     
     def build(self):
         interests = self.root_node.follows()
