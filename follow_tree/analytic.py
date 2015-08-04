@@ -4,7 +4,7 @@ import time
 
 def traverse(root, string):
     if(len(root.tree_followers)):
-        for child in root.tree_followers:
+        for child_id, child in root.tree_followers:
             print 'child.__class__ >> '+str(child.__class__)
             traverse(child, string+' '+root.user)
     else:
