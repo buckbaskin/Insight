@@ -7,7 +7,6 @@ Twitter API: https://github.com/sixohsix/twitter
 '''
 
 from insight_apis.twitter_access import TwitterAccess
-import threading
 import time
 import sys
 
@@ -39,11 +38,7 @@ class FollowTree(object):
                 self._add(FollowNode(user_id, self.access))
                 self.traverse(self.root, 'interest path after build: ')
                 time.sleep(60)
-        
-#         thread = FollowThread(_build, (self.root,))
-#         print 'build thread.start_new_thread'
-#         thread.start()
-#         print 'build thread.end'
+
         print 'blocking build:'
         _build(self.root)
         
@@ -94,13 +89,3 @@ class FollowNode(object):
             if(node.height()>max_height):
                 max_height = node.height  
         return max_height
-
-class FollowThread(threading.Thread):
-    def __init__ (self, function, arg):
-        threading.Thread.__init__(self)
-        self.f = function
-        self.a = arg
-
-    def run(self):
-        self.f(self.a)
-    
