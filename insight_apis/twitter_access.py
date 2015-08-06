@@ -48,18 +48,21 @@ class TwitterAccess(object):
             self.call_count += 1
             print 'API.FRIENDS.IDS()'
             followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=-1)
+            ids.extend(followed['ids'])
         except TwitterHTTPError as the:
             self.handle_rate_error(the)
-        ids.extend(followed['ids'])
         while(followed['next_cursor']!=0):
             try:
                 self.call_count += 1
                 print 'API.FRIENDS.IDS()'
                 followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=followed['next_cursor'])
+                ids.extend(followed['ids'])
             except TwitterHTTPError as the:
                 self.handle_rate_error(the)
-            ids.extend(followed['ids'])
-        return ids
+        if(ids):
+            return ids
+        else:
+            return []
     
     def get_followers_ids(self, user_id):
         a = self.api
@@ -68,18 +71,21 @@ class TwitterAccess(object):
             self.call_count += 1
             print 'API.FOLLOWERS.IDS()'
             follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
+            ids.extend(follows['ids'])
         except TwitterHTTPError as the:
             self.handle_rate_error(the)
-        ids.extend(follows['ids'])
         while(follows['next_cursor']!=0):
             try:
                 self.call_count += 1
                 print 'API.FOLLOWERS.IDS()'
                 follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=follows['next_cursor'])
+                ids.extend(follows['ids'])
             except TwitterHTTPError as the:
                 self.handle_rate_error(the)
-            ids.extend(follows['ids'])
-        return ids
+        if(ids):
+            return ids
+        else:
+            return []
     
     def handle_rate_error(self, the):
         print the
