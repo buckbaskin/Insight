@@ -1,0 +1,2 @@
+# Override .m files to Matlab
+*.m linguist-language=Matlab
