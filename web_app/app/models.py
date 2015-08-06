@@ -2,12 +2,16 @@ from web_app.app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    t_username = db.Column(db.String(120), index=True, unique=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
+    
+class Follows(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    follower = db.relationship('User', backref='follower', lazy='dynamic')
+    followee = db.relationship('User', backref='followee', lazy='dynamic')
     
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -18,3 +22,4 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post %r>' % (self.body)
+    
