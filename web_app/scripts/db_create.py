@@ -7,7 +7,11 @@ import os.path
 db.create_all()
 
 if not os.path.exists(mig_repo):
+    print 'mig_repo does not exist'
     api.create(mig_repo, 'database repository')
+    print 'created mig_repo'
     api.version_control(db_uri, mig_repo)
+    print 'added version control'
 else:
     api.version_control(db_uri, mig_repo, api.version(mig_repo))
+    print 'added version control'
