@@ -1,3 +1,6 @@
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 from web_app.config import secret_config
 
 config = dict([('DEBUG', True), 
@@ -9,4 +12,6 @@ config = dict([('DEBUG', True),
                                     {'name': 'AOL', 'url': 'http://openid.aol.com/<username>'},
                                     {'name': 'Flickr', 'url': 'http://www.flickr.com/<username>'},
                                     {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'}]),
-               ('SECRET_KEY', secret_config.SECRET_KEY)])
+               ('SECRET_KEY', secret_config.SECRET_KEY),
+               ('SQLALCHEMY_DATABASE_URI' , 'sqlite:///' + os.path.join(basedir, 'app.db')),
+               ('SQLALCHEMY_MIGRATE_REPO' , os.path.join(basedir, 'db_repository'))])
