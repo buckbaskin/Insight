@@ -34,3 +34,15 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post %r>' % (self.body)
     
+class Status(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    
+    favorited = db.Column(db.Boolean)
+    created_at = db.Column(db.DateTime)
+    
+class Tags(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Integer, db.ForeignKey(''))
+    
+class Hashtag(db.Model):
+    text = db.Column(db.String, primary_key = True)
