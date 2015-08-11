@@ -2,6 +2,15 @@ from web_app.app import app
 from flask import render_template, flash, redirect
 from web_app.app.forms import LoginForm
 from web_app.app import db
+from web_app.app.models import User
+
+# Git anchor
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(user_id)
+
+# Git anchor
+
 
 @app.route('/')
 @app.route('/index')
