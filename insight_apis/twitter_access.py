@@ -25,13 +25,18 @@ class TwitterAccess(object):
     def __init__(self):
         f = open('../insight_apis/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
+        self.call_count = 0
         
     def get_friends_iter(self, user_id, callback):
         a = self.api
         # t.search.tweets(q=str(term), lang="en", count=100)
+        self.call_count += 1
+        print 'API.FRIENDS.LIST()'
         followed = a.friends.list(user_id=str(user_id), count=200, skip_status='t', cursor=-1)
         callback(iter(followed['users']))
         while(followed['next_cursor']!=0):
+            self.call_count += 1
+            print 'API.FRIENDS.LIST()'
             followed = a.friends.list(user_id=str(user_id), count=200, skip_stus='t', cursor=followed['next_cursor'])
             callback(iter(followed['users']))
         return True
@@ -40,49 +45,56 @@ class TwitterAccess(object):
         a = self.api
         ids = []
         try:
+            self.call_count += 1
+            print 'API.FRIENDS.IDS()'
             followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=-1)
+            ids.extend(followed['ids'])
         except TwitterHTTPError as the:
-                print the
-                print 'probably terminated because of rate limit'
-                print str(datetime.datetime.now())
-                time.sleep(15*60)
-                print 'end rate limit sleep'
-        ids.extend(followed['ids'])
+            self.handle_rate_error(the)
         while(followed['next_cursor']!=0):
             try:
+                self.call_count += 1
+                print 'API.FRIENDS.IDS()'
                 followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=followed['next_cursor'])
+                ids.extend(followed['ids'])
             except TwitterHTTPError as the:
-                print the
-                print 'probably terminated because of rate limit'
-                print str(datetime.datetime.now())
-                time.sleep(15*60)
-                print 'end rate limit sleep'
-            ids.extend(followed['ids'])
-        return ids
+                self.handle_rate_error(the)
+        if(ids):
+            return ids
+        else:
+            return []
     
     def get_followers_ids(self, user_id):
         a = self.api
         ids = []
         try:
+            self.call_count += 1
+            print 'API.FOLLOWERS.IDS()'
             follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
+            ids.extend(follows['ids'])
         except TwitterHTTPError as the:
-            print the
-            print 'probably terminated because of rate limit'
-            print str(datetime.datetime.now())
-            time.sleep(15*60)
-            print 'end rate limit sleep'
-        ids.extend(follows['ids'])
+            self.handle_rate_error(the)
         while(follows['next_cursor']!=0):
             try:
+                self.call_count += 1
+                print 'API.FOLLOWERS.IDS()'
                 follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=follows['next_cursor'])
+                ids.extend(follows['ids'])
             except TwitterHTTPError as the:
-                print the
-                print 'probably terminated because of rate limit'
-                print str(datetime.datetime.now())
-                time.sleep(15*60)
-                print 'end rate limit sleep'
-            ids.extend(follows['ids'])
-        return ids
+                self.handle_rate_error(the)
+        if(ids):
+            return ids
+        else:
+            return []
+    
+    def handle_rate_error(self, the):
+        print the
+        print 'probably terminated because of rate limit'
+        print str(datetime.datetime.now())
+        print str(self.call_count)+' calls made before rate limit'
+        self.call_count = 0
+        time.sleep(15*60)
+        print 'end rate limit sleep'
         
 class Twitter_Handler(object):
     

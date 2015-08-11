@@ -2,6 +2,6 @@ raw/
 *~
 *.smile
 *.pyc
-
 web_app/config/secret_config.py
 *.db
+*.*project

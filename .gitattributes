@@ -1,0 +1,4 @@
+# Override .m files to Matlab
+*.m linguist-language=Matlab
+
+web_app/scripts/* linguist-vendored=true

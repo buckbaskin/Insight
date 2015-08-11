@@ -52,13 +52,13 @@ class FollowTree(object):
         print 'adding element '+element.user+' to '+self.root.user
         self.root.tree_followers[element.user] = element
         
-    def traverse(self, root, string, new_print):
+    def traverse(self, root, string):
         if(len(root.tree_followers)):
             for child_id in root.tree_followers:
                 child = root.tree_followers[child_id]
                 self.traverse(child, string+' '+root.user)
         else:
-            new_print(string+' end '+root.user)
+            print (str(string)+' end '+str(root.user))
 
 class FollowNode(object):
     def __init__(self, user_id, access):
