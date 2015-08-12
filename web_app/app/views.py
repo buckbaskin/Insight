@@ -1,6 +1,6 @@
 from web_app.app import app
-from flask import render_template, flash, redirect
-from flask.ext.login import login_user
+from flask import render_template, flash, redirect, url_for
+from flask.ext.login import login_user, logout_user
 from web_app.app.forms import LoginForm, SignupForm
 from web_app.app import db
 from web_app.app.models import User
@@ -8,7 +8,6 @@ from web_app.app.models import User
 
 @app.route('/')
 @app.route('/index')
-
 def index():
     user = {'nickname': 'fakeBuck'}  # fake user
     posts = [  # fake array of posts
@@ -54,6 +53,11 @@ def signup():
             pass
     flash('The site is not accepting users right now, unfortunately')
     return redirect('/index')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
     
 @app.errorhandler(404)
 def not_found_error(error):
