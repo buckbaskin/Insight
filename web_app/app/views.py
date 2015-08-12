@@ -1,22 +1,16 @@
 from web_app.app import app
 from flask import render_template, flash, redirect
-from web_app.app.forms import LoginForm
+from flask.ext.login import login_user
+from web_app.app.forms import LoginForm, SignupForm
 from web_app.app import db
 from web_app.app.models import User
-
-# Git anchor
-@login_manager.user_loader
-def user_loader(user_id):
-    return User.query.get(user_id)
-
-# Git anchor
 
 
 @app.route('/')
 @app.route('/index')
 
 def index():
-    user = {'nickname': 'Buck'}  # fake user
+    user = {'nickname': 'fakeBuck'}  # fake user
     posts = [  # fake array of posts
         { 
             'author': {'nickname': 'John'}, 
@@ -36,13 +30,30 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for OpenID="%s", remember_me=%s' %
-              (form.openid.data, str(form.remember_me.data)))
-        return redirect('/index')
+        user = User.query.filter_by(t_screen_name=form.username.data).first()
+        flash('Login requested for Username="%s"' % (form.username.data))
+        if(user and user.password.data == form.password):
+            login_user(user, form.remember_me.data)
+            return redirect('/index')
     return render_template('login.html', 
                            title='Sign In',
                            form=form,
                            providers=app.config['OPENID_PROVIDERS'])
+
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        flash('Signup requested for username="%s", remember_me=%s' % (form.username.data))
+        if(form.password.data == form.confirm_password.data):
+            # Signup user
+#             new_user = User('username','password')
+#             db.session.add(new_user)
+#             db.session.commit
+            # login_user(user, form.remember_me.data)
+            pass
+    flash('The site is not accepting users right now, unfortunately')
+    return redirect('/index')
     
 @app.errorhandler(404)
 def not_found_error(error):
