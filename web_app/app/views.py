@@ -30,9 +30,9 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(t_screen_name=form.username.data).first()
+        user = User.query.filter_by(t_screen_name=form.username.data).first()  # @UndefinedVariable
         flash('Login requested for Username="%s"' % (form.username.data))
-        if(user and user.password.data == form.password):
+        if(user and user.check_password(form.password.data)):
             login_user(user, form.remember_me.data)
             return redirect('/index')
     return render_template('login.html', 

@@ -1,8 +1,15 @@
 from web_app.app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
+    
+    def __init__(self, username, password):
+        self.t_screen_name = username
+        self.set_password(password)
+    
     id = db.Column(db.Integer, primary_key=True)
     t_screen_name = db.Column(db.String(120), index=True, unique=True)
+    password = db.Column(db.String)
     
     contributors = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime(True))
@@ -18,6 +25,13 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
+    # Git anchor
+    
+    def set_password(self, password):
+        self.pw_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pw_hash, password)
     
     # Git anchor
     # user login model
