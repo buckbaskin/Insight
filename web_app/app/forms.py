@@ -27,9 +27,6 @@ class EditForm(Form):
 #     username = StringField('twitter username', validators=[DataRequired()])
 #     password = PasswordField('password', validators=[Length(min=8, max=30)])
 #     remember_me = BooleanField('remember_me', default=False)
-#     
-# class SignupForm(Form):
-#     username = StringField('twitter username', validators=[DataRequired()])
-#     password = PasswordField('password (not from twitter)', validators=[Length(min=8, max=30)])
-#     confirm_password = PasswordField('Confirm password', validators=[Length(min=8, max=30)])
-#     remember_me = BooleanField('remember_me', default=False)
+
+class SignupForm(Form):
+    username = StringField('twitter username', validators=[DataRequired()])
