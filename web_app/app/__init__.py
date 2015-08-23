@@ -22,9 +22,3 @@ if not app.debug:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('Insight web_app startup')
-    
-@login_manager.user_loader
-def load_user(user_id):
-    print 'Possible error with undefined User or query'
-    from web_app.app.models import User
-    return User.query.get(int(user_id)) # @UndefinedVariable query

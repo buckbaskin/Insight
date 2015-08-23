@@ -1,5 +1,5 @@
 from web_app.app import db
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     
@@ -27,45 +27,21 @@ class User(db.Model):
         return '<User %r>' % (self.nickname)
     # Git anchor
     
-    def set_password(self, password):
-        self.pw_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.pw_hash, password)
-    
     # Git anchor
     # user login model
-    authenticated = db.Column(db.Boolean, default=False)
-
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return self.authenticated
-
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
-    
     # Git anchor
     
-    @staticmethod
-    def make_unique_nickname(nickname):
-        if User.query.filter_by(nickname=nickname).first() is None:
-            return nickname
-        version = 2
-        while True:
-            new_nickname = nickname + str(version)
-            if User.query.filter_by(nickname=nickname).first() is None:
-                break
-            version += 1
-        return new_nickname
+#     @staticmethod
+#     def make_unique_nickname(nickname):
+#         if User.query.filter_by(nickname=nickname).first() is None:
+#             return nickname
+#         version = 2
+#         while True:
+#             new_nickname = nickname + str(version)
+#             if User.query.filter_by(nickname=nickname).first() is None:
+#                 break
+#             version += 1
+#         return new_nickname
     
 class Follows(db.Model):
     id = db.Column(db.Integer, primary_key=True)
