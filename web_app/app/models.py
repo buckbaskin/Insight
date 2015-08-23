@@ -3,13 +3,12 @@ from web_app.app import db
 
 class User(db.Model):
     
-    def __init__(self, username, password):
+    def __init__(self, username):
         self.t_screen_name = username
-        self.set_password(password)
     
     id = db.Column(db.Integer, primary_key=True)
     t_screen_name = db.Column(db.String(120), index=True, unique=True)
-    password = db.Column(db.String)
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
     
     contributors = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime(True))
@@ -24,7 +23,7 @@ class User(db.Model):
     verified = db.Column(db.Boolean)
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '<User %r>' % (self.t_screen_name)
     # Git anchor
     
     # Git anchor
@@ -45,8 +44,8 @@ class User(db.Model):
     
 class Follows(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    follower = db.Column(db.Integer, db.ForeignKey('user.t_userame'), index=True)
-    followee = db.Column(db.Integer, db.ForeignKey('user.t_userame'), index=True)
+    follower = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
+    followee = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
     
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)

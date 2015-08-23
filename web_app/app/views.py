@@ -49,7 +49,7 @@ def user(username):
             'body': 'TEst user post 2' 
         }
     ]
-    return render_template('user.html', user=u, posts=posts)
+    return render_template('user_profile.html', user=u, posts=posts)
     
 @app.errorhandler(404)
 def not_found_error(error):
