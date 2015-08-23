@@ -35,20 +35,11 @@ def create():
 
 @app.route('/user/<username>')
 def user(username):
-    u = User.query.filter_by(t_screen_name=username)  # @UndefinedVariable
+    u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
         return redirect(url_for('index'))
-    posts = [
-        { 
-            'author': user, 
-            'body': 'Test user post 1' 
-        },
-        { 
-            'author': user, 
-            'body': 'TEst user post 2' 
-        }
-    ]
+    posts = u.posts.all()
     return render_template('user_profile.html', user=u, posts=posts)
     
 @app.errorhandler(404)

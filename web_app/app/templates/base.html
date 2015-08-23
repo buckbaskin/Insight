@@ -13,6 +13,7 @@
     <a href="{{ url_for('user', username='beBaskin')}}">User</a>
     </div>
     <hr>
+    <!-- show flash messages for debug -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
