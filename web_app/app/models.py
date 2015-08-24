@@ -1,14 +1,20 @@
 from web_app.app import db
 # from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
+
+import datetime
 
 class User(db.Model):
     
     def __init__(self, username):
         self.t_screen_name = username
+        self.last_updated = datetime.datetime.utcnow()
+        self.description = ''
     
     id = db.Column(db.Integer, primary_key=True)
     t_screen_name = db.Column(db.String(120), index=True, unique=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    last_updated = db.Column(db.DateTime)
     
     contributors = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime(True))
@@ -21,10 +27,26 @@ class User(db.Model):
     name = db.Column(db.String(30))
     statuses_count = db.Column(db.Integer)
     verified = db.Column(db.Boolean)
+    
+    profile_url = db.Column(db.String(100))
+
 
     def __repr__(self):
         return '<User %r>' % (self.t_screen_name)
     # Git anchor
+    
+    def avatar(self, size):
+        self.onPageLoad()
+        if self.profile_url:
+            return str(self.profile_url)
+        return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
+                (md5(self.t_screen_name.encode('utf-8')).hexdigest(), size))
+        
+    def onPageLoad(self):
+        if self.last_updated == None:
+            self.last_updated = datetime.datetime.utcnow()
+            db.session.add(self)
+            db.session.commit()
     
     # Git anchor
     # user login model
