@@ -20,8 +20,7 @@ class TestCase(unittest.TestCase):
     def test_avatar(self):
         u = User('johnDoe')
         avatar = u.avatar(128)
-        print 'I found an avatar!!! for johnDoe, 128'+str(avatar)
-        expected = 'http://www.gravatar.com/avatar/idkwhattoputhere'
+        expected = 'http://www.gravatar.com/avatar/9a0c75a27f67d0496095d060f28fb8ed'
         assert avatar[0:len(expected)] == expected
         
 if __name__ == '__main__':
