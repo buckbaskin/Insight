@@ -25,12 +25,29 @@ def index():
                            user=user, 
                            posts=posts)
 
+@app.route('/create/<username>', methods=['GET','POST'])
+def create_name(username):
+    form = SignupForm()
+    form.username.data = username
+    if form.validate_on_submit():
+        # create user
+        user = User(form.username.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('created user '+user.t_screen_name)
+        return redirect(url_for('index'))
+    return render_template('user_create.html', title='Add new user', form=form)
+
 @app.route('/create', methods=['GET','POST'])
 def create():
     form = SignupForm()
     if form.validate_on_submit():
         # create user
-        pass
+        user = User(form.username.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('created user '+user.t_screen_name)
+        return redirect(url_for('index'))
     return render_template('user_create.html', title='Add new user', form=form)
 
 @app.route('/user/<username>')
@@ -38,7 +55,7 @@ def user(username):
     u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
-        return redirect(url_for('index'))
+        return redirect(url_for('create_name', username=username))
     posts = u.posts.all()
     return render_template('user_profile.html', user=u, posts=posts)
     
