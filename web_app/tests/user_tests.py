@@ -49,9 +49,8 @@ class TestCase(unittest.TestCase):
         assert u2.followers.count() == 0
         
     def test_follow_posts(self):
-        '''
-        Please note, this is essentially a direct copy of the test, plus minus a few minor changes.
-        '''
+        # Please note, this is essentially a direct copy of the test, plus minus a few minor changes.
+        
         # make four users
         u1 = User('john')
         u2 = User('susan')
@@ -98,7 +97,7 @@ class TestCase(unittest.TestCase):
         assert f1 == [p4, p2, p1]
         assert f2 == [p3, p2]
         assert f3 == [p4, p3]
-        assert f4 == [p4, '']
+        assert f4 == [p4]
         
 if __name__ == '__main__':
     unittest.main()
