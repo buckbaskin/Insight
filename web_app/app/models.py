@@ -89,6 +89,20 @@ class User(db.Model):
     def is_following(self, user):
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
     
+    def followed_posts(self):
+        '''
+        join: create new extended table of posts, 
+                where any post (Post) 
+                that is by a user that is followed (followers.c.followed_id == Post.user_id) 
+                has the follow relationship appended (followers)
+        filter: refine the above table to only include posts that are followed by this (parent) user (followers.c.follwer_id == self.id)
+                Note: result will be posts without appended filter information
+        order_by: ordered by the time stamp column (Post.timestamp.desc())
+        '''
+        return (Post.query.join(followers, (followers.c.followed_id == Post.user_id))
+                            .filter(followers.c.follwer_id == self.id)
+                            .order_by(Post.timestamp.desc()))
+    
     # Git anchor
     
 # class Follows(db.Model):
