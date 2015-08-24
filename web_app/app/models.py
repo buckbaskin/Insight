@@ -87,7 +87,7 @@ class Status(db.Model):
     
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Integer, db.ForeignKey(''))
+    status = db.Column(db.Integer, db.ForeignKey('status.id'))
     
 class Hashtag(db.Model):
     text = db.Column(db.String, primary_key = True)
