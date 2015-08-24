@@ -1,4 +1,5 @@
 from flask.ext.wtf import Form
+from flask import flash
 from wtforms import StringField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Length
 from wtforms.fields.simple import TextAreaField
@@ -20,3 +21,11 @@ class EditForm(Form):
 
 class SignupForm(Form):
     username = StringField('twitter username', validators=[DataRequired()])
+    
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        conflict = User.query.filter_by(t_screen_name=self.username.data).first() # @UndefinedVariable
+        if conflict != None:
+            flash('Username already in db')
+        return conflict == None
