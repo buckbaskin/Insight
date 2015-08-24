@@ -98,7 +98,7 @@ class TestCase(unittest.TestCase):
         assert f1 == [p4, p2, p1]
         assert f2 == [p3, p2]
         assert f3 == [p4, p3]
-        assert f4 == [p4]
+        assert f4 == [p4, '']
         
 if __name__ == '__main__':
     unittest.main()
