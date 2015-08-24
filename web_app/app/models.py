@@ -104,7 +104,7 @@ class User(db.Model):
         '''
         # Note returns a query
         return (Post.query.join(followers, (followers.c.followed_id == Post.user_id))
-                            .filter(followers.c.follwer_id == self.id)
+                            .filter(followers.c.follower_id == self.id)
                             .order_by(Post.timestamp.desc()))
     
     # Git anchor

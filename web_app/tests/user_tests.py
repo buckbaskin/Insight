@@ -20,6 +20,8 @@ class TestCase(unittest.TestCase):
         
     def test_avatar(self):
         u = User('johnDoe')
+        db.session.add(u)
+        db.session.commit()
         avatar = u.avatar(128)
         expected = 'http://www.gravatar.com/avatar/9a0c75a27f67d0496095d060f28fb8ed'
         assert avatar[0:len(expected)] == expected
