@@ -71,10 +71,13 @@ class User(db.Model):
             self.last_updated = datetime.datetime.utcnow()
             db.session.add(self)
             db.session.commit()
+        
+        # add user posts to their stream
+        self.follow(self)
             
     # Git anchor
 
-    # managin edges in many to many relationship #manytomany
+    # managing edges in many to many relationship #manytomany
     def follow(self, user):
         # if parent is not following user, follow user
         if not self.is_following(user):
@@ -99,6 +102,7 @@ class User(db.Model):
                 Note: result will be posts without appended filter information
         order_by: ordered by the time stamp column (Post.timestamp.desc())
         '''
+        # Note returns a query
         return (Post.query.join(followers, (followers.c.followed_id == Post.user_id))
                             .filter(followers.c.follwer_id == self.id)
                             .order_by(Post.timestamp.desc()))
