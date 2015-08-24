@@ -29,3 +29,6 @@ class SignupForm(Form):
         if conflict != None:
             flash('Username already in db')
         return conflict == None
+    
+class PostForm(Form):
+    post = StringField('post', validators=[DataRequired(), Length(min=0, max=140)])

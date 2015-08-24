@@ -1,8 +1,10 @@
-<tr valign="top">
+<tr>
 {% if user and user.t_screen_name %}
 	<td><i>says:</i><br>{{ post.body }}</td>
 {% else %}
+	{% if post.author.avatar %}
 	<td><img src="{{ post.author.avatar(32) }}" width="32px" height="32px"></td>
+	{% endif %}
 	<td><i>{{ post.author.t_screen_name }} says:</i><br>{{ post.body }}</td>
 {% endif %}
 </tr>

@@ -1,20 +1,28 @@
 from web_app.app import app
 from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
-from web_app.app.forms import SignupForm, EditForm
+from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
 from web_app.app.models import User, Post
 
 import datetime
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     posts = Post.query.order_by('timestamp').all() # @UndefinedVariable
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=User('indexUser'))
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
     return render_template('index.html',
                            title='Home',
-                           posts=posts)
+                           posts=posts,
+                           form=form)
 
 @app.route('/create/<username>', methods=['GET','POST'])
 def create_name(username):
