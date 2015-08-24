@@ -1,0 +1,28 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - microblog</title>
+    {% else %}
+    <title>microblog</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>Microblog: 
+    <a href="/index">Home</a> 
+    <a href="/create">Add User</a>
+    <a href="{{ url_for('user', username='beBaskin')}}">User</a>
+    </div>
+    <hr>
+    <!-- show flash messages for debug -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

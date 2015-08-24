@@ -1,0 +1,17 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	{% if user.t_screen_name %}
+    <h1>User Profile: {{ user.t_screen_name }}</h1>
+     <hr>
+	  {% for post in posts %}
+	  <p>
+	    |-- <b>{{ post.body }}</b>
+	  </p>
+	  {% endfor %}
+    {% else %}
+    <h1>User not found</h1>
+    {% endif %}
+ 
+{% endblock %}
