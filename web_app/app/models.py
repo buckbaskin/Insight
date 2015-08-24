@@ -4,6 +4,14 @@ from hashlib import md5
 
 import datetime
 
+# MANY TO MANY TABLES
+
+# example many to many relationship #manytomany
+followers = db.Table('followers',
+                         db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+                         db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
+                     )
+
 class User(db.Model):
     
     def __init__(self, username):
@@ -21,7 +29,6 @@ class User(db.Model):
     description = db.Column(db.String(400))
     favourites_count = db.Column(db.Integer)
     followers_count = db.Column(db.Integer)
-    following = db.Column(db.Boolean)
     friends_count = db.Column(db.Integer)
     t_id = db.Column(db.Integer)
     name = db.Column(db.String(30))
@@ -29,6 +36,23 @@ class User(db.Model):
     verified = db.Column(db.Boolean)
     
     profile_url = db.Column(db.String(100))
+    
+    # example many to many relationship #manytomany
+    '''
+    column = db.relationship( right side of relationship (left side is parent class),
+                                secondary = association table for relationship
+                                primaryjoin = condition that links left side with association
+                                secondaryjoin = condition that links the right side with association
+                                backref = how relationship is accessed from right side entity
+                                dynamic means run when specificially requested, more later?
+                                )
+    '''
+    followed = db.relationship('User',
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=db.backref('followers', lazy='dynamic'),
+                               lazy = 'dynamic')
 
 
     def __repr__(self):
@@ -47,27 +71,30 @@ class User(db.Model):
             self.last_updated = datetime.datetime.utcnow()
             db.session.add(self)
             db.session.commit()
+            
+    # Git anchor
+
+    # managin edges in many to many relationship #manytomany
+    def follow(self, user):
+        # if parent is not following user, follow user
+        if not self.is_following(user):
+            self.followed.append(user)
+            return self
+        
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+            return self
+        
+    def is_following(self, user):
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
     
     # Git anchor
-    # user login model
-    # Git anchor
     
-#     @staticmethod
-#     def make_unique_nickname(nickname):
-#         if User.query.filter_by(nickname=nickname).first() is None:
-#             return nickname
-#         version = 2
-#         while True:
-#             new_nickname = nickname + str(version)
-#             if User.query.filter_by(nickname=nickname).first() is None:
-#                 break
-#             version += 1
-#         return new_nickname
-    
-class Follows(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    follower = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
-    followee = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
+# class Follows(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     follower = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
+#     followee = db.Column(db.Integer, db.ForeignKey('user.t_screen_name'), index=True)
     
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
