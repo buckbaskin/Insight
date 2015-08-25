@@ -5,18 +5,14 @@
 		{{ form.hidden_tag() }}
 		<table>
 			<tr>
-			    <td>Say something:</td>
-			    <td>{{ form.post(size=30, maxlength=140) }}</td>
+			    <td>Say something:&nbsp;</td>
+			    <td>{{ form.post(size=30, maxlength=140, class="form-control") }}</td>
+			    <td><input type="submit" value="post" class="btn" style="margin-left:10px;"></td>
 			    <td>
 			    {% for error in form.post.errors %}
 			    <span style="color: red;">[{{ error }}]</span><br>
 			    {% endfor %}
 			    </td>
-			</tr>
-			<tr>
-			    <td></td>
-			    <td><input type="submit" value="Post!"></td>
-			    <td></td>
 			</tr>
 		</table>
 	  </form>
