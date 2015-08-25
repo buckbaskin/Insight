@@ -1,20 +1,33 @@
 from web_app.app import app
 from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
-from web_app.app.forms import SignupForm, EditForm
+from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
 from web_app.app.models import User, Post
+from web_app.config.user_config import POSTS_PER_PAGE
 
 import datetime
+from sqlalchemy import desc
 
 
-@app.route('/')
-@app.route('/index')
-def index():
-    posts = Post.query.order_by('timestamp').all() # @UndefinedVariable
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
+def index(page=1):
+    if(page > POSTS_PER_PAGE):
+        return redirect(url_for('index', page=1))
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=User('indexUser'))
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
     return render_template('index.html',
                            title='Home',
-                           posts=posts)
+                           posts=posts,
+                           form=form)
 
 @app.route('/create/<username>', methods=['GET','POST'])
 def create_name(username):
@@ -65,7 +78,7 @@ def user(username):
     if u == None:
         flash('Twitter screenname not found for '+username)
         return redirect(url_for('create_name', username=username))
-    posts = u.posts.all()
+    posts = u.posts.order_by(desc(Post.timestamp)).paginate(1,POSTS_PER_PAGE,False).items
     return render_template('user_profile.html', user=u, posts=posts)
     
 @app.errorhandler(404)
