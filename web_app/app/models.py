@@ -136,3 +136,32 @@ class Tags(db.Model):
     
 class Hashtag(db.Model):
     text = db.Column(db.String, primary_key = True)
+    
+class Session(db.Model):
+    #session created on homepage load (w/o session), passed between pages as they are loaded
+    
+    def __init__(self):
+        self.start = datetime.datetime.utcnow()
+    
+    def __repr__(self):
+        return '<Session %s>' % (str(self.t_screen_name),)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.DateTime)
+    pages = db.relationship('PageLoad', backref='session', lazy='dynamic')
+    #posts = db.relationship('Post', backref='author', lazy='dynamic')
+    
+class PageLoad(db.Model):
+    
+    def __init__(self, session, page_name):
+        self.time = datetime.datetime.utcnow()
+        self.session = session
+        self.page_id = page_name
+        
+    def __repr__(self):
+        return '<PageLoad %s>' % (str(self.page_id),)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime)
+    page_id = db.Column(db.String(80))
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'))

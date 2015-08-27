@@ -5,6 +5,7 @@ from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
 from web_app.app.models import User, Post
 from web_app.config.user_config import POSTS_PER_PAGE
+from web_app.analytics import analyze
 
 import datetime
 from sqlalchemy import desc
@@ -13,7 +14,8 @@ from sqlalchemy import desc
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
-def index(page=1):
+@analyze()
+def index(page=1, session=None):
     if(page > POSTS_PER_PAGE):
         return redirect(url_for('index', page=1))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
