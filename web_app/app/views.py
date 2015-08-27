@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
-from web_app.app.models import User, Post
+from web_app.app.models import User, Post, Trace, PageLoad
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
 
@@ -98,6 +98,16 @@ def user(username, trace=None):
     posts = u.posts.order_by(desc(Post.timestamp)).paginate(1,POSTS_PER_PAGE,False).items
     return render_template('user_profile.html', title='User '+str(username), user=u, posts=posts, trace=trace)
     
+@app.route('/trace')
+@app.route('/trace/<int:trace>')
+@analyze
+def show_trace(trace=None):
+    flash('trace: '+str(trace))
+    # t = Trace.query.get(trace.id) # @UndefinedVariable
+    pages = PageLoad.query.filter_by(trace_id=trace.id).order_by(desc(PageLoad.time)) # @UndefinedVariable
+    return render_template('trace_profile.html', title='View Trace '+str(trace.id), trace=trace, pages=pages)
+
+
 @app.errorhandler(404)
 @analyze
 def not_found_error(error, trace=None):

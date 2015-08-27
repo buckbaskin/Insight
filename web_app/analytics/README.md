@@ -7,4 +7,6 @@ Analytics is a side project for the site. While I was building the site while fo
  - Site Tracing: follow users through the site, to determine which paths of the site are most active
  - Page Activity: follow the pages that are getting the most page loads
 
-It is worth noting that none of this is client side (yet?), so it works even if the client has Javascript disabled. It does not keep any identifying information except pages visited (the site doesn't even use login). One thing that I'm working on is adding pages to show different traces, and a link for uses to view their current trace, so they can see all the data that is collected.
+It is worth noting that none of this is client side (yet?), so it works even if the client has Javascript disabled. It does not keep any identifying information except pages visited (the site doesn't even use login). 
+
+The site now has a "View Your Trace" page, so you can see what the site is tracking. It shows the trace information, and a list of their page views. The next step is to paginate the views (already pretty well set, because I have the example)
