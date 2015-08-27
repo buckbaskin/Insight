@@ -14,11 +14,10 @@ from sqlalchemy import desc
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
-@app.route('/index/<int:page>/<int:session>', methods=['GET', 'POST'])
+@app.route('/index/<int:page>/<int:trace>', methods=['GET', 'POST'])
 @analyze
-def index(page=1, session=None):
-    flash('session: '+str(session))
-    print 'index/'+str(page)+' called'
+def index(page=1, trace=None):
+    flash('trace: '+str(trace))
     if(page > POSTS_PER_PAGE):
         return redirect(url_for('index', page=1))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
@@ -33,10 +32,13 @@ def index(page=1, session=None):
                            title='Home',
                            posts=posts,
                            form=form,
-                           session=session)
+                           trace=trace)
 
 @app.route('/create/<username>', methods=['GET','POST'])
-def create_name(username):
+@app.route('/create/<username>/<int:trace>', methods=['GET','POST'])
+@analyze
+def create_name(username, trace=None):
+    flash('trace: '+str(trace))
     form = SignupForm()
     form.username.data = username
     if form.validate_on_submit():
@@ -46,10 +48,13 @@ def create_name(username):
         db.session.commit()
         flash('created user '+user.t_screen_name)
         return redirect(url_for('index'))
-    return render_template('user_create.html', title='Add new user', form=form)
+    return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 @app.route('/create', methods=['GET','POST'])
-def create():
+@app.route('/create/<int:trace>', methods=['GET','POST'])
+@analyze
+def create(trace=None):
+    flash('trace: '+str(trace))
     form = SignupForm()
     if form.validate_on_submit():
         # create user
@@ -58,11 +63,14 @@ def create():
         db.session.commit()
         flash('created user '+user.t_screen_name)
         return redirect(url_for('index'))
-    return render_template('user_create.html', title='Add new user', form=form)
+    return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 
 @app.route('/user/<username>/edit', methods=['GET','POST'])
-def edit_user(username):
+@app.route('/user/<username>/edit/<int:trace>', methods=['GET','POST'])
+@analyze
+def edit_user(username, trace=None):
+    flash('trace: '+str(trace))
     u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
@@ -76,22 +84,29 @@ def edit_user(username):
         return redirect(url_for('user', username=username))
     else:
         form = EditForm()
-    return render_template('user_edit_profile.html', user=u, form=form)
+    return render_template('user_edit_profile.html', user=u, form=form, trace=trace)
 
 @app.route('/user/<username>')
-def user(username):
+@app.route('/user/<username>/<int:trace>')
+@analyze
+def user(username, trace=None):
+    flash('trace: '+str(trace))
     u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
         return redirect(url_for('create_name', username=username))
     posts = u.posts.order_by(desc(Post.timestamp)).paginate(1,POSTS_PER_PAGE,False).items
-    return render_template('user_profile.html', user=u, posts=posts)
+    return render_template('user_profile.html', user=u, posts=posts, trace=trace)
     
 @app.errorhandler(404)
-def not_found_error(error):
-    return render_template('404.html'), 404
+@analyze
+def not_found_error(error, trace=None):
+    flash('trace: '+str(trace))
+    return render_template('404.html', trace=trace), 404
 
 @app.errorhandler(500)
-def internal_server_error(error):
+@analyze
+def internal_server_error(error, trace=None):
     db.session.rollback()
-    return render_template('500.html'), 500
+    flash('trace: '+str(trace))
+    return render_template('500.html', trace=trace), 500

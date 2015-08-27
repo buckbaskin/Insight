@@ -1,1 +1,1 @@
-from sessions import analyze
+from web_app.analytics.trace import analyze
