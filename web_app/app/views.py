@@ -84,7 +84,7 @@ def edit_user(username, trace=None):
         return redirect(url_for('user', username=username))
     else:
         form = EditForm()
-    return render_template('user_edit_profile.html', user=u, form=form, trace=trace)
+    return render_template('user_edit_profile.html', title='Edit user '+str(username), user=u, form=form, trace=trace)
 
 @app.route('/user/<username>')
 @app.route('/user/<username>/<int:trace>')
@@ -96,17 +96,17 @@ def user(username, trace=None):
         flash('Twitter screenname not found for '+username)
         return redirect(url_for('create_name', username=username))
     posts = u.posts.order_by(desc(Post.timestamp)).paginate(1,POSTS_PER_PAGE,False).items
-    return render_template('user_profile.html', user=u, posts=posts, trace=trace)
+    return render_template('user_profile.html', title='User '+str(username), user=u, posts=posts, trace=trace)
     
 @app.errorhandler(404)
 @analyze
 def not_found_error(error, trace=None):
     flash('trace: '+str(trace))
-    return render_template('404.html', trace=trace), 404
+    return render_template('404.html', title="something wasn't found", trace=trace), 404
 
 @app.errorhandler(500)
 @analyze
 def internal_server_error(error, trace=None):
     db.session.rollback()
     flash('trace: '+str(trace))
-    return render_template('500.html', trace=trace), 500
+    return render_template('500.html', title="oops, the computer didn't computer", trace=trace), 500
