@@ -37,6 +37,9 @@
 	        <li><a href="{{ url_for('index') }}">Home</a></li>
 	        <li><a href="{{ url_for('create') }}">Add User</a></li>
 	        <li><a href="{{ url_for('user', username='beBaskin') }}">User</a></li>
+	        {% if session %}
+	        <li><a href="{{ url_for('index', page=1, session=session.serialize() ) }}">Home w/ Session</a></li>
+	        {% endif %}
 	      </ul>
 	      <form class="navbar-form navbar-right" role="search">
 	        <div class="form-group">

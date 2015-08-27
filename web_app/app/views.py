@@ -14,8 +14,11 @@ from sqlalchemy import desc
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
-@analyze()
+@app.route('/index/<int:page>/<int:session>', methods=['GET', 'POST'])
+@analyze
 def index(page=1, session=None):
+    flash('session: '+str(session))
+    print 'index/'+str(page)+' called'
     if(page > POSTS_PER_PAGE):
         return redirect(url_for('index', page=1))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
@@ -29,7 +32,8 @@ def index(page=1, session=None):
     return render_template('index.html',
                            title='Home',
                            posts=posts,
-                           form=form)
+                           form=form,
+                           session=session)
 
 @app.route('/create/<username>', methods=['GET','POST'])
 def create_name(username):

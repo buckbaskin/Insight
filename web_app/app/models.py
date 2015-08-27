@@ -144,7 +144,15 @@ class Session(db.Model):
         self.start = datetime.datetime.utcnow()
     
     def __repr__(self):
-        return '<Session %s>' % (str(self.t_screen_name),)
+        return '<Session %s>' % (str(self.id),)
+    
+    def serialize(self):
+        return self.id
+    
+    @staticmethod
+    def deserialize(num):
+        # id_num = int(string[8:])
+        return Session.query.get(num)
     
     id = db.Column(db.Integer, primary_key=True)
     start = db.Column(db.DateTime)
