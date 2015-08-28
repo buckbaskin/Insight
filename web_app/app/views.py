@@ -53,7 +53,7 @@ def create_name(username, trace=None):
         db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index', page=1, trace=trace.serialize()))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 @app.route('/create', methods=['GET','POST'])
@@ -71,7 +71,7 @@ def create(trace=None):
         db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index', page=1, trace=trace.serialize()))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 
@@ -83,14 +83,14 @@ def edit_user(username, trace=None):
     u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
-        return redirect(url_for('create_name', username=username))
+        return redirect(url_for('create_name', username=username, trace=trace.serialize()))
     form = EditForm()
     if form.validate_on_submit():
         u.description = form.about_me.data
         u.last_updated = datetime.datetime.utcnow()
         db.session.add(u)
         db.session.commit()
-        return redirect(url_for('user', username=username))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     else:
         form = EditForm()
     return render_template('user_edit_profile.html', title='Edit user '+str(username), user=u, form=form, trace=trace)
@@ -103,7 +103,7 @@ def user(username, trace=None):
     u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
     if u == None:
         flash('Twitter screenname not found for '+username)
-        return redirect(url_for('create_name', username=username))
+        return redirect(url_for('create_name', username=username, trace=trace.serialize()))
     posts = u.posts.order_by(desc(Post.timestamp)).paginate(1,POSTS_PER_PAGE,False).items
     return render_template('user_profile.html', title='User '+str(username), user=u, posts=posts, trace=trace)
     
