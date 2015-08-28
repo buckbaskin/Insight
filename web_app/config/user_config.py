@@ -1,2 +1,2 @@
 # pagination for index
-POSTS_PER_PAGE = 10
+POSTS_PER_PAGE = 6

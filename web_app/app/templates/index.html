@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-
-	<form action="" method="post" name="post">
+	
+	<div class="row">
+	  <form action="" method="post" name="post">
 		{{ form.hidden_tag() }}
-		<table>
+		<table class="col-md-6 col-md-offset-3">
 			<tr>
 			    <td>Say something:&nbsp;</td>
 			    <td>{{ form.post(size=30, maxlength=140, class="form-control") }}</td>
@@ -16,25 +17,33 @@
 			</tr>
 		</table>
 	  </form>
-
-	<h1>Posts of the Day</h1>
-	<table>
-		{% for post in posts.items %}
-			{% include 'post.html' %}
-		{% endfor %}
-	</table>
-	{% if posts.has_prev %}
-		{% if trace %}
-	    <a href="{{ url_for('index', page=posts.prev_num, trace=trace.serialize()) }}">Newer Posts</a>
-	    {% else %}
-	    <a href="{{ url_for('index', page=posts.prev_num) }}">Newer Posts</a>
-	    {% endif %}
-	{% endif %}
-	{% if posts.has_next %}
-	{% if trace %}
-	    <a href="{{ url_for('index', page=posts.next_num, trace=trace.serialize()) }}">Older Posts</a>
-	    {% else %}
-	    <a href="{{ url_for('index', page=posts.next_num) }}">Older Posts</a>
-	    {% endif %}
-	{% endif %}
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3" style="text-align:center">
+			<div class="page-header row">
+				{% if posts.has_prev %}
+					{% if trace %}
+				    <div class="col-md-2"><a href="{{ url_for('index', page=posts.prev_num, trace=trace.serialize()) }}"><h2>Newer</h2></a></div>
+				    {% else %}
+				    <div class="col-md-2"><a href="{{ url_for('index', page=posts.prev_num) }}"><h2>Newer</h2></a></div>
+				    {% endif %}
+				    <div class="col-md-8"><h1>Posts of the Day</h1></div>
+				{% else %}
+					<div class="col-md-8 col-md-offset-2"><h1>Posts of the Day</h1></div>
+				{% endif %}
+				{% if posts.has_next %}
+					{% if trace %}
+					<div class="col-md-2"><a href="{{ url_for('index', page=posts.next_num, trace=trace.serialize()) }}"><h2>Older</h2></a></div>
+				    {% else %}
+				    <div class="col-md-2"><a href="{{ url_for('index', page=posts.next_num ) }}"><h2>Older</h2></a></div>
+				    {% endif %}
+				{% endif %}
+			</div>
+		<table class="table">
+			{% for post in posts.items %}
+				{% include 'post.html' %}
+			{% endfor %}
+		</table>
+		</div>
+	</div>
 {% endblock %}
