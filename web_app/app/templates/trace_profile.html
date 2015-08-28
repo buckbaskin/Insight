@@ -1,0 +1,41 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	{% if trace %}
+		<table>
+			<tr valign="top">
+				<td><img src="{{ trace.avatar(64) }}" width="64px" height="64px"></td>
+				<td>
+					<h1>{{ trace.id }}</h1>
+					{% if trace.start %}
+						started {{ trace.start }}
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+	    
+		<hr>
+		<table>
+		{% for page in pages.items %}
+			{% include 'trace.html' %}
+		{% endfor %}
+		</table>
+	{% else %}
+    	<h1>User not found</h1>
+    {% endif %}
+    {% if pages.has_prev %}
+		{% if trace %}
+	    <a href="{{ url_for('index', page=pages.prev_num, trace=trace.serialize()) }}">Newer Pages</a>
+	    {% else %}
+	    <a href="{{ url_for('index', page=pages.prev_num) }}">Newer Pages</a>
+	    {% endif %}
+	{% endif %}
+	{% if pages.has_next %}
+	{% if trace %}
+	    <a href="{{ url_for('index', page=pages.next_num, trace=trace.serialize()) }}">Older Pages</a>
+	    {% else %}
+	    <a href="{{ url_for('index', page=pages.next_num) }}">Older Pages</a>
+	    {% endif %}
+	{% endif %}
+{% endblock %}
