@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
-from web_app.app.models import User, Post, Trace, PageLoad
+from web_app.app.models import User, Post, PageLoad
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
 

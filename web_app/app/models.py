@@ -167,7 +167,7 @@ class Trace(db.Model):
         return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
                 (md5(str(self.id).encode('utf-8')).hexdigest(), size))
     
-    analytics = analytics
+    # analytics = analytics
     
     def favorite_page(self):
         return analytics.favorite(self.pages)
