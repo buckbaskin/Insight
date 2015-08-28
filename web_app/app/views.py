@@ -53,7 +53,7 @@ def create_name(username, trace=None):
         db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index', page=1, trace=trace.serialize()))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 @app.route('/create', methods=['GET','POST'])
@@ -71,7 +71,7 @@ def create(trace=None):
         db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index', page=1, trace=trace.serialize()))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 
@@ -90,7 +90,7 @@ def edit_user(username, trace=None):
         u.last_updated = datetime.datetime.utcnow()
         db.session.add(u)
         db.session.commit()
-        return redirect(url_for('user', username=username, trace=trace.serialize()))
+        return redirect(url_for('user', username=user.t_screen_name, trace=trace.serialize()))
     else:
         form = EditForm()
     return render_template('user_edit_profile.html', title='Edit user '+str(username), user=u, form=form, trace=trace)

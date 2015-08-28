@@ -31,14 +31,14 @@ def analyze(f): # arguments to decorator
                         trace = kwargs[parameters[i]]
                 else:
                     # the parameter has no value
+                    params_left = len(parameters)-i
+                    default_index = len(defaults)-params_left
                     if parameters[i] is not 'trace': # and it is not trace
-                        params_left = len(parameters)-i
-                        default_index = len(defaults)-params_left
                         print 'param %s extended as def %s' % (str(parameters[i]), str(defaults[default_index]))
                         page_name = page_name+'/'+str(defaults[default_index]) # add default to page_name
                     else:
-                        print 'trace found as default %s' % str(defaults[i-len(args)])
-                        trace = defaults[i-len(args)]
+                        print 'trace found as default %s' % str(defaults[default_index])
+                        trace = defaults[default_index]
         
         if trace is None: # create a new trace if one wasn't passed
             trace = Trace()
