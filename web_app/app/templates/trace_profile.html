@@ -2,20 +2,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% if trace %}
+	{% if vm['trace'] %}
 		<table>
 			<tr valign="top">
-				<td><img src="{{ trace.avatar(64) }}" width="64px" height="64px"></td>
+				<td><img src="{{ vm['trace'].avatar(64) }}" width="64px" height="64px"></td>
 				<td>
-					<h1>{{ trace.id }}</h1>
-					{% if trace.start %}
-						started {{ trace.start }}
+					<h1>{{ vm['trace'].id }}</h1>
+					{% if vm['trace'].start %}
+						started {{ vm['trace'].start }}
 					{% endif %}
 				</td>
 			</tr>
 		</table>
 	    
 		<hr>
+		<h1>Full Trace</h1>
 		<table>
 		{% for page in pages %}
 			{% include 'trace.html' %}

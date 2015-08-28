@@ -1,9 +1,13 @@
 <html>
   <head>
-    {% if title %}
-    <title>{{ title }} - Insight</title>
+  	{% if vm['title'] %}
+    <title>{{ vm['title'] }} - Insight</title>
     {% else %}
-    <title>Insight</title>
+	    {% if title %}
+	    <title>{{ title }} - Insight</title>
+	    {% else %}
+	    <title>Insight</title>
+	    {% endif %}
     {% endif %}
     
     <!-- Latest compiled and minified CSS -->
