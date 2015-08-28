@@ -4,7 +4,7 @@ Created on Aug 28, 2015
 @author: buck
 '''
 
-# from web_app.app.models import Trace, PageLoad
+from web_app.app.models import Trace, PageLoad
 
 def favorite(page_list):
     pages = dict()

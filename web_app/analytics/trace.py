@@ -1,11 +1,6 @@
 import inspect
 
 from web_app.app import db
-# from web_app.app.models import Trace, PageLoad
-# from web_app.app import models
-import os
-print ' *** '+str(os.getcwd())
-
 from web_app.app.models import Trace, PageLoad
 
 from functools import wraps
