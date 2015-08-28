@@ -19,15 +19,18 @@ from sqlalchemy import desc
 def index(page=1, trace=None):
     flash('trace: '+str(trace))
     if(page > POSTS_PER_PAGE):
-        return redirect(url_for('index', page=1))
+        return redirect(url_for('index', page=1, trace=trace.serialize()))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
     form = PostForm()
     if form.validate_on_submit():
         post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=User('indexUser'))
+        pg = PageLoad(trace=trace.id, page_name='index/post')
         db.session.add(post)
+        db.session.add(pg)
+        print 'added pg to db session'
         db.session.commit()
         flash('Your post is now live!')
-        return redirect(url_for('index'))
+        return redirect(url_for('index', page=1, trace=trace.serialize()))
     return render_template('index.html',
                            title='Home',
                            posts=posts,
@@ -47,7 +50,7 @@ def create_name(username, trace=None):
         db.session.add(user)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index'))
+        return redirect(url_for('index', page=1, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 @app.route('/create', methods=['GET','POST'])
@@ -62,7 +65,7 @@ def create(trace=None):
         db.session.add(user)
         db.session.commit()
         flash('created user '+user.t_screen_name)
-        return redirect(url_for('index'))
+        return redirect(url_for('index', page=1, trace=trace.serialize()))
     return render_template('user_create.html', title='Add new user', form=form, trace=trace)
 
 
