@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from flask import flash
-from wtforms import StringField, BooleanField, PasswordField
+from wtforms import StringField # , BooleanField, PasswordField
 from wtforms.validators import DataRequired, Length
 from wtforms.fields.simple import TextAreaField
 from web_app.app.models import User

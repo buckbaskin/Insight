@@ -136,3 +136,55 @@ class Tags(db.Model):
     
 class Hashtag(db.Model):
     text = db.Column(db.String, primary_key = True)
+    
+class Trace(db.Model):
+    #trace created on first load (w/o trace), passed between pages as they are loaded
+     
+    def __init__(self):
+        self.start = datetime.datetime.utcnow()
+     
+    def __repr__(self):
+        return '<Trace %s>' % (str(self.id),)
+     
+    def serialize(self):
+        return self.id
+     
+    @staticmethod
+    def deserialize(num):
+        # id_num = int(string[8:])
+        ses = Trace.query.get(num)
+        if ses is None:
+            ses = Trace()
+            db.session.add(ses)
+            db.session.commit()
+        return ses
+     
+    id = db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.DateTime)
+    pages = db.relationship('PageLoad', backref='trace', lazy='dynamic')
+    
+    def avatar(self, size):
+        return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
+                (md5(str(self.id).encode('utf-8')).hexdigest(), size))
+     
+class PageLoad(db.Model):
+     
+    def __init__(self, trace, page_name):
+        self.time = datetime.datetime.utcnow()
+        if isinstance(trace, int):
+            self.trace_id = trace
+        else:
+            self.trace_id = trace.id
+        self.page_id = page_name
+         
+    def __repr__(self):
+        return '<PageLoad %s>' % (str(self.page_id),)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime)
+    page_id = db.Column(db.String(80))
+    trace_id = db.Column(db.Integer, db.ForeignKey('trace.id'))
+    
+    def avatar(self, size):
+        return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
+                (md5(str(self.page_id).encode('utf-8')).hexdigest(), size))
