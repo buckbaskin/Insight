@@ -1,5 +1,5 @@
 from web_app.app import db
-import web_app.analytics as analytics
+# from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 
 import datetime
@@ -166,21 +166,9 @@ class Trace(db.Model):
     def avatar(self, size):
         return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
                 (md5(str(self.id).encode('utf-8')).hexdigest(), size))
-    
-    analytics = analytics
-    
-    def favorite_page(self):
-        return analytics.favorite(self.pages)
-    
-    def favorite_next(self):
-        return analytics.markov_forward(self.pages)
-    
-    def best_referal(self):
-        return analytics.markov_backward(self.pages)
-    
-    
+     
 class PageLoad(db.Model):
-    # TODO
+     
     def __init__(self, trace, page_name):
         self.time = datetime.datetime.utcnow()
         if isinstance(trace, int):
@@ -200,5 +188,3 @@ class PageLoad(db.Model):
     def avatar(self, size):
         return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
                 (md5(str(self.page_id).encode('utf-8')).hexdigest(), size))
-    
-    

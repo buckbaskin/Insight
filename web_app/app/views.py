@@ -103,15 +103,9 @@ def user(username, trace=None):
 @analyze
 def show_trace(trace=None):
     flash('trace: '+str(trace))
-    vm = dict() # view_model
-    vm['title'] = 'View Trace '+str(trace.id)
-    vm['trace'] = trace
     # t = Trace.query.get(trace.id) # @UndefinedVariable
-    vm['pages'] = PageLoad.query.filter_by(trace_id=trace.id).order_by(desc(PageLoad.time)) # @UndefinedVariable
-    vm['fav'] = trace.analytics.favorite(vm['pages'])
-    vm['transition_f'] = trace.analytics.markov_forward(vm['pages'])
-    vm['transition_b'] = trace.analytics.markov_backward(vm['pages'])
-    return render_template('trace_profile.html', title='View Trace '+str(trace.id), trace=trace, pages=vm['pages'], vm=vm)
+    pages = PageLoad.query.filter_by(trace_id=trace.id).order_by(desc(PageLoad.time)) # @UndefinedVariable
+    return render_template('trace_profile.html', title='View Trace '+str(trace.id), trace=trace, pages=pages)
 
 
 @app.errorhandler(404)
