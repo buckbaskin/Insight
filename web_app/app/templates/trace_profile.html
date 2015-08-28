@@ -17,12 +17,25 @@
 	    
 		<hr>
 		<table>
-		{% for page in pages %}
+		{% for page in pages.items %}
 			{% include 'trace.html' %}
 		{% endfor %}
 		</table>
 	{% else %}
     	<h1>User not found</h1>
     {% endif %}
- 
+    {% if pages.has_prev %}
+		{% if trace %}
+	    <a href="{{ url_for('index', page=pages.prev_num, trace=trace.serialize()) }}">Newer Pages</a>
+	    {% else %}
+	    <a href="{{ url_for('index', page=pages.prev_num) }}">Newer Pages</a>
+	    {% endif %}
+	{% endif %}
+	{% if pages.has_next %}
+	{% if trace %}
+	    <a href="{{ url_for('index', page=pages.next_num, trace=trace.serialize()) }}">Older Pages</a>
+	    {% else %}
+	    <a href="{{ url_for('index', page=pages.next_num) }}">Older Pages</a>
+	    {% endif %}
+	{% endif %}
 {% endblock %}

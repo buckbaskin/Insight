@@ -13,13 +13,13 @@ from sqlalchemy import desc
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-@app.route('/index/<int:page>', methods=['GET', 'POST'])
-@app.route('/index/<int:page>/<int:trace>', methods=['GET', 'POST'])
+@app.route('/index/<int:trace>', methods=['GET', 'POST'])
+@app.route('/index/<int:trace>/<int:page>', methods=['GET', 'POST'])
 @analyze
-def index(page=1, trace=None):
+def index(trace=None, page=1):
     flash('trace: '+str(trace))
-    if(page > POSTS_PER_PAGE):
-        return redirect(url_for('index', page=1, trace=trace.serialize()))
+#     if(page > POSTS_PER_PAGE):
+#         return redirect(url_for('index', page=1, trace=trace.serialize()))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
     form = PostForm()
     if form.validate_on_submit():
@@ -27,7 +27,6 @@ def index(page=1, trace=None):
         pg = PageLoad(trace=trace.id, page_name='index/post')
         db.session.add(post)
         db.session.add(pg)
-        print 'added pg to db session'
         db.session.commit()
         flash('Your post is now live!')
         return redirect(url_for('index', page=1, trace=trace.serialize()))
@@ -103,11 +102,21 @@ def user(username, trace=None):
     
 @app.route('/trace')
 @app.route('/trace/<int:trace>')
+@app.route('/trace/<int:trace>/<int:page>')
 @analyze
-def show_trace(trace=None):
+def show_trace(trace=None, page=1):
     flash('trace: '+str(trace))
-    # t = Trace.query.get(trace.id) # @UndefinedVariable
-    pages = PageLoad.query.filter_by(trace_id=trace.id).order_by(desc(PageLoad.time)) # @UndefinedVariable
+    # paginate
+    if page <= 0:
+        page = 0
+        # load aggregate statistics for page
+        pages = []
+    else:
+        pages = (PageLoad.query.filter_by(trace_id=trace.id) # @UndefinedVariable
+                 .order_by(desc(PageLoad.time)) # @UndefinedVariable
+                 .paginate(page,POSTS_PER_PAGE,False)) # @UndefinedVariable
+#       posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
+    
     return render_template('trace_profile.html', title='View Trace '+str(trace.id), trace=trace, pages=pages)
 
 
