@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app import db
-from web_app.app.models import User, Post, Trace, PageLoad
+from web_app.app.models import User, Post, PageLoad #, Trace
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
 
@@ -24,7 +24,8 @@ def index(trace=None, page=1):
     form = PostForm()
     if form.validate_on_submit():
         post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=User('indexUser'))
-        pg = PageLoad(trace=trace.id, page_name='index/post')
+        page_name = 'index/'+str(page)+'/post'
+        pg = PageLoad(trace=trace.id, page_name=page_name)
         db.session.add(post)
         db.session.add(pg)
         db.session.commit()
@@ -46,7 +47,10 @@ def create_name(username, trace=None):
     if form.validate_on_submit():
         # create user
         user = User(form.username.data)
+        page_name = 'create_name/'+str(username)+'/post'
+        pg = PageLoad(trace=trace, page_name=page_name)
         db.session.add(user)
+        db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
         return redirect(url_for('index', page=1, trace=trace.serialize()))
@@ -61,7 +65,10 @@ def create(trace=None):
     if form.validate_on_submit():
         # create user
         user = User(form.username.data)
+        page_name = 'create_name/post'
+        pg = PageLoad(trace=trace, page_name=page_name)
         db.session.add(user)
+        db.session.add(pg)
         db.session.commit()
         flash('created user '+user.t_screen_name)
         return redirect(url_for('index', page=1, trace=trace.serialize()))
@@ -114,7 +121,7 @@ def show_trace(trace=None, page=1):
     else:
         pages = (PageLoad.query.filter_by(trace_id=trace.id) # @UndefinedVariable
                  .order_by(desc(PageLoad.time)) # @UndefinedVariable
-                 .paginate(page,POSTS_PER_PAGE,False)) # @UndefinedVariable
+                 .paginate(page,POSTS_PER_PAGE-1,False)) # @UndefinedVariable
 #       posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
     
     return render_template('trace_profile.html', title='View Trace '+str(trace.id), trace=trace, pages=pages)
