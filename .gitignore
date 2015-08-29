@@ -7,3 +7,4 @@ web_app/config/secret_config.py
 *.*project
 .settings/
 rethinkdb/
+web_app/config/app.db
