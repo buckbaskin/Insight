@@ -57,7 +57,7 @@
 
     <!-- show flash messages for debug -->
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
+      {% if messages and False %}
         <ul>
         {% for message in messages %}
             <li>{{ message }} </li>
