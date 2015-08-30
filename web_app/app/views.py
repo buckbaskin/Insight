@@ -23,7 +23,10 @@ def index(trace=None, page=1):
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page,POSTS_PER_PAGE,False) # @UndefinedVariable
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=User('indexUser'))
+        user = User.query.filter_by(t_screen_name='indexUser').first() # @UndefinedVariable
+        if not user:
+            user = User('indexUser')
+        post = Post(body=form.post.data, timestamp=datetime.datetime.utcnow(), author=user)
         page_name = 'index/'+str(page)+'/post'
         pg = PageLoad(trace=trace.id, page_name=page_name)
         db.session.add(post)
