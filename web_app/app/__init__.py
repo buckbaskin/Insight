@@ -8,8 +8,8 @@ app = Flask(__name__)
 app.config.from_object(server_config)
 db = SQLAlchemy(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
 
 from web_app.app import views, models
 
