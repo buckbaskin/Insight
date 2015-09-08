@@ -2,6 +2,7 @@ from web_app.app import app
 from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
+from web_app.app.forms import ReqForm
 from web_app.app import db
 from web_app.app.models import User, Post, PageLoad #, Trace
 from web_app.config.user_config import POSTS_PER_PAGE
@@ -12,6 +13,17 @@ from sqlalchemy import desc
 
 
 @app.route('/', methods=['GET', 'POST'])
+def index2():
+    flash('wrong index')
+    form = ReqForm()
+    if form.validate_on_submit():
+        pass
+    
+    return render_template('index2.html',
+                           form=form)
+    
+    
+
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:trace>', methods=['GET', 'POST'])
 @app.route('/index/<int:trace>/<int:page>', methods=['GET', 'POST'])
