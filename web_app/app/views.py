@@ -5,6 +5,7 @@ from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app.forms import ReqForm
 from web_app.app import db
 from web_app.app.models import User, Post, PageLoad #, Trace
+from web_app.app.models import Result
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
 
@@ -12,6 +13,12 @@ import datetime
 from sqlalchemy import desc
 
 import requests
+from stop_words import stops
+from collections import Counter
+from bs4 import BeautifulSoup
+import re
+import nltk
+import operator
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -28,6 +35,39 @@ def index2():
             print r.text
         except:
             errors.append("Unable to get URL. Please make sure it's valid and try again.")
+        if r:
+            # text processing
+            raw = BeautifulSoup(r.text).get_text()
+            nltk.data.path.append('/home/buck/Github/Insight/web_app/nltk_data')  # set the path
+            tokens = nltk.word_tokenize(raw)
+            text = nltk.Text(tokens)
+            
+            # remove punctuation, count raw words
+            nonPunct = re.compile('.*[A-Za-z].*')
+            raw_words = [w for w in text if nonPunct.match(w)]
+            raw_word_count = Counter(raw_words)
+
+            # stop words
+            no_stop_words = [w for w in raw_words if w.lower() not in stops]
+            no_stop_words_count = Counter(no_stop_words)
+            print 'no_stop_words count: '+str(no_stop_words_count)
+            
+            # save the results
+            results = sorted(
+                no_stop_words_count.items(),
+                key=operator.itemgetter(1),
+                reverse=True
+            )
+            try:
+                result = Result(
+                    url=url,
+                    result_all=raw_word_count,
+                    result_no_stop_words=no_stop_words_count
+                )
+                db.session.add(result)
+                db.session.commit()
+            except:
+                errors.append("Unable to add item to database.")
     
     return render_template('index2.html',
                            form=form,
