@@ -11,16 +11,28 @@ from web_app.analytics import analyze
 import datetime
 from sqlalchemy import desc
 
+import requests
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index2():
     flash('wrong index')
     form = ReqForm()
+    errors = []
+    results = ()
     if form.validate_on_submit():
-        pass
+        url = form.url.data
+        try:
+            r = requests.get(url)
+            print ' >>> requests returned'
+            print r.text
+        except:
+            errors.append("Unable to get URL. Please make sure it's valid and try again.")
     
     return render_template('index2.html',
-                           form=form)
+                           form=form,
+                           errors = errors,
+                           results=results)
     
     
 
