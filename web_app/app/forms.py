@@ -32,3 +32,6 @@ class SignupForm(Form):
     
 class PostForm(Form):
     post = StringField('post', validators=[DataRequired(), Length(min=0, max=140)])
+    
+class ReqForm(Form):
+    url = StringField('url', validators=[DataRequired()])
