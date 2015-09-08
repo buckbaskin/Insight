@@ -31,8 +31,8 @@ def index2():
         url = form.url.data
         try:
             r = requests.get(url)
-            print ' >>> requests returned'
-            print r.text
+            # print ' >>> requests returned'
+            # print r.text
         except:
             errors.append("Unable to get URL. Please make sure it's valid and try again.")
         if r:
@@ -50,7 +50,7 @@ def index2():
             # stop words
             no_stop_words = [w for w in raw_words if w.lower() not in stops]
             no_stop_words_count = Counter(no_stop_words)
-            print 'no_stop_words count: '+str(no_stop_words_count)
+            # print 'no_stop_words count: '+str(no_stop_words_count)
             
             # save the results
             results = sorted(
