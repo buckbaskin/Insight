@@ -20,13 +20,21 @@ Insight/
     - __init__.py
     - forms.py (possibly moving to just Angular)
     - models.py (db models)
-    - tasks.py (tasks for the Redis queue to run)
+    - tasks.py (tasks for the Redis queue to run. just collects from other packages)
     - views.py (routes)
     - stop_words.py (nltk stopwords resource)
     - server_pro.py
     - server.py
-- analytics/
+- analytics/ (in site analytics, dropped? in first revision)
+- insight_apis/ (package for all twitter collection)
+- insight/ (main analysis of collected data is here)
+  - follow_tree/ (examine user following patterns)
+  - user_fingerprint/ (characterize user post/read activity)
+  - user_matching/ (find users to connect with)
+  - user_access/ (get in front of a user)
 - config/
 - scripts/
 - tests/
+- git_hooks/
+- migrations/
 - temp/
