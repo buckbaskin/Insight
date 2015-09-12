@@ -3,12 +3,13 @@ sys.path.append('/home/buck/Github/Insight')
 
 from web_app.app import app
 from flask import render_template, flash, redirect, url_for
+from flask import jsonify
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app.forms import ReqForm
 from web_app.app import db, q
 from web_app.app.models import User, Post, PageLoad #, Trace
-# from web_app.app.models import Result
+from web_app.app.models import Result
 from web_app.app.tasks import count_and_save_words
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
@@ -23,7 +24,7 @@ from sqlalchemy import desc
 # from bs4 import BeautifulSoup
 # import re
 # import nltk
-# import operator
+import operator
 
 from web_app.scripts.redis_worker import conn
 from rq.job import Job
@@ -50,7 +51,13 @@ def index2():
 def get_queue_results(job_key):
     job = Job.fetch(job_key, connection=conn)
     if job.is_finished:
-        return str(job.result), 200
+        result = Result.query.filter_by(id=job.result).first() 
+        results = sorted(
+            result.result_no_stop_words.items(),
+            key=operator.itemgetter(1),
+            reverse=True
+        )[:10]
+        return jsonify(results)
     else:
         return "Nay!", 202
     
