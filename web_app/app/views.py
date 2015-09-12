@@ -3,7 +3,7 @@ sys.path.append('/home/buck/Github/Insight')
 
 from web_app.app import app
 from flask import render_template, flash, redirect, url_for
-from flask import jsonify
+from flask import jsonify, request
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app.forms import ReqForm
@@ -18,13 +18,14 @@ import datetime
 from sqlalchemy import desc
 
 # Comment for cleanup
-# import requests
+import requests
 # from stop_words import stops
 # from collections import Counter
 # from bs4 import BeautifulSoup
 # import re
 # import nltk
 import operator
+import json
 
 from web_app.scripts.redis_worker import conn
 from rq.job import Job
@@ -33,25 +34,22 @@ from rq.job import Job
 @app.route('/', methods=['GET', 'POST'])
 def index2():
     flash('wrong index')
-    form = ReqForm()
-    results = ()
-    if form.validate_on_submit():
-        url = form.url.data
-        job = q.enqueue_call(
-            func=count_and_save_words, args=(url,), result_ttl=5000
-        )
-        print str(job.get_id())
-    
-    return render_template('index2.html',
-                           form=form,
-                           # errors = errors,
-                           results=results)
-    
+    return render_template('index2.html')
+
+@app.route('/start', methods=['POST'])    
+def get_counts():
+    data = json.loads(request.data.decode())
+    url = data["url"]
+    job = q.enqueue_call(
+        func=count_and_save_words, args=(url,), result_ttl=5000
+    )
+    return job.get_id()
+
 @app.route('/results/<job_key>', methods=['GET'])
 def get_queue_results(job_key):
     job = Job.fetch(job_key, connection=conn)
     if job.is_finished:
-        result = Result.query.filter_by(id=job.result).first() 
+        result = Result.query.filter_by(id=job.result).first() # @UndefinedVariable 
         results = sorted(
             result.result_no_stop_words.items(),
             key=operator.itemgetter(1),
