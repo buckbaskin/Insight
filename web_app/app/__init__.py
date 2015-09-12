@@ -4,9 +4,13 @@ from flask_login import LoginManager
 
 from web_app.config import server_config
 
+from rq import Queue
+from web_app.scripts.redis_worker import conn
+
 app = Flask(__name__)
 app.config.from_object(server_config)
 db = SQLAlchemy(app)
+q = Queue(connection=conn)
 
 # login_manager = LoginManager()
 # login_manager.init_app(app)

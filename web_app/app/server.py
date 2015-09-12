@@ -9,6 +9,10 @@ sys.path.append('/home/buck/Github/Insight')
 from web_app.app import app
 from web_app.config import server_config
 
+from rq import Queue
+from rq.job import Job
+from web_app.scripts.redis_worker import conn
+
 # === APP ===
 
 app.config.from_object(server_config)
