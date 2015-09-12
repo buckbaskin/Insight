@@ -2,6 +2,8 @@ from web_app.app import db
 # from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 
+from sqlalchemy.dialects.postgresql import JSON
+
 import datetime
 
 # MANY TO MANY TABLES
@@ -188,3 +190,20 @@ class PageLoad(db.Model):
     def avatar(self, size):
         return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
                 (md5(str(self.page_id).encode('utf-8')).hexdigest(), size))
+        
+class Result(db.Model):
+    __tablename__ = 'results'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String())
+    result_all = db.Column(JSON)
+    result_no_stop_words = db.Column(JSON)
+
+    def __init__(self, url, result_all, result_no_stop_words):
+        self.url = url
+        self.result_all = result_all
+        self.result_no_stop_words = result_no_stop_words
+
+    def __repr__(self):
+        return '<Result: id {}>'.format(self.id)
+    
