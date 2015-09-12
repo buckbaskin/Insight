@@ -3,7 +3,28 @@
 Insight/
 - app/
   - static/
+    - _files_:
+      - main.js (Currently all of AngularJS)
   - templates/
+    - _files_:
+      - 404.html
+      - 500.html
+      - base.html
+      - index.html
+      - post.html ("partial")
+      - trace_profile.html
+      - trace.html ("partial")
+      - user_create.html
+      - user_profile.html
+  - _files_:
+    - __init__.py
+    - forms.py (possibly moving to just Angular)
+    - models.py (db models)
+    - tasks.py (tasks for the Redis queue to run)
+    - views.py (routes)
+    - stop_words.py (nltk stopwords resource)
+    - server_pro.py
+    - server.py
 - analytics/
 - config/
 - scripts/
