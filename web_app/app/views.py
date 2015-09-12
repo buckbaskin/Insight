@@ -1,79 +1,58 @@
+import sys
+sys.path.append('/home/buck/Github/Insight')
+
 from web_app.app import app
 from flask import render_template, flash, redirect, url_for
 # from flask.ext.login import login_user, logout_user
 from web_app.app.forms import SignupForm, EditForm, PostForm
 from web_app.app.forms import ReqForm
-from web_app.app import db
+from web_app.app import db, q
 from web_app.app.models import User, Post, PageLoad #, Trace
-from web_app.app.models import Result
+# from web_app.app.models import Result
+from web_app.app.tasks import count_and_save_words
 from web_app.config.user_config import POSTS_PER_PAGE
 from web_app.analytics import analyze
 
 import datetime
 from sqlalchemy import desc
 
-import requests
-from stop_words import stops
-from collections import Counter
-from bs4 import BeautifulSoup
-import re
-import nltk
-import operator
+# Comment for cleanup
+# import requests
+# from stop_words import stops
+# from collections import Counter
+# from bs4 import BeautifulSoup
+# import re
+# import nltk
+# import operator
+
+from web_app.scripts.redis_worker import conn
+from rq.job import Job
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index2():
     flash('wrong index')
     form = ReqForm()
-    errors = []
     results = ()
     if form.validate_on_submit():
         url = form.url.data
-        try:
-            r = requests.get(url)
-            # print ' >>> requests returned'
-            # print r.text
-        except:
-            errors.append("Unable to get URL. Please make sure it's valid and try again.")
-        if r:
-            # text processing
-            raw = BeautifulSoup(r.text).get_text()
-            nltk.data.path.append('/home/buck/Github/Insight/web_app/nltk_data')  # set the path
-            tokens = nltk.word_tokenize(raw)
-            text = nltk.Text(tokens)
-            
-            # remove punctuation, count raw words
-            nonPunct = re.compile('.*[A-Za-z].*')
-            raw_words = [w for w in text if nonPunct.match(w)]
-            raw_word_count = Counter(raw_words)
-
-            # stop words
-            no_stop_words = [w for w in raw_words if w.lower() not in stops]
-            no_stop_words_count = Counter(no_stop_words)
-            # print 'no_stop_words count: '+str(no_stop_words_count)
-            
-            # save the results
-            results = sorted(
-                no_stop_words_count.items(),
-                key=operator.itemgetter(1),
-                reverse=True
-            )[:10]
-            try:
-                result = Result(
-                    url=url,
-                    result_all=raw_word_count,
-                    result_no_stop_words=no_stop_words_count
-                )
-                db.session.add(result)
-                db.session.commit()
-            except:
-                errors.append("Unable to add item to database.")
+        job = q.enqueue_call(
+            func=count_and_save_words, args=(url,), result_ttl=5000
+        )
+        print str(job.get_id())
     
     return render_template('index2.html',
                            form=form,
-                           errors = errors,
+                           # errors = errors,
                            results=results)
     
+@app.route('/results/<job_key>', methods=['GET'])
+def get_queue_results(job_key):
+    job = Job.fetch(job_key, connection=conn)
+    if job.is_finished:
+        return str(job.result), 200
+    else:
+        return "Nay!", 202
     
 
 @app.route('/index', methods=['GET', 'POST'])
