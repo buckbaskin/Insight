@@ -5,3 +5,6 @@ raw/
 web_app/config/secret_config.py
 *.db
 *.*project
+.settings/
+rethinkdb/
+web_app/config/app.db

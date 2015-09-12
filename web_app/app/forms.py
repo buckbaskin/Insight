@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from flask import flash
-from wtforms import StringField, BooleanField, PasswordField
+from wtforms import StringField # , BooleanField, PasswordField
 from wtforms.validators import DataRequired, Length
 from wtforms.fields.simple import TextAreaField
 from web_app.app.models import User
@@ -29,3 +29,9 @@ class SignupForm(Form):
         if conflict != None:
             flash('Username already in db')
         return conflict == None
+    
+class PostForm(Form):
+    post = StringField('post', validators=[DataRequired(), Length(min=0, max=140)])
+    
+class ReqForm(Form):
+    url = StringField('url', validators=[DataRequired()])
