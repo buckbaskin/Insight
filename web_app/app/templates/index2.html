@@ -30,10 +30,23 @@
       <br>
       <!-- Angular now owns {{ }} inside raw Jinja tags -->
       <div id="results">
-        
-          {{wordcounts}}
-        
-      </div>
+		  <table class="table table-striped">
+		    <thead>
+		      <tr>
+		        <th>Word</th>
+		        <th>Count</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr ng-repeat="(key, val) in wordcounts">
+		        
+		        <td>{{key}}</td>
+		        <td>{{val}}</td>
+		        
+		      </tr>
+		    </tbody>
+		  </table>
+		</div>
     </div>
     {% endraw %}
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
