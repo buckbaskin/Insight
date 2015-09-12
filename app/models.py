@@ -13,6 +13,10 @@ followers = db.Table('followers',
                          db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
                          db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
                      )
+hashtags = db.Table('hashtags',
+                         db.Column('status_id', db.Integer, db.ForeignKey('status.id')),
+                         db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'))
+                     )
 
 class User(db.Model):
     
@@ -22,10 +26,16 @@ class User(db.Model):
         self.description = ''
     
     id = db.Column(db.Integer, primary_key=True)
-    t_screen_name = db.Column(db.String(120), index=True, unique=True)
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
+    
+    # Site Info
+    
+    tracking = db.Column(db.Boolean)
     last_updated = db.Column(db.DateTime)
     
+    # Twitter Info
+    
+    t_screen_name = db.Column(db.String(120), index=True, unique=True)
+    statuses = db.relationship('Status', backref='author', lazy='dynamic')
     contributors = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime(True))
     description = db.Column(db.String(400))
@@ -36,7 +46,6 @@ class User(db.Model):
     name = db.Column(db.String(30))
     statuses_count = db.Column(db.Integer)
     verified = db.Column(db.Boolean)
-    
     profile_url = db.Column(db.String(100))
     
     # example many to many relationship #manytomany
@@ -129,13 +138,25 @@ class Post(db.Model):
 class Status(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     
-    favorited = db.Column(db.Boolean)
+    # Twitter Info
+    hashtags = db.relationship('Hashtag',
+                               secondary=hashtags,
+                               primaryjoin=(hashtags.c.status_id == id),
+                               secondaryjoin=(hashtags.c.hashtag_id == id),
+                               backref=db.backref('statuses', lazy='dynamic'),
+                               lazy = 'dynamic')
+#     mentions = db.relationship('User',
+#                                secondary=mention,
+#                                primaryjoin=(mention.c.user_id == id),
+#                                secondaryjoin=(mention.c.status_id == id),
+#                                backref=db.backref('followers', lazy='dynamic'),
+#                                lazy = 'dynamic')
+    in_reply_to = db.Column(db.Integer, db.ForeignKey('status.id'))
+    t_id = db.Column(db.Integer)
+    text = db.Column(db.String)
     created_at = db.Column(db.DateTime)
-    
-class Tags(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Integer, db.ForeignKey('status.id'))
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 class Hashtag(db.Model):
     text = db.Column(db.String, primary_key = True)
     
@@ -191,18 +212,18 @@ class PageLoad(db.Model):
         return ('http://www.gravatar.com/avatar/%s?d=retro&s=%d' %
                 (md5(str(self.page_id).encode('utf-8')).hexdigest(), size))
         
-class Result(db.Model):
-    __tablename__ = 'results'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String())
-    result_all = db.Column(JSON)
-    result_no_stop_words = db.Column(JSON)
-
-    def __init__(self, url, result_all, result_no_stop_words):
-        self.url = url
-        self.result_all = result_all
-        self.result_no_stop_words = result_no_stop_words
-
-    def __repr__(self):
-        return '<Result: id {}>'.format(self.id)
+# class Result(db.Model):
+#     __tablename__ = 'results'
+#     
+#     id = db.Column(db.Integer, primary_key=True)
+#     url = db.Column(db.String())
+#     result_all = db.Column(JSON)
+#     result_no_stop_words = db.Column(JSON)
+# 
+#     def __init__(self, url, result_all, result_no_stop_words):
+#         self.url = url
+#         self.result_all = result_all
+#         self.result_no_stop_words = result_no_stop_words
+# 
+#     def __repr__(self):
+#         return '<Result: id {}>'.format(self.id)
