@@ -7,6 +7,7 @@ blinker==1.4
 bulbs==0.3.29.post20140417
 ccsm==0.9.11.3
 chardet==2.0.1
+click==5.1
 colorama==0.2.5
 command-not-found==0.3
 compizconfig-python==0.9.11.3
@@ -69,9 +70,11 @@ python-openid==2.2.5
 pytz==2012rc0
 pyxdg==0.25
 PyYAML==3.11
+redis==2.10.3
 reportlab==3.0
 requests==2.7.0
 requests-oauthlib==0.4.2
+rq==0.5.5
 Schemer==0.2.9
 scipy==0.13.3
 sessioninstaller==0.0.0
