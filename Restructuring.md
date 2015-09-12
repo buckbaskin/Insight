@@ -7,3 +7,7 @@ app/
 
 tests/
 - need to add support for nose testing, coverage
+
+
+## other:
+Consider setting up with virtualenv + docker
