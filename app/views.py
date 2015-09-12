@@ -5,7 +5,6 @@ from app import app
 from flask import render_template, flash, redirect, url_for
 from flask import jsonify, request
 from app.forms import SignupForm, EditForm, PostForm
-from app.forms import ReqForm
 from app import db, q
 from app.models import User, Post, PageLoad
 from app.models import Result
