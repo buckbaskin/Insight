@@ -25,6 +25,9 @@
       {% endfor %}
     </div>
     {% raw %}
+    <div class="col-sm-5 col-sm-offset-1" ng-show="!wordcounts">
+    	{{ message }}
+    </div>
     <div class="col-sm-5 col-sm-offset-1" ng-show="wordcounts">
       <h2>Frequencies</h2>
       <br>

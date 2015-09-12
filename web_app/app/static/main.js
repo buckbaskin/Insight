@@ -30,9 +30,14 @@
         $http.get('/results/'+jobID).
           success(function(data, status, headers, config) {
             if(status === 202) {
-              $log.log(data, status);
+              if($scope.message) {
+              	$scope.message = $scope.message + '.'
+              } else {
+              	$scope.message = 'Your data is loading'
+              }
+              // $log.log(data, status);
             } else if (status === 200){
-              $log.log(data);
+              // $log.log(data);
               $scope.wordcounts = data;
               $timeout.cancel(timeout);
               return false;
