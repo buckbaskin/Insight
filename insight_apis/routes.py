@@ -12,7 +12,7 @@ def user(username):
         flash('Twitter screenname not found for '+username)
         return redirect(url_for('create_user'))
     vm['title'] = vm['user'].t_screen_name
-    vm['posts'] = vm['user'].posts.order_by(desc(Status.created_at)).paginate(1,POSTS_PER_PAGE,False).items
+    vm['statuses'] = vm['user'].statuses.order_by(desc(Status.created_at)).paginate(1,POSTS_PER_PAGE,False).items
     return render_template('user_profile.html',
                            vm=vm)
     

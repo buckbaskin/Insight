@@ -15,7 +15,7 @@ followers = db.Table('followers',
                      )
 hashtags = db.Table('hashtags',
                          db.Column('status_id', db.Integer, db.ForeignKey('status.id')),
-                         db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.text'))
+                         db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'))
                      )
 
 class User(db.Model):
@@ -151,14 +151,15 @@ class Status(db.Model):
 #                                secondaryjoin=(mention.c.status_id == id),
 #                                backref=db.backref('followers', lazy='dynamic'),
 #                                lazy = 'dynamic')
-    in_reply_to = db.Column(db.Integer, db.ForeignKey('status.id'))
+    # in_reply_to = db.Column(db.Integer, db.ForeignKey('status.id'))
     t_id = db.Column(db.Integer)
     text = db.Column(db.String)
     created_at = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Hashtag(db.Model):
-    text = db.Column(db.String, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String, index = True)
     
 class Trace(db.Model):
     #trace created on first load (w/o trace), passed between pages as they are loaded
