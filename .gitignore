@@ -8,3 +8,4 @@ web_app/config/secret_config.py
 .settings/
 rethinkdb/
 web_app/config/app.db
+*.zip
