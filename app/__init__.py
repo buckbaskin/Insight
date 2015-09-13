@@ -12,7 +12,8 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 q = Queue(connection=conn)
 
-from app import views, models
+from app import models
+from app import routes
 
 if not app.debug:
     import logging

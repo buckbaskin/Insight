@@ -7,7 +7,6 @@ from flask import jsonify, request
 from app.forms import SignupForm, EditForm, PostForm
 from app import db, q
 from app.models import User, Post, PageLoad
-from app.models import Result
 from app.tasks import count_and_save_words
 from config.user_config import POSTS_PER_PAGE
 from analytics import analyze
@@ -21,12 +20,40 @@ import json
 from scripts.redis_worker import conn
 from rq.job import Job
 
+import analytics
+import insight_apis
+import task_manager
+
 @app.route('/', methods=['GET'])
 def index():
     vm = {}
     vm['title'] = 'Home'
     return render_template('index.html',
                            vm=vm)
+
+analytics = app.route('/a', methods=['GET'])(
+            app.route('/analytics', methods=['GET'])(
+                 analytics.routes.index))
+a_json = app.route('/a.json', methods=['GET'])(
+             analytics.routes.json)
+
+user = app.route('/u/<username>', methods=['GET'])(
+       app.route('/user/<username>', methods=['GET'])(
+                 insight_apis.routes.user))
+u_json = app.route('/u/<username>.json', methods=['GET'])(
+             insight_apis.routes.user_json)
+
+create_user = app.route('/u/new', methods=['GET'])(
+              app.route('/user/new', methods=['GET'])(
+                 insight_apis.routes.create_user))
+c_post = app.route('/u/new', methods=['POST'])(
+            insight_apis.routes.post_create)
+
+queue = app.route('/q', methods=['GET'])(
+        app.route('/queue', methods=['GET'])(
+            task_manager.routes.index))
+q_json = app.route('/q.json')(
+            task_manager.routes.json)
 
 # Drop everything below
 
