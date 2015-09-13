@@ -4,7 +4,6 @@ sys.path.append('/home/buck/Github/Insight')
 from app import app
 from flask import render_template
 from app import db
-from analytics import analyze
 
 import analytics
 import insight_apis
@@ -44,12 +43,10 @@ q_json = app.route('/q.json')(
             task_manager.routes.json)
 
 @app.errorhandler(404)
-@analyze
 def not_found_error(error):
     return render_template('404.html', title="something wasn't found"), 404
 
 @app.errorhandler(500)
-@analyze
 def internal_server_error(error):
     db.session.rollback()
     return render_template('500.html', title="oops, the computer didn't computer"), 500
