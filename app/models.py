@@ -15,7 +15,7 @@ followers = db.Table('followers',
                      )
 hashtags = db.Table('hashtags',
                          db.Column('status_id', db.Integer, db.ForeignKey('status.id')),
-                         db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'))
+                         db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.text'))
                      )
 
 class User(db.Model):
@@ -29,7 +29,7 @@ class User(db.Model):
     
     # Site Info
     
-    tracking = db.Column(db.Boolean)
+    # tracking = db.Column(db.Boolean)
     last_updated = db.Column(db.DateTime)
     
     # Twitter Info
