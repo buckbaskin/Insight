@@ -1,101 +1,104 @@
 '''
-Created on Aug 3, 2015
+Twitter Manager handles all requests for data from twitter
+Analysis is run separately, and is run over all data collected/in db up to that point.
+The two functions run asynchronously, but Analysis may request data (run task that puts a task into data Queue)
 
-@author: buck
-
+Twitter Manager makes requests on list
 Twitter API: https://github.com/sixohsix/twitter
-'''
 
-import twitter as it
-# import twitter.Twitter as Twitter
-# import twitter.OAuth as OAuth
-# import twitter.TwitterHTTPError as TwitterHTTPError
-# import twitter.oauth_dance as oauth_dance
-import os
+This is properly used by creating a TwitterManager and passing it as an arg to tasks that need it
+'''
 import time
-import datetime
+import os
+import twitter as it
 from twitter.api import TwitterHTTPError
 
-'''
-creates a custom Python access portal that automates a lot of the access portion
-ex. streaming large datasets, maximizing data returned per API call
-'''
-
-class TwitterAccess(object):
+class TwitterManager(object):
     def __init__(self):
+        self.new_requests = []
+        self.full_requests = []
+        self.partial_requests = {}
+        
         f = open('../insight_apis/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
-        self.call_count = 0
         
-    def get_friends_iter(self, user_id, callback):
-        a = self.api
-        # t.search.tweets(q=str(term), lang="en", count=100)
-        self.call_count += 1
-        print 'API.FRIENDS.LIST()'
-        followed = a.friends.list(user_id=str(user_id), count=200, skip_status='t', cursor=-1)
-        callback(iter(followed['users']))
-        while(followed['next_cursor']!=0):
-            self.call_count += 1
-            print 'API.FRIENDS.LIST()'
-            followed = a.friends.list(user_id=str(user_id), count=200, skip_stus='t', cursor=followed['next_cursor'])
-            callback(iter(followed['users']))
-        return True
+    def request_data(self, req):
+        self.new_requests.append(req)
     
-    def get_friends_ids(self, user_id):
-        a = self.api
-        ids = []
-        try:
-            self.call_count += 1
-            print 'API.FRIENDS.IDS()'
-            followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=-1)
-            ids.extend(followed['ids'])
-        except TwitterHTTPError as the:
-            self.handle_rate_error(the)
-        while(followed['next_cursor']!=0):
+    def push_data(self):
+        while(len(self.full_requests)):
+            basket = self.full_requests.pop()
             try:
-                self.call_count += 1
-                print 'API.FRIENDS.IDS()'
-                followed = a.friends.ids(user_id=str(user_id), count=5000, cursor=followed['next_cursor'])
-                ids.extend(followed['ids'])
-            except TwitterHTTPError as the:
-                self.handle_rate_error(the)
-        if(ids):
-            return ids
-        else:
-            return []
+                basket.go(self)
+            except TwitterHTTPError:
+                # Probably rate limit
+                self.full_requests.append(basket)
+                time.sleep(60*15)
+                
     
-    def get_followers_ids(self, user_id):
-        a = self.api
-        ids = []
-        try:
-            self.call_count += 1
-            print 'API.FOLLOWERS.IDS()'
-            follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=-1)
-            ids.extend(follows['ids'])
-        except TwitterHTTPError as the:
-            self.handle_rate_error(the)
-        while(follows['next_cursor']!=0):
-            try:
-                self.call_count += 1
-                print 'API.FOLLOWERS.IDS()'
-                follows = a.followers.ids(user_id=str(user_id), count=5000, cursor=follows['next_cursor'])
-                ids.extend(follows['ids'])
-            except TwitterHTTPError as the:
-                self.handle_rate_error(the)
-        if(ids):
-            return ids
-        else:
-            return []
-    
-    def handle_rate_error(self, the):
-        print the
-        print 'probably terminated because of rate limit'
-        print str(datetime.datetime.now())
-        print str(self.call_count)+' calls made before rate limit'
-        self.call_count = 0
-        time.sleep(15*60)
-        print 'end rate limit sleep'
+    def update_requests(self):
+        for req in self.new_requests:
+            if req.type in self.partial_requests:
+                self.partial_requests[req.type].add(req)
+                if self.partial_requests[req.type].is_full():
+                    self.full_requests.append(self.partial_requests[req.type])
+                    self.partial_requests
+            else:
+                self.partial_requests[req.type] = Basket(req.type)
+
+class Request(object):
+    def __init__(self, t, data):
+        self.type = t
+        self.data = data
+
+class Basket(object):
+    def __init__(self, t, m):
+        self.type = t
+        self.max = m
+        self.reqs = []
         
+    def add(self, request):
+        # expand existing request
+        if len(self.reqs) < self.max:
+            self.reqs.append(request.data)
+            return True
+        else:
+            return False
+    
+    def go(self, tm):
+        # make the request, store the data
+        pass
+    
+    def is_full(self):
+        return len(self.reqs) >= self.max
+    
+class StatusesList(Basket):
+    def __init__(self):
+        Basket.__init__(self, 'status', 100)
+        
+    def go(self, tm):
+        ids = str(self.reqs[0])
+        for r in self.reqs[1:]:
+            ids = ids+', '+str(r)
+        include_entities = 1
+        trim_user = 0
+        a = tm.api
+        s = a.statuses.lookup(id=ids, include_entities=include_entities, trim_user=trim_user)
+        # TODO(buckbaskin): store Statuses
+
+class UserList(Basket):
+    def __init__(self):
+        Basket.__init__(self, 'status', 100)
+        
+    def go(self, tm):
+        ids = str(self.reqs[0])
+        for r in self.reqs[1:]:
+            ids = ids+', '+str(r)
+        include_entities = 1
+        a = tm.api
+        s = a.users.lookup(user_id=ids, include_entities=include_entities)
+        # TODO(buckbaskin): store Users
+
 class Twitter_Handler(object):
     
     def __init__(self,consumerKey,consumerSecret,accessToken,accessTokenSecret):
@@ -132,8 +135,6 @@ class Twitter_Handler(object):
     def test(self):
         self.twitter_access.search.tweets(q='test')
         
-def main():
-    ta = TwitterAccess()
-    
-if __name__ == '__main__':
-    main()
+        
+def initialize():
+    return TwitterManager()
