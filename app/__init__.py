@@ -1,6 +1,5 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 
 import config
 
@@ -10,7 +9,8 @@ from scripts.redis_worker import conn
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
-q = Queue(connection=conn)
+q = Queue(connection=conn) # other Queue, doesn't care about rate limit
+t_q = Queue(connection=conn) # Twitter Queue, knows about rate limit
 
 from app import models
 from app import routes
