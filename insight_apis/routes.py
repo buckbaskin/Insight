@@ -29,7 +29,7 @@ def update_user(username):
 def create_user():
     vm = {}
     vm['title'] = 'Create User'
-    return render_template('user_create.html')
+    return render_template('user_create.html', vm=vm)
 
 def post_create():
     # TODO(buckbaskin): do stuff
