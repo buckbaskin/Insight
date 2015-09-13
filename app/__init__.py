@@ -15,6 +15,7 @@ t_q = Queue(connection=conn) # Twitter Queue, knows about rate limit
 from app import models
 from app import routes
 
+
 if not app.debug:
     import logging
     from logging.handlers import RotatingFileHandler

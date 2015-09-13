@@ -1,6 +1,3 @@
-import sys
-sys.path.append('/home/buck/Github/Insight')
-
 from app import app
 from flask import render_template
 from app import db
@@ -16,11 +13,11 @@ def index():
     return render_template('index.html',
                            vm=vm)
 
-analytics = app.route('/a', methods=['GET'])(
+analytic = app.route('/a', methods=['GET'])(
             app.route('/analytics', methods=['GET'])(
-                 analytics.routes.index))
+                 analytics.routes.a_index))
 a_json = app.route('/a.json', methods=['GET'])(
-             analytics.routes.json)
+             analytics.routes.a_json)
 
 user = app.route('/u/<username>', methods=['GET'])(
        app.route('/user/<username>', methods=['GET'])(
@@ -38,9 +35,9 @@ c_post = app.route('/u/new', methods=['POST'])(
 
 queue = app.route('/q', methods=['GET'])(
         app.route('/queue', methods=['GET'])(
-            task_manager.routes.index))
+            task_manager.routes.t_index))
 q_json = app.route('/q.json')(
-            task_manager.routes.json)
+            task_manager.routes.t_json)
 
 @app.errorhandler(404)
 def not_found_error(error):

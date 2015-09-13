@@ -1,12 +1,12 @@
 from flask import render_template, jsonify
 
-def index():
+def t_index():
     # TODO(buckbaskin):
     vm = {}
     vm['title'] = 'Queue Status'
     return render_template('queue.html', 
                            vm=vm)
     
-def json():
+def t_json():
     # TODO(buckbaskin):
     return jsonify()

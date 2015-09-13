@@ -1,5 +1,5 @@
 import nltk
-nltk.data.path.append('/home/buck/Github/Insight/web_app/nltk_data')  # set the path
+nltk.data.path.append('/home/buck/Github/Insight/nltk_data')  # set the path
 from nltk.corpus import stopwords
 
 stops = [
