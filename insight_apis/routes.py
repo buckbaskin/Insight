@@ -15,7 +15,8 @@ def user(username):
                            vm=vm)
     
 def user_json(username):
-    return jsonify()
+    u = User.query.filter_by(t_screen_name=username).first()  # @UndefinedVariable
+    return jsonify(u)
     
 def create_user():
     vm = {}
@@ -23,5 +24,5 @@ def create_user():
     return render_template('user_create.html')
 
 def post_create():
-    # do stuff
+    # TODO(buckbaskin): do stuff
     return jsonify()
