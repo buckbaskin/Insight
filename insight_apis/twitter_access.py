@@ -1,0 +1,140 @@
+'''
+Twitter Manager handles all requests for data from twitter
+Analysis is run separately, and is run over all data collected/in db up to that point.
+The two functions run asynchronously, but Analysis may request data (run task that puts a task into data Queue)
+
+Twitter Manager makes requests on list
+Twitter API: https://github.com/sixohsix/twitter
+
+This is properly used by creating a TwitterManager and passing it as an arg to tasks that need it
+'''
+import time
+import os
+import twitter as it
+from twitter.api import TwitterHTTPError
+
+class TwitterManager(object):
+    def __init__(self):
+        self.new_requests = []
+        self.full_requests = []
+        self.partial_requests = {}
+        
+        f = open('../insight_apis/simile.smile','r')
+        self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
+        
+    def request_data(self, req):
+        self.new_requests.append(req)
+    
+    def push_data(self):
+        while(len(self.full_requests)):
+            basket = self.full_requests.pop()
+            try:
+                basket.go(self)
+            except TwitterHTTPError:
+                # Probably rate limit
+                self.full_requests.append(basket)
+                time.sleep(60*15)
+                
+    
+    def update_requests(self):
+        for req in self.new_requests:
+            if req.type in self.partial_requests:
+                self.partial_requests[req.type].add(req)
+                if self.partial_requests[req.type].is_full():
+                    self.full_requests.append(self.partial_requests[req.type])
+                    self.partial_requests
+            else:
+                self.partial_requests[req.type] = Basket(req.type)
+
+class Request(object):
+    def __init__(self, t, data):
+        self.type = t
+        self.data = data
+
+class Basket(object):
+    def __init__(self, t, m):
+        self.type = t
+        self.max = m
+        self.reqs = []
+        
+    def add(self, request):
+        # expand existing request
+        if len(self.reqs) < self.max:
+            self.reqs.append(request.data)
+            return True
+        else:
+            return False
+    
+    def go(self, tm):
+        # make the request, store the data
+        pass
+    
+    def is_full(self):
+        return len(self.reqs) >= self.max
+    
+class StatusesList(Basket):
+    def __init__(self):
+        Basket.__init__(self, 'status', 100)
+        
+    def go(self, tm):
+        ids = str(self.reqs[0])
+        for r in self.reqs[1:]:
+            ids = ids+', '+str(r)
+        include_entities = 1
+        trim_user = 0
+        a = tm.api
+        s = a.statuses.lookup(id=ids, include_entities=include_entities, trim_user=trim_user)
+        # TODO(buckbaskin): store Statuses
+
+class UserList(Basket):
+    def __init__(self):
+        Basket.__init__(self, 'status', 100)
+        
+    def go(self, tm):
+        ids = str(self.reqs[0])
+        for r in self.reqs[1:]:
+            ids = ids+', '+str(r)
+        include_entities = 1
+        a = tm.api
+        s = a.users.lookup(user_id=ids, include_entities=include_entities)
+        # TODO(buckbaskin): store Users
+
+class Twitter_Handler(object):
+    
+    def __init__(self,consumerKey,consumerSecret,accessToken,accessTokenSecret):
+        self.consumer_key = consumerKey
+        self.consumer_secret = consumerSecret
+        self.access_token = accessToken
+        self.access_token_secret = accessTokenSecret
+        
+        if (os.path.isfile('simile2.smile'))==False:
+            print('oauth_dance')
+            token,token_key = it.oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
+            '''testing'''
+            with open('simile2.smile','r') as f:
+                token2 = f.readline()[:-1]
+                token_key2 = f.readline()[:-1]
+            print '|'+token+'|'
+            print '|'+token2+'|'
+            print '|'+token_key+'|'
+            print '|'+token_key2+'|'
+            '''end testing code'''
+        else:
+            with open('simile2.smile','r') as f:
+                token = f.readline()[:-1]
+                token_key = f.readline()[:-1]
+        try:
+            self.twitter_access = it.Twitter(auth=it.OAuth(token, token_key, 
+                                            self.consumer_key, self.consumer_secret))
+            self.test()
+        except it.TwitterHTTPError as e:
+            print 'Twitter HTTP Error: '
+            print e
+            print 'end Twitter HTTP Error'
+    
+    def test(self):
+        self.twitter_access.search.tweets(q='test')
+        
+        
+def initialize():
+    return TwitterManager()
