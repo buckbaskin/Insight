@@ -21,6 +21,14 @@ import json
 from scripts.redis_worker import conn
 from rq.job import Job
 
+@app.route('/', methods=['GET'])
+def index():
+    vm = {}
+    vm['title'] = 'Home'
+    return render_template('index.html',
+                           vm=vm)
+
+# Drop everything below
 
 @app.route('/', methods=['GET', 'POST'])
 def index2():
