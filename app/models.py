@@ -259,6 +259,6 @@ class FollowTreeNode(db.Model):
     parent = db.Column(db.Integer, db.ForeignKey('followtreenode.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
-    def is_following(self, user):
-        # TODO(buckbaskin): implement by getting user, calling is_following method
-        return False
+    def is_following(self, other_user):
+        node_user = User.query.get(self.user_id)
+        return node_user.is_following(other_user)
