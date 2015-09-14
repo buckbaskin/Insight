@@ -101,6 +101,8 @@ class User(db.Model):
             return self
         
     def is_following(self, user):
+        if isinstance(user, int):
+            return self.followed.filter(followers.c.followed_id == user).count() > 0
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
     
     def followed_posts(self):
@@ -228,3 +230,35 @@ class PageLoad(db.Model):
 # 
 #     def __repr__(self):
 #         return '<Result: id {}>'.format(self.id)
+
+class FollowTree(db.Model):
+    
+    def __init__(self, t_screen_name):
+        self.last_updated = datetime.datetime.utcnow()
+    
+    def __repr__(self):
+        return '<FollowTree %s>' % (str(self.user_id))
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    last_updated = db.Column(db.DateTime)
+    
+class FollowTreeNode(db.Model):
+    
+    def __init__(self, tree, parent=None, user):
+        self.tree = tree.id
+        if parent:
+            self.parent = parent.id
+        self.user_id = user.id
+    
+    def __repr__(self):
+        return '<FollowNode %s>' % (str(self.id))
+    
+    id = db.Column(db.Integer, primary_key=True)
+    tree = db.Column(db.Integer, db.ForeignKey('followtree.id'))
+    parent = db.Column(db.Integer, db.ForeignKey('followtreenode.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    def is_following(self, user):
+        # TODO(buckbaskin): implement by getting user, calling is_following method
+        return False
