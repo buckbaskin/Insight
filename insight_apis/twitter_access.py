@@ -14,6 +14,9 @@ import twitter as it
 from twitter.api import TwitterHTTPError
 
 class TwitterManager(object):
+    
+    # TODO define error classes in this class that help other classes define rate limits, etc.
+    
     def __init__(self):
         self.new_requests = []
         self.full_requests = []
@@ -21,6 +24,9 @@ class TwitterManager(object):
         
         f = open('../insight_apis/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
+        
+    def twitter(self):
+        return self.api.twitter_access
         
 class Twitter_Handler(object):
     

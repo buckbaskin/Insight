@@ -1,11 +1,15 @@
 from app import db
 from app.models import User, FollowTree, FollowTreeNode
+from insight_apis import TwitterManager, initialize
 
 def collect_followers(t_screen_name):
     # Query twitter for the followers of this user
     # make sure that it is compliant with rate limits
+    tm = initialize()
+    api = tm.twitter()
+    # example
+    api.search.tweets(q='follower')
     # TODO(buckbaskin):
-    pass
 
 def aggregate_followers(t_screen_name):
     # For all followers of given t_screen_name
