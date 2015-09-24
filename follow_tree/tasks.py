@@ -26,14 +26,14 @@ def aggregate_followers(t_screen_name):
     
     max_in_session = 10
     
-    for user in followers:
-        existing_node = FollowTreeNode.query.filter_by(tree=tree.id).filter_by(user_id=user.id).first() # @UndefinedVariable
+    for follower in followers:
+        existing_node = FollowTreeNode.query.filter_by(tree=tree.id).filter_by(user_id=follower.id).first() # @UndefinedVariable
         if existing_node:
             # do not move/do anything to a node if it is already in the tree
             pass
         else:
             # create a new node for that user/follower
-            node = FollowTreeNode(tree=tree.id, user=user.id)
+            node = FollowTreeNode(tree=tree.id, user=follower.id)
             db.session.add(node)
             max_in_session = max_in_session - 1
             
