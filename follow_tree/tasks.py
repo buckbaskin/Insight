@@ -14,6 +14,11 @@ def collect_friends(t_screen_name):
     #  and then construct a tree of friends where each edge points from a follower to it's friend 
     api = initialize_twitter().get_api()
     # example
+    print 'xxx ' + str(api.uriparts)
+    if len(api.uriparts) > 1:
+        api.uriparts = (api.uriparts[0],)
+    print 'yyy ' + str(api.uriparts)
+    # comment
     friends = api.friends.ids(screen_name=t_screen_name, count=5000)
     print friends
     

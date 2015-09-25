@@ -1,6 +1,9 @@
 import os
 import sys
-sys.path.append('/home/buck/Github/Insight')
+if not '/home/buck/Github/Insight' in sys.path:
+    sys.path.append('/home/buck/Github/Insight')
+print 'redis_worker.py: '
+print sys.path
 
 import redis
 from rq import Worker, Queue, Connection

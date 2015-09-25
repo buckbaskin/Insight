@@ -4,6 +4,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import config
 
 import sys
+if not '/home/buck/Github/Insight' in sys.path:
+    sys.path.append('/home/buck/Github/Insight')
+print 'app/__init__.py: '
 print sys.path
 
 from rq import Queue

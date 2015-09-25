@@ -3,15 +3,18 @@ from flask.ext.migrate import Migrate, MigrateCommand
 import os
 
 import sys
-sys.path.append('/home/buck/Github/Insight')
+if not '/home/buck/Github/Insight' in sys.path:
+    sys.path.append('/home/buck/Github/Insight')
+print 'manage.py: '
+print sys.path
 
-from app import app, db
+from app import server, db
 from config import server_config
 
-app.config.from_object(server_config)
+server.config.from_object(server_config)
 
-migrate = Migrate(app, db)
-manager = Manager(app)
+migrate = Migrate(server, db)
+manager = Manager(server)
 
 manager.add_command('db', MigrateCommand)
 
