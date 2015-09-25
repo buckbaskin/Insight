@@ -19,10 +19,14 @@ def collect_friends(t_screen_name):
         api.uriparts = (api.uriparts[0],)
     print 'yyy ' + str(api.uriparts)
     # comment
-    friends = api.friends.ids(screen_name=t_screen_name, count=5000)
-    print friends
-    
-    # TODO(buckbaskin):
+    result = api.friends.ids(screen_name=t_screen_name, count=5000)
+    friends = result['ids']
+    while result['next_cursor']:
+        result = api.friends.ids(screen_name=t_screen_name, count=5000, cursor=result['next_cursor'])
+        friends.extend(result['ids'])
+    print 'found ' + str(len(friends)) + ' friends'
+    # TODO(buckbaskin): save to db
+    return friends
 
 def aggregate_followers(t_screen_name):
     # For all followers of given t_screen_name
