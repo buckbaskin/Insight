@@ -3,6 +3,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 import config
 
+import sys
+print sys.path
+
 from rq import Queue
 from scripts.redis_worker import conn
 
@@ -12,7 +15,7 @@ db = SQLAlchemy(server)
 q = Queue(connection=conn) # other Queue, doesn't care about rate limit
 t_q = Queue(connection=conn) # Twitter Queue, knows about rate limit
 
-from app import models
+from app import models as models
 from app import routes
 
 

@@ -1,5 +1,9 @@
 from flask import render_template, flash, redirect, url_for, jsonify
 from sqlalchemy import desc
+
+import sys
+print sys.path
+
 from app.models import User, Status
 from config.user_config import POSTS_PER_PAGE
 from app.tasks import collect_friends

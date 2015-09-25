@@ -22,10 +22,11 @@ class TwitterManager(object):
         self.full_requests = []
         self.partial_requests = {}
         
-        f = open('../insight_apis/simile.smile','r')
+        f = open('./insight_apis/config/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
         
     def get_api(self):
+        self.api.twitter_access.uriparts = ('1.1',)
         return self.api.twitter_access
         
 class Twitter_Handler(object):
@@ -36,11 +37,11 @@ class Twitter_Handler(object):
         self.access_token = accessToken
         self.access_token_secret = accessTokenSecret
         
-        if (os.path.isfile('simile2.smile'))==False:
+        if (os.path.isfile('./insight_apis/config/simile2.smile'))==False:
             print('oauth_dance')
             token,token_key = it.oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
             '''testing'''
-            with open('simile2.smile','r') as f:
+            with open('./insight_apis/config/simile2.smile','r') as f:
                 token2 = f.readline()[:-1]
                 token_key2 = f.readline()[:-1]
             print '|'+token+'|'
@@ -49,11 +50,11 @@ class Twitter_Handler(object):
             print '|'+token_key2+'|'
             '''end testing code'''
         else:
-            with open('simile2.smile','r') as f:
+            with open('./insight_apis/config/simile2.smile','r') as f:
                 token = f.readline()[:-1]
                 token_key = f.readline()[:-1]
         try:
-            self.twitter_access = it.Twitter(auth=it.OAuth(token, token_key, 
+            self.twitter_access = it.Twitter(domain='api.twitter.com', auth=it.OAuth(token, token_key, 
                                             self.consumer_key, self.consumer_secret))
             self.test()
         except it.TwitterHTTPError as e:
