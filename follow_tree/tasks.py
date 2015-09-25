@@ -13,6 +13,11 @@ def collect_friends(t_screen_name):
     # In this case, we are trying to find all of the people that a user follows (friends)
     #  and then construct a tree of friends where each edge points from a follower to it's friend 
     api = initialize_twitter().get_api()
+    root = User.query.filter_by(t_screen_name=t_screen_name).first() # @UndefinedVariable
+    if not root:
+        root = User(t_screen_name)
+        db.session.add(root)
+        db.session.commit()
     # example
     print 'xxx ' + str(api.uriparts)
     if len(api.uriparts) > 1:
@@ -26,7 +31,15 @@ def collect_friends(t_screen_name):
         friends.extend(result['ids'])
     print 'found ' + str(len(friends)) + ' friends'
     # TODO(buckbaskin): save to db
-    return friends
+    count = 0
+    for user_id in friends:
+        count += 1
+        u = User.from_id(user_id)
+        root.follow(u)
+        db.session.add(u)
+        if not count % 10:
+            db.session.commit()
+    db.session.commit()
 
 def aggregate_followers(t_screen_name):
     # For all followers of given t_screen_name

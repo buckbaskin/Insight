@@ -68,6 +68,14 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.t_screen_name)
+    
+    @staticmethod
+    def from_id(twitter_id):
+        u = User.query.filter_by(t_id = twitter_id).first()
+        if not u:
+            u = User('')
+            u.t_id = twitter_id
+        return u
     # Git anchor
     
     def avatar(self, size):
