@@ -25,7 +25,7 @@ class TwitterManager(object):
         f = open('../insight_apis/simile.smile','r')
         self.api = Twitter_Handler(f.readline()[:-1],f.readline()[:-1],f.readline()[:-1],f.readline()).twitter_access
         
-    def twitter(self):
+    def get_api(self):
         return self.api.twitter_access
         
 class Twitter_Handler(object):

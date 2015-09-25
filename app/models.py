@@ -245,7 +245,7 @@ class FollowTree(db.Model):
     
 class FollowTreeNode(db.Model):
     
-    def __init__(self, tree, parent=None, user):
+    def __init__(self, tree, user, parent=None):
         self.tree = tree.id
         if parent:
             self.parent = parent.id

@@ -1,14 +1,22 @@
 from app import db
 from app.models import User, FollowTree, FollowTreeNode
-from insight_apis import TwitterManager, initialize
+from insight_apis.twitter_access import TwitterManager
+from insight_apis.twitter_access import initialize as initialize_twitter
 
-def collect_followers(t_screen_name):
+def collect_friends(t_screen_name):
     # Query twitter for the followers of this user
     # make sure that it is compliant with rate limits
-    tm = initialize()
-    api = tm.twitter()
+    
+    # in twitter speak:
+    # a user is followed by "followers"
+    # a user follows their "friends"
+    # In this case, we are trying to find all of the people that a user follows (friends)
+    #  and then construct a tree of friends where each edge points from a follower to it's friend 
+    api = initialize_twitter().get_api()
     # example
-    api.search.tweets(q='follower')
+    friends = api.friends.ids(screen_name=t_screen_name, count=5000)
+    print friends
+    
     # TODO(buckbaskin):
 
 def aggregate_followers(t_screen_name):
