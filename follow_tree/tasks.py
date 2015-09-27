@@ -3,7 +3,7 @@ from app.models import User, FollowTree, FollowTreeNode
 from insight_apis.twitter_access import TwitterManager
 from insight_apis.twitter_access import initialize as initialize_twitter
 
-def collect_friends(t_screen_name):
+def collect_friends(t_screen_name=None, t_id=None):
     # Query twitter for the followers of this user
     # make sure that it is compliant with rate limits
     
@@ -15,7 +15,12 @@ def collect_friends(t_screen_name):
     api = initialize_twitter().get_api()
     root = User.query.filter_by(t_screen_name=t_screen_name).first() # @UndefinedVariable
     if not root:
-        root = User(t_screen_name)
+        root = User.query.filter_by(t_id=t_id).first() # @UndefinedVariable
+    if not root:
+        if t_id:
+            root = User(t_id)
+        else:
+            root = User.from_screen_name(t_screen_name)
         db.session.add(root)
         db.session.commit()
     # example
@@ -34,7 +39,7 @@ def collect_friends(t_screen_name):
     count = 0
     for user_id in friends:
         count += 1
-        u = User.from_id(user_id)
+        u = User(user_id)
         root.follow(u)
         db.session.add(u)
         if not count % 10:

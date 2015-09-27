@@ -20,8 +20,8 @@ hashtags = db.Table('hashtags',
 
 class User(db.Model):
     
-    def __init__(self, username):
-        self.t_screen_name = username
+    def __init__(self, t_id):
+        self.t_id = t_id
         self.last_updated = datetime.datetime.utcnow()
         self.description = ''
     
@@ -70,11 +70,11 @@ class User(db.Model):
         return '<User %r>' % (self.t_screen_name)
     
     @staticmethod
-    def from_id(twitter_id):
-        u = User.query.filter_by(t_id = twitter_id).first()
+    def from_screen_name(username):
+        u = User.query.filter_by(t_screen_name = username).first()
         if not u:
-            u = User('')
-            u.t_id = twitter_id
+            u = User(1)
+            u.t_screen_name = username
         return u
     # Git anchor
     
