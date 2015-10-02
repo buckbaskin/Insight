@@ -1,4 +1,4 @@
-from app import app
+from app import server
 from flask import render_template
 from app import db
 
@@ -6,44 +6,44 @@ import analytics
 import insight_apis
 import task_manager
 
-@app.route('/', methods=['GET'])
+@server.route('/', methods=['GET'])
 def index():
     vm = {}
     vm['title'] = 'Home'
     return render_template('index.html',
                            vm=vm)
 
-analytic = app.route('/a', methods=['GET'])(
-            app.route('/analytics', methods=['GET'])(
+analytic = server.route('/a', methods=['GET'])(
+            server.route('/analytics', methods=['GET'])(
                  analytics.routes.a_index))
-a_json = app.route('/a.json', methods=['GET'])(
+a_json = server.route('/a.json', methods=['GET'])(
              analytics.routes.a_json)
 
-user = app.route('/u/<username>', methods=['GET'])(
-       app.route('/user/<username>', methods=['GET'])(
+user = server.route('/u/<username>', methods=['GET'])(
+       server.route('/user/<username>', methods=['GET'])(
                  insight_apis.routes.user))
-u_json = app.route('/u/<username>.json', methods=['GET'])(
+u_json = server.route('/u/<username>.json', methods=['GET'])(
              insight_apis.routes.user_json)
-user_process = app.route('/u/<username>/update', methods=['POST'])(
+user_process = server.route('/u/<username>/update', methods=['POST'])(
                    insight_apis.routes.update_user)
 
-create_user = app.route('/u/new', methods=['GET'])(
-              app.route('/user/new', methods=['GET'])(
+create_user = server.route('/u/new', methods=['GET'])(
+              server.route('/user/new', methods=['GET'])(
                  insight_apis.routes.create_user))
-c_post = app.route('/u/new', methods=['POST'])(
+c_post = server.route('/u/new', methods=['POST'])(
             insight_apis.routes.post_create)
 
-queue = app.route('/q', methods=['GET'])(
-        app.route('/queue', methods=['GET'])(
-            task_manager.routes.t_index))
-q_json = app.route('/q.json')(
+queue = server.route('/q', methods=['GET'])(
+        server.route('/queue', methods=['GET'])(
+            task_manager.routes.t_index))       
+q_json = server.route('/q.json')(
             task_manager.routes.t_json)
 
-@app.errorhandler(404)
+@server.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html', title="something wasn't found"), 404
 
-@app.errorhandler(500)
+@server.errorhandler(500)
 def internal_server_error(error):
     db.session.rollback()
     return render_template('500.html', title="oops, the computer didn't computer"), 500

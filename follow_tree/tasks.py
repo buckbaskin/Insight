@@ -1,11 +1,50 @@
 from app import db
 from app.models import User, FollowTree, FollowTreeNode
+from insight_apis.twitter_access import TwitterManager
+from insight_apis.twitter_access import initialize as initialize_twitter
 
-def collect_followers(t_screen_name):
+def collect_friends(t_screen_name=None, t_id=None):
     # Query twitter for the followers of this user
     # make sure that it is compliant with rate limits
-    # TODO(buckbaskin):
-    pass
+    
+    # in twitter speak:
+    # a user is followed by "followers"
+    # a user follows their "friends"
+    # In this case, we are trying to find all of the people that a user follows (friends)
+    #  and then construct a tree of friends where each edge points from a follower to it's friend 
+    api = initialize_twitter().get_api()
+    root = User.query.filter_by(t_screen_name=t_screen_name).first() # @UndefinedVariable
+    if not root:
+        root = User.query.filter_by(t_id=t_id).first() # @UndefinedVariable
+    if not root:
+        if t_id:
+            root = User(t_id)
+        else:
+            root = User.from_screen_name(t_screen_name)
+        db.session.add(root)
+        db.session.commit()
+    # example
+    print 'xxx ' + str(api.uriparts)
+    if len(api.uriparts) > 1:
+        api.uriparts = (api.uriparts[0],)
+    print 'yyy ' + str(api.uriparts)
+    # comment
+    result = api.friends.ids(screen_name=t_screen_name, count=5000)
+    friends = result['ids']
+    while result['next_cursor']:
+        result = api.friends.ids(screen_name=t_screen_name, count=5000, cursor=result['next_cursor'])
+        friends.extend(result['ids'])
+    print 'found ' + str(len(friends)) + ' friends'
+    # TODO(buckbaskin): save to db
+    count = 0
+    for user_id in friends:
+        count += 1
+        u = User(user_id)
+        root.follow(u)
+        db.session.add(u)
+        if not count % 10:
+            db.session.commit()
+    db.session.commit()
 
 def aggregate_followers(t_screen_name):
     # For all followers of given t_screen_name
@@ -26,14 +65,14 @@ def aggregate_followers(t_screen_name):
     
     max_in_session = 10
     
-    for user in followers:
-        existing_node = FollowTreeNode.query.filter_by(tree=tree.id).filter_by(user_id=user.id).first() # @UndefinedVariable
+    for follower in followers:
+        existing_node = FollowTreeNode.query.filter_by(tree=tree.id).filter_by(user_id=follower.id).first() # @UndefinedVariable
         if existing_node:
             # do not move/do anything to a node if it is already in the tree
             pass
         else:
             # create a new node for that user/follower
-            node = FollowTreeNode(tree=tree.id, user=user.id)
+            node = FollowTreeNode(tree=tree.id, user=follower.id)
             db.session.add(node)
             max_in_session = max_in_session - 1
             

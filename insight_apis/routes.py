@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, jsonify
 from sqlalchemy import desc
+
 from app.models import User, Status
 from config.user_config import POSTS_PER_PAGE
-from app.tasks import process_friends
+from app.tasks import collect_friends
 from app import q
 
 def user(username):
@@ -22,7 +23,7 @@ def user_json(username):
 
 def update_user(username):
     job = q.enqueue_call(
-        func=process_friends, args=(username,), result_ttl=5000
+        func=collect_friends, args=(username,), result_ttl=5000
     )
     return job.get_id()
     

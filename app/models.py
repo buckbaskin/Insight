@@ -20,8 +20,8 @@ hashtags = db.Table('hashtags',
 
 class User(db.Model):
     
-    def __init__(self, username):
-        self.t_screen_name = username
+    def __init__(self, t_id):
+        self.t_id = t_id
         self.last_updated = datetime.datetime.utcnow()
         self.description = ''
     
@@ -68,6 +68,14 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.t_screen_name)
+    
+    @staticmethod
+    def from_screen_name(username):
+        u = User.query.filter_by(t_screen_name = username).first()
+        if not u:
+            u = User(1)
+            u.t_screen_name = username
+        return u
     # Git anchor
     
     def avatar(self, size):
@@ -245,7 +253,7 @@ class FollowTree(db.Model):
     
 class FollowTreeNode(db.Model):
     
-    def __init__(self, tree, parent=None, user):
+    def __init__(self, tree, user, parent=None):
         self.tree = tree.id
         if parent:
             self.parent = parent.id
@@ -259,6 +267,6 @@ class FollowTreeNode(db.Model):
     parent = db.Column(db.Integer, db.ForeignKey('followtreenode.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
-    def is_following(self, user):
-        # TODO(buckbaskin): implement by getting user, calling is_following method
-        return False
+    def is_following(self, other_user):
+        node_user = User.query.get(self.user_id)
+        return node_user.is_following(other_user)
