@@ -8,7 +8,11 @@ class TweetVector(object):
     def __init__(self, tweet):
         # tweet is the string of 140ish characters
         self.tkns = self.tokenize(tweet)
-        
+        self.v = self.vectorize(self.tkns)
+    
+    def __len__(self):
+        return len(self.tkns)
+    
     def tokenize(self, tweet):
         items = tweet.split()
         for i in range(len(items)):
@@ -21,7 +25,9 @@ class TweetVector(object):
         sparse_vec = {'<start>':0}
         for t in tkns:
             index += 1
-            sparse_vec[t] = index
+            if t not in sparse_vec:
+                sparse_vec[t] = []
+            sparse_vec[t].append(index)
             
     def distance(self, other_vec):
         # determine the distance in word+word dimensional space
@@ -30,14 +36,26 @@ class TweetVector(object):
         # else:
         #    the distance for that word is the length of the longer tweet squared
         # normalize over the maximum possible distance (length of longer tweet squared * (sum of length of tweets))
-        return 0
+        distance = 0
+        max_length = max(len(self), len(other_vec))
+        for word, value in other_vec.v:
+            if word in self.v:
+                minimum = abs(value-self.v[word][0])
+                for options in self.v[word]:
+                    if abs(value-options) < min:
+                        minimum = abs(value-options)
+                distance += pow(minimum,2)
+            else:
+                distance += pow(max_length,2)
         
-    def min_modulo_distance(self):
+        return distance / (pow(max_length, 2) * (len(self) + len(other_vec)))
+        
+    def min_modulo_distance(self, other_vec):
         # test every possible rotational permutation of the ordering against this tweet
         # return the minimum distance
         return 0
     
-    def min_reorder_distance(self):
+    def min_reorder_distance(self, other_vec):
         # reorder both tweets based on probability model of tweet construction
         # return the distance between reordered tweets
         return 1
