@@ -29,7 +29,12 @@ class WordNetwork(object):
         # 0: take words that are connected to at least one of the same word or synonyms (previously identified reductions)
         
         # similarity not yet implemented
+        count = 0
+        l = len(self.vertices)
         for word, _ in self.vertices.iteritems():
+            count += 1
+            if count % int(math.floor(l/100)) == 0:
+                print str(int(math.ceil((count*100.0)/l)))+' %'
             self.find_similar_words(word)
     
     def print_network(self):
@@ -65,9 +70,11 @@ class WordNetwork(object):
                 else:  
                     postCandidates[word_option] = max(0, similarity)
                 
-        for word, count in preCandidates.iteritems():
-            if word in postCandidates:
+        for word_, count in preCandidates.iteritems():
+            if word_ in postCandidates:
+                print 'found word for word: '+str(word)+' | '+str(word_)
                 wordlet.similar_words[word] = max(count, postCandidates[word])
+        
     
 class Wordlet(object):
     def __init__(self, word):
