@@ -44,10 +44,22 @@ class WordNetwork(object):
                 print (str(v)+'     ')[:5]+' -> '+str(k)
                 
     def print_similarity(self):
+        avg = 0
+        count = 0
+        maximum = 0
+        maxstring = ''
         for word, wordlet in self.vertices.iteritems():
             if len(wordlet.similar_words):
                 for word_, strength in wordlet.similar_words.iteritems():
-                    print str(word)+' -> '+str(word_)+' ... '+str(strength) 
+                    count += 1
+                    avg += strength
+                    if strength > maximum:
+                        maximum = strength
+                        maxstring = str(word)+' -> '+str(word_)+' ... '+str(strength)
+                    if strength > 5:
+                        print str(word)+' -> '+str(word_)+' ... '+str(strength) 
+        print 'avg = '+str(avg*1.0/count)
+        print 'max = '+str(maximum)+' '+str(maxstring)
     
     def find_similar_words(self, word): # first iteration
         preCandidates = {}
@@ -72,8 +84,9 @@ class WordNetwork(object):
                 
         for word_, count in preCandidates.iteritems():
             if word_ in postCandidates:
-                print 'found word for word: '+str(word)+' | '+str(word_)
-                wordlet.similar_words[word] = max(count, postCandidates[word])
+                
+                if not (word_ == word):
+                    wordlet.similar_words[word_] = max(count, postCandidates[word_])
         
     
 class Wordlet(object):
