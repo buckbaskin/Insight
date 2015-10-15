@@ -51,11 +51,13 @@ class TweetVector(object):
         return distance / (pow(max_length, 2) * (len(self) + len(other_vec)))
         
     def min_modulo_distance(self, other_vec):
+        # TODO(buckbaskin): start here
         # test every possible rotational permutation of the ordering against this tweet
         # return the minimum distance
         return 0
     
     def min_reorder_distance(self, other_vec):
+        # TODO(buckbaskin):
         # reorder both tweets based on probability model of tweet construction
         # return the distance between reordered tweets
         return 1
