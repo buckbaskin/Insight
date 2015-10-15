@@ -23,7 +23,7 @@ class WordNetwork(object):
         self.vertices[first].add_trailer(second)    
         self.vertices[second].add_leader(first)
         
-    def reduce_network(self, similarity, iterations):
+    def reduce_network(self, iterations):
         # similarity indicates tolerance for isomorphic like relations
         # 1>=: only take words that are connected with the exact same words
         # 0: take words that are connected to at least one of the same word or synonyms (previously identified reductions)
@@ -33,9 +33,18 @@ class WordNetwork(object):
         l = len(self.vertices)
         for word, _ in self.vertices.iteritems():
             count += 1
-            if count % int(math.floor(l/100)) == 0:
+            if count % int(math.floor(l*1.0/100)) == 0:
                 print str(int(math.ceil((count*100.0)/l)))+' %'
             self.find_similar_words(word)
+        
+        count = 0
+        if iterations > 2:
+            for i in range(0, iterations-1):
+                for word, _ in self.vertices.iteritems():
+                    count += 1
+                    if count % int(math.floor(l*2.0/100)) == 0:
+                        print 'iter: '+str(i+1)+' '+ str(int(math.ceil((count*100.0)/l)))+' %'
+                    self.find_similar_with_similar(word)
     
     def print_network(self):
         for key, value in self.vertices.iteritems():
@@ -87,7 +96,9 @@ class WordNetwork(object):
                 
                 if not (word_ == word):
                     wordlet.similar_words[word_] = max(count, postCandidates[word_])
-        
+    
+    def find_similar_with_similar(self, word):
+        pass
     
 class Wordlet(object):
     def __init__(self, word):
