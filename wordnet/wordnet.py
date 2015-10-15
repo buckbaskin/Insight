@@ -38,7 +38,7 @@ class WordNetwork(object):
             self.find_similar_words(word)
         
         count = 0
-        if iterations > 2:
+        if iterations > 2 and False:
             for i in range(0, iterations-1):
                 for word, _ in self.vertices.iteritems():
                     count += 1
@@ -98,7 +98,40 @@ class WordNetwork(object):
                     wordlet.similar_words[word_] = max(count, postCandidates[word_])
     
     def find_similar_with_similar(self, word):
-        pass
+        preCandidates = {}
+        postCandidates = {}
+        wordlet = self.vertices[word]
+        
+#         for word_, count in wordlet.prev.iteritems(): # backward references
+#             for word_option, count_ in self.vertices[word_].next.iteritems(): # forward references back to the same point
+#                 similarity = min(count, count_) # overlap between forward, backward references
+#                 if word_option in preCandidates:
+#                     preCandidates[word_option] = max(preCandidates[word_option], similarity)
+#                 else:
+#                     preCandidates[word_option] = max(0, similarity)
+#         
+#         for word_, count in wordlet.next.iteritems(): # backward references
+#             for word_option, count_ in self.vertices[word_].prev.iteritems(): # forward references back to the same point
+#                 similarity = min(count, count_) # overlap between forward, backward references
+#                 if word_option in postCandidates:
+#                     postCandidates[word_option] = max(postCandidates[word_option], similarity)
+#                 else:  
+#                     postCandidates[word_option] = max(0, similarity)
+
+        for similar, value in wordlet.similar_words.iteritems():
+            # for each similar word, get candidates forward and back, then reverse (same as above)
+            # collect these into the preCandidates, postCandidates with weighting (need to figure that out)
+            # weighting: original findings weighted heaviest, decreasing percent influence from similarity later
+            #   the goal should be for it to converge after a certain number of iterations
+            # Maybe weight everything by percent of total inbound/outbound support
+            # run the same post processing on preCandidates, postCandidates
+            pass
+                
+        for word_, count in preCandidates.iteritems():
+            if word_ in postCandidates:
+                
+                if not (word_ == word):
+                    wordlet.similar_words[word_] = max(count, postCandidates[word_])
     
 class Wordlet(object):
     def __init__(self, word):
