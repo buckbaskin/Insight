@@ -17,7 +17,7 @@ def estimated_connection(prev, current):
     # returns the likelihood of the current data coming from the prev data
     # this is primarily based on timing and metadata between the two
     #  not an analysis of weights and other nodes
-    pass
+    return prev[current['posts'][0].username]] + .1
 
 data = dict()
 
