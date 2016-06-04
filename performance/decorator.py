@@ -16,6 +16,18 @@ Copyright 2016 William Baskin
 
 import time
 
+def speed_test2():
+    def wrapper_decorator(func):
+        def timer_func(*args, **kwargs):
+            begin = time.time()
+            result = func(*args, **kwargs)
+            print('response time %f sec for %s' % (time.time() - begin, func.__name__))
+            return result
+        timer_func.__name__ = func.__name__
+        return timer_func
+    wrapper_decorator.__name__ = 'speed_test'
+    return wrapper_decorator
+
 def speed_test(func):
     def timer_func(*args, **kwargs):
         begin = time.time()
