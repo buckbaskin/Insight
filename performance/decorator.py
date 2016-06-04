@@ -15,17 +15,46 @@ Copyright 2016 William Baskin
 '''
 
 import time
+import resource
 
-def speed_test2():
+def performance(func):
+    return mem_test()(
+           speed_test2()(
+               func
+           ))
+
+counter = 0
+
+def speed_test2(http_request=False):
     def wrapper_decorator(func):
         def timer_func(*args, **kwargs):
+            if http_request:
+                global counter
+                counter += 1
             begin = time.time()
             result = func(*args, **kwargs)
-            print('response time %f sec for %s' % (time.time() - begin, func.__name__))
+            time_taken = time.time() - begin
+            print('response time %f sec for %s' % (time_taken, func.__name__))
+            print('estimated queries per sec: %f' % (1.0/time_taken*counter))
+            if http_request:
+                global counter
+                counter -= 1
             return result
         timer_func.__name__ = func.__name__
         return timer_func
     wrapper_decorator.__name__ = 'speed_test'
+    return wrapper_decorator
+
+def mem_test():
+    def wrapper_decorator(func):
+        def mem_func(*args, **kwargs):
+            before_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+            result = func(*args, **kwargs)
+            after_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+            print('max memory usage of function: %f mb' % (max(before_mem, after_mem)/1000))
+            return result
+        mem_func.__name__ = func.__name__
+        return mem_func
     return wrapper_decorator
 
 def speed_test(func):

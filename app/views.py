@@ -20,7 +20,7 @@ from flask import request
 
 # decorators
 from abtests import ab
-from performance import speed_test2
+from performance import speed_test2, mem_test
 from users import user_handler
 
 render_template = speed_test2()(render_template) # measure time spent rendering
@@ -33,8 +33,9 @@ import time
 
 @server.route('/')
 @server.route('/index')
+@mem_test()
+@speed_test2(True)
 @user_handler
-@speed_test2()
 @ab
 def index(ab='A'):
     user = {'nickname': 'Buck'}  # fake user
@@ -60,12 +61,14 @@ def index(ab='A'):
                            posts=posts)
 
 @server.route('/fast')
-@speed_test2()
+@mem_test()
+@speed_test2(True)
 def fast():
     return "f"
 
 @server.route('/slow')
-@speed_test2()
+@mem_test()
+@speed_test2(True)
 def slow():
     time.sleep(2.0)
     return "sloooow"
