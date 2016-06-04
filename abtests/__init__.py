@@ -1,2 +1,2 @@
-from abtests.decorator import ab
+from Insight.abtests.decorator import ab
 del decorator

@@ -19,14 +19,14 @@ from flask import render_template
 from flask import request
 
 # decorators
-from abtests import ab
-from performance import speed_test2, mem_test
-from users import user_handler
+from Insight.abtests import ab
+from Insight.performance import speed_test2, mem_test, performance
+from Insight.users import user_handler
 
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from Insight.app import server
 
 # other
 import time
