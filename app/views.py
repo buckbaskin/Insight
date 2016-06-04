@@ -15,7 +15,7 @@ Copyright 2016 William Baskin
 '''
 
 # flask
-from flask import render_template
+from flask import render_template, make_response
 from flask import request
 
 # decorators
@@ -29,11 +29,12 @@ render_template = speed_test2()(render_template) # measure time spent rendering
 from Insight.app import server
 
 # other
+import requests
 import time
 
 @server.route('/')
 @server.route('/index')
-@performance
+@performance()
 @user_handler
 @ab
 def index(ab='A'):
@@ -60,12 +61,21 @@ def index(ab='A'):
                            posts=posts)
 
 @server.route('/fast')
-@performance
+@performance()
 def fast():
     return "f"
 
 @server.route('/slow')
-@performance
+@performance()
 def slow():
     time.sleep(2.0)
     return "sloooow"
+
+@server.route('/service')
+@performance()
+def service():
+    requests_get = speed_test2(logging_name='requests.get')(requests.get)
+    req_response = requests_get('http://127.0.0.1:5001/data')
+    response = make_response(req_response.text, req_response.status_code)
+    return response
+    return r.text

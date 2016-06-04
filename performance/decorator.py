@@ -17,15 +17,18 @@ Copyright 2016 William Baskin
 import time
 import resource
 
-def performance(func):
-    return mem_test()(
-           speed_test2()(
-               func
-           ))
+def performance(logging_name=None):
+    def inner_decorator(func):
+        return mem_test()(
+               speed_test2(logging_name, http_request=True)(
+                   func
+               ))
+    inner_decorator.__name__ = 'performance'
+    return inner_decorator
 
 counter = 0
 
-def speed_test2(http_request=False):
+def speed_test2(logging_name=None, http_request=False):
     def wrapper_decorator(func):
         def timer_func(*args, **kwargs):
             if http_request:
@@ -34,9 +37,12 @@ def speed_test2(http_request=False):
             begin = time.time()
             result = func(*args, **kwargs)
             time_taken = time.time() - begin
-            print('response time %f sec for %s' % (time_taken, func.__name__))
-            print('estimated queries per sec: %f' % (1.0/time_taken*counter))
+            if logging_name is not None:
+                print('response time %f sec for %s' % (time_taken, logging_name))
+            else:
+                print('response time %f sec for %s' % (time_taken, func.__name__))
             if http_request:
+                print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
                 global counter
                 counter -= 1
             return result
