@@ -33,8 +33,7 @@ import time
 
 @server.route('/')
 @server.route('/index')
-@mem_test()
-@speed_test2(True)
+@performance
 @user_handler
 @ab
 def index(ab='A'):
@@ -61,14 +60,12 @@ def index(ab='A'):
                            posts=posts)
 
 @server.route('/fast')
-@mem_test()
-@speed_test2(True)
+@performance
 def fast():
     return "f"
 
 @server.route('/slow')
-@mem_test()
-@speed_test2(True)
+@performance
 def slow():
     time.sleep(2.0)
     return "sloooow"
