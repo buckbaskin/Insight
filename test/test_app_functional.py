@@ -26,24 +26,24 @@ def teardown_module():
     pass
 
 def test_slash_redir():
-    res = client.get('/')
+    res = app_client.get('/')
     assert_equal(302, res.status_code)
     ok_(hasattr(res, 'headers'))
     assert_equal('http://127.0.0.1:5000/index', res.headers['Location'])
 
 def test_index_success():
-    res = client.get('/index')
+    res = app_client.get('/index')
     assert_equal(200, res.status_code)
 
 def test_fast_success():
-    res = client.get('/fast')
+    res = app_client.get('/fast')
     assert_equal(200, res.status_code)
 
 def test_slow_success():
-    res = client.get('/slow')
+    res = app_client.get('/slow')
     assert_equal(200, res.status_code)
 
 def test_service_success():
-    res = client.get('/service')
+    res = app_client.get('/service')
     assert_equal(200, res.status_code)
 
