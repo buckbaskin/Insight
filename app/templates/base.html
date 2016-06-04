@@ -9,9 +9,10 @@
   </head>
   <body>
     <div>
-      <a href="/index">Home</a>
+      <p><a href="/index" style="float:left;">Home</a></p>
+      <p style="float:right;">You are in the {{ user_group }} testing group. </p>
     </div>
-    <hr>
+    <hr style="clear:both;">
     {% block content %}
     {% endblock %}
   </body>

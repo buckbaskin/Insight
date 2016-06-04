@@ -1,11 +1,40 @@
-from flask import render_template
+'''
+Copyright 2016 William Baskin
 
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+'''
+
+# flask
+from flask import render_template
+from flask import request
+
+# decorators
+from abtests import ab
+from performance import speed_test
+from users import user_handler
+
+# more flask
 from app import server
 
+# other
+import time
 
 @server.route('/')
 @server.route('/index')
-def index():
+@user_handler
+@speed_test
+@ab
+def index(ab='A'):
     user = {'nickname': 'Buck'}  # fake user
     posts = [
         {
@@ -17,12 +46,23 @@ def index():
             'body': 'Avengers!'
         }
     ]
+    user_id = 0
+    if 'user_id' in request.cookies:
+        user_id = request.cookies['user_id']
     return render_template('index.html',
                            title='Home',
                            user=user,
+                           user_group=ab,
+                           user_id=user_id,
                            posts=posts)
 
-
 @server.route('/fast')
+@speed_test
 def fast():
     return "f"
+
+@server.route('/slow')
+@speed_test
+def slow():
+    time.sleep(2.0)
+    return "sloooow"
