@@ -1,6 +1,10 @@
 <html>
   <head>
+    {% if title %}
     <title>{{ title }} - Insight</title>
+    {% else %}
+    <title> Welcome to Insight</title>
+    {% endif %}
   </head>
   <body>
     <h1>Hello, {{ user.nickname }}!</h1>
