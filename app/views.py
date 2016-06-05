@@ -33,8 +33,8 @@ from Insight.app import server
 import requests
 import time
 
-@server.route('/')
-@server.route('/index')
+@server.route('/', methods=['GET'])
+@server.route('/index', methods=['GET'])
 @performance()
 @user_handler
 @ab
@@ -61,18 +61,18 @@ def index(ab='A'):
                            user_id=user_id,
                            posts=posts)
 
-@server.route('/fast')
+@server.route('/fast', methods=['GET'])
 @performance()
 def fast():
     return "f"
 
-@server.route('/slow')
+@server.route('/slow', methods=['GET'])
 @performance()
 def slow():
     time.sleep(2.0)
     return "sloooow"
 
-@server.route('/service')
+@server.route('/service', methods=['GET'])
 @performance()
 @automock('requests_module', default=requests, test=mock_requests)
 def service(requests_module=requests):
