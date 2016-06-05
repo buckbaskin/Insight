@@ -7,9 +7,12 @@
     <title>Welcome to Insight</title>
     {% endif %}
     <script src="{{url_for('static', filename='click.js')}}" type="text/javascript"></script>
-    
+    <script type="text/javascript">document.addEventListener("mousemove", c(document, window, new XMLHttpRequest(), true));
+    </script>
+
+
   </head>
-  <body onmousemove="getCoords(event);" style="margin:0;padding:8px;">
+  <body>
     <div>
       <p><a href="/index" style="float:left;">Home</a></p>
       <p style="float:right;">You are in the {{ user_group }} testing group. </p>
