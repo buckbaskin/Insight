@@ -3,6 +3,7 @@ class Mock(object):
 
 response = Mock()
 response.status_code = 200
+response.text = 'This is mock text'
 
 mock_requests = Mock()
 def get_function(string_):

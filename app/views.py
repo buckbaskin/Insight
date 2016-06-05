@@ -80,4 +80,4 @@ def service(requests_module=requests):
     req_response = requests_get('http://127.0.0.1:5001/data')
     response = make_response(req_response.text, req_response.status_code)
     return response
-    return r.text
+

@@ -3,7 +3,6 @@ Test that each of the expected code paths functions without error. This will get
 more complicated as time goes on. For tests about response time/latency
 performance see test/test_app_sla.
 '''
-
 import os
 
 from Insight.app import server as flask_app
@@ -15,14 +14,16 @@ app_client = None
 service_client = None
 
 def setup_module():
-    print('Module level setup run - integration')
+    global flask_app, flask_service
     flask_app.config['TESTING'] = True
+    flask_service.config['TESTING'] = True
+    if 'STATUS' not in os.environ:
+        os.environ['STATUS'] = 'TESTING'
     global app_client, service_client
     app_client = flask_app.test_client()
     service_client = flask_service.test_client()
 
 def teardown_module():
-    print('Module level teardown - integration')
     pass
 
 def test_slash_redir():
