@@ -6,6 +6,8 @@ import os
 
 from Insight.app import server as flask_app
 from Insight.service import server as flask_service
+
+from Insight.automock import jsmock
 from nose.tools import ok_, assert_equal, assert_is_not_none
 from nose.tools import timed
 
@@ -15,7 +17,7 @@ node = None
 def setup_module():
     global node, ctx
     node = execjs.get(execjs.runtime_names.Node)
-    with open('app/static/small.js', 'r') as clickjs_file:
+    with open('app/static/click.js', 'r') as clickjs_file:
         code = ''.join([str(line) for line in clickjs_file])
         ctx = node.compile(code)
 
@@ -29,6 +31,6 @@ def test_small_compile():
     window = 2
     xhr = 3
     debug = True
-    assert_is_not_none(ctx.call('test_this', 1, 2))
+    assert_is_not_none(ctx.call('c', jsmock.mouseevent))
     assert_equal(200, 200)
 

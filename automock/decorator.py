@@ -1,4 +1,3 @@
-from Insight.app import server
 import os
 
 def automock(param, default, prod=None, stage=None, test=None, dev=None):

@@ -20,7 +20,7 @@ from flask import request
 
 # decorators
 from Insight.abtests import ab
-from Insight.automock import automock, mock_requests, mock_time
+from Insight.automock import decorators, mock_requests, mock_time
 from Insight.performance import speed_test2, mem_test, performance
 from Insight.users import user_handler
 
@@ -68,14 +68,14 @@ def fast():
 
 @server.route('/slow', methods=['GET'])
 @performance()
-@automock('time_module', default=time, test=mock_time)
+@decorators.automock('time_module', default=time, test=mock_time)
 def slow(time_module=time):
     time_module.sleep(2.0)
     return "sloooow"
 
 @server.route('/service', methods=['GET'])
 @performance()
-@automock('requests_module', default=requests, test=mock_requests)
+@decorators.automock('requests_module', default=requests, test=mock_requests)
 def service(requests_module=requests):
     requests_get = speed_test2(logging_name='requests.get')(requests_module.get)
     req_response = requests_get('http://127.0.0.1:5001/data')
