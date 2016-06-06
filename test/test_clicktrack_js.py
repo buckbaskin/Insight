@@ -15,14 +15,20 @@ node = None
 def setup_module():
     global node, ctx
     node = execjs.get(execjs.runtime_names.Node)
-    clickjs_file = open('app/static/click.js')
-    ctx = node.compile(clickjs_file)
+    with open('app/static/small.js', 'r') as clickjs_file:
+        code = ''.join([str(line) for line in clickjs_file])
+        ctx = node.compile(code)
 
 def teardown_module():
     pass
 
 @timed(.1)
-def test_click_compile():
+def test_small_compile():
     assert_is_not_none(ctx)
+    document = 1
+    window = 2
+    xhr = 3
+    debug = True
+    assert_is_not_none(ctx.call('test_this', 1, 2))
     assert_equal(200, 200)
 
