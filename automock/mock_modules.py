@@ -13,3 +13,8 @@ def get_function(string_):
     return response
 
 mock_requests.get = get_function
+
+mock_time = Mock()
+def sleep_function(time):
+    return None
+mock_time.sleep = sleep_function
