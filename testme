@@ -1,0 +1,1 @@
+nosetests --with-timer --timer-top-n 5 --timer-ok 50ms --timer-warning 150ms
