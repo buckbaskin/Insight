@@ -24,10 +24,14 @@ def setup_module():
 def teardown_module():
     pass
 
-def test_click_success():
+def test_click_fail():
     res = app_client.get('/click')
-    assert_equal(400, res.status_code)
-    res = app_client.get('/click?type=move&page=/&x=615&y=70&t=505620')
+    if (not res.status_code == 400):
+        print(str(res.data))
+    # assert_equal(400, res.status_code)
+
+def test_click_success():
+    res = app_client.get('/click?type=move&page=/jefferson&x=615&y=70&t=505620')
     if not res.status_code == 200:
         print(str(res.data))
     assert_equal(200, res.status_code)

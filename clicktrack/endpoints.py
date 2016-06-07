@@ -35,7 +35,7 @@ import time
 
 @server.route('/click', methods=['GET'])
 @user_handler
-def clickdata():
+def cursordata():
     user_id = 0
     if 'user_id' in request.cookies:
         user_id = int(request.cookies['user_id'])
