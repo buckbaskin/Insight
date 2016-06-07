@@ -28,20 +28,18 @@ def ab(func):
         if 'user_id' in request.cookies:
             user_id = request.cookies['user_id']
             if int(user_id) % 2 == 1:
+                print('user_id in request.cookies (B)')
                 user_group = 'B'
-        overwrite_flag = 'ab' in kwargs
-        if overwrite_flag:
-            old_ab = kwargs['ab']
+            else:
+                print('user_id in request.cookies (A)')
+        else:
+            print('user_id not in request.cookies')
         kwargs['ab'] = user_group
         try:
             return func(*args, **kwargs)
         except TypeError:
-            if overwrite_flag:
-                kwargs['ab'] = old_ab
-                return function(*args, **kwargs)
-            else:
-                del kwargs['ab']
-                return function(*args, **kwargs)
+            del kwargs['ab']
+            return func(*args, **kwargs)
     new_response.__name__ = func.__name__
     return new_response
 
