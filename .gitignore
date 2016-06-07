@@ -11,3 +11,4 @@ rethinkdb/
 web_app/config/app.db
 *.zip
 *.patch
+.coverage
