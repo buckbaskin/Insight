@@ -1,4 +1,4 @@
-function c(document_, window_, xhr_, debug) {
+function c(window_, xhr_, debug) {
   console.log('loading click');
   if (debug == undefined || !(debug)) {
     console.log('replacing console.');

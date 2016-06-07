@@ -23,7 +23,11 @@ def setup_module():
         test_code = ''
         with open('app/local/js/tests.js', 'r') as testjs_file:
             test_code = ''.join([str(line) for line in testjs_file])
+        mock_code = ''
+        with open('app/local/js/mocks.js', 'r') as mockjs_file:
+            mock_code = ''.join([str(line) for line in mockjs_file])
         code += '\n\n'+test_code
+        code += '\n\n'+mock_code
         ctx = node.compile(code)
 
 def teardown_module():
@@ -33,6 +37,14 @@ def test_tests_included():
     assert_is_not_none(ctx)
     ok_(ctx.call('truth', 1))
     ok_(not ctx.call('falsey', 1))
+
+def test_mocks_included():
+    assert_is_not_none(ctx)
+    ok_(ctx.eval('window.location.pathname === "/"'))
+
+def test_js_setup():
+    assert_is_not_none(ctx)
+    ok_(ctx.eval('isFunction(c)'))
 
 @SkipTest
 @timed(.1)
