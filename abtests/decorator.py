@@ -23,14 +23,25 @@ def ab(func):
     the user id. It will then track all of the experiments, and click throughs
     and such. Or something like that.
     '''
-    def new_response():
+    def new_response(*args, **kwargs):
         user_group = 'A'
         if 'user_id' in request.cookies:
             user_id = request.cookies['user_id']
             if int(user_id) % 2 == 1:
                 user_group = 'B'
-
-        return func(ab=user_group)
+        overwrite_flag = 'ab' in kwargs
+        if overwrite_flag:
+            old_ab = kwargs['ab']
+        kwargs['ab'] = user_group
+        try:
+            return func(*args, **kwargs)
+        except TypeError:
+            if overwrite_flag:
+                kwargs['ab'] = old_ab
+                return function(*args, **kwargs)
+            else:
+                del kwargs['ab']
+                return function(*args, **kwargs)
     new_response.__name__ = func.__name__
     return new_response
 
