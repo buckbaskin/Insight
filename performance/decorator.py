@@ -63,11 +63,11 @@ def mem_test():
         return mem_func
     return wrapper_decorator
 
-def speed_test(func):
-    def timer_func(*args, **kwargs):
-        begin = time.time()
-        result = func(*args, **kwargs)
-        print('response time for %s is %f' % (func.__name__, time.time() - begin))
-        return result
-    timer_func.__name__ = func.__name__
-    return timer_func
+# def speed_test(func):
+#     def timer_func(*args, **kwargs):
+#         begin = time.time()
+#         result = func(*args, **kwargs)
+#         print('response time for %s is %f' % (func.__name__, time.time() - begin))
+#         return result
+#     timer_func.__name__ = func.__name__
+#     return timer_func
