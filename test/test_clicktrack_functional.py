@@ -36,3 +36,6 @@ def test_click_success():
         print(str(res.data))
     assert_equal(200, res.status_code)
 
+def test_bad_format_fail():
+    res = app_client.get('/click?type=move')
+    assert_equal(400, res.status_code)
