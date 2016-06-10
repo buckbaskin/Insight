@@ -26,8 +26,12 @@ def setup_module():
         mock_code = ''
         with open('app/local/js/mocks.js', 'r') as mockjs_file:
             mock_code = ''.join([str(line) for line in mockjs_file])
+        ok_code = ''
+        with open('app/local/js/ok.js', 'r') as ok_file:
+            ok_code = ''.join([str(line) for line in ok_file])
         code += '\n\n'+test_code
         code += '\n\n'+mock_code
+        code += '\n\n'+ok_code
         ctx = node.compile(code)
 
 def teardown_module():
@@ -39,21 +43,29 @@ def test_tests_included():
     # ok_(not ctx.call('falsey', 1))
 
 def test_mocks_included():
-    # assert_is_not_none(ctx)
     ok_(ctx.eval('window.location.pathname === "/"'))
 
 def test_js_setup():
-    # assert_is_not_none(ctx)
     ok_(ctx.eval('isFunction(c)'))
+
+def test_ok_included():
+    ok_(ctx.eval('isFunction(ok)'))
 
 @SkipTest
 @timed(.1)
 def test_small_compile():
-    assert_is_not_none(ctx)
     document = 1
     window = 2
     xhr = 3
     debug = True
     assert_is_not_none(ctx.call('c', jsmock.mouseevent))
-    assert_equal(200, 200)
 
+def test_demo_okjs_positive():
+    # 0 is okay, 1 is assertion, -1 is other error
+    assert_equal(ctx.eval('ok(assert, true);'), 0)
+
+def test_demo_okjs_negative():
+    assert_equal(ctx.eval('ok(assert, false);'), 1)
+
+def test_demo_okjs_error():
+    assert_equal(ctx.eval('ok(assert, 1/0);'), -1)
