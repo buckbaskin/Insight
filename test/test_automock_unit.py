@@ -7,6 +7,7 @@ import os
 from flask import request
 from Insight.app import server as flask_app
 from Insight.automock.decorator import automock
+from Insight.automock.mock_modules import mock_requests
 from nose.tools import ok_, assert_equal, assert_not_in, assert_in
 from nose.tools import timed
 
@@ -71,4 +72,13 @@ def test_automock_default_nostatus():
     test_function = automock(param='parkas', default='default', prod='prod', 
                         stage='stage', test='test', dev='dev')(test_function)
     assert_equal('default', test_function())
+
+def test_automock_requests_positive():
+    print(mock_requests.get('http://127.0.0.1:5001').text)
+    assert(mock_requests.get('http://127.0.0.1:5001').text == 'This is mock text')
+    assert(mock_requests.get('http://127.0.0.1:5001').status_code == 200)
+
+def test_automock_requests_negative():
+    assert(mock_requests.get('something else').text == 'Default mock')
+    assert(mock_requests.get('something else').status_code == 200)
 
