@@ -1,5 +1,5 @@
 function loadjs(document_, xhr_, file_name, debug) {
-  xhr_.open("GET", "/static/js/"+file_name+".js", true);
+  xhr_.open("GET", "j/"+file_name+".js", true);
   xhr_.onload = function(e) {
     try {
       window.execScript(xhr_.responseText);

@@ -9,9 +9,7 @@
     {% if altJS %}
     <script src="{{url_for('static', filename='js/loadme.js')}}" type="text/javascript"></script>
     <script type="text/javascript">
-    loadjs(document, new XMLHttpRequest(), 'quiet', true);
     loadjs(document, new XMLHttpRequest(), 'index');
-    loadjs(document, new XMLHttpRequest(), 'click');
     </script>
     {% else %}
     <script src="{{url_for('static', filename='js/click.js')}}" type="text/javascript"></script>

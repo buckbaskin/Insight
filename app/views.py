@@ -17,6 +17,7 @@ Copyright 2016 William Baskin
 # flask
 from flask import render_template, make_response
 from flask import request
+from werkzeug.contrib.cache import SimpleCache
 
 # decorators
 from Insight.abtests import ab
@@ -32,6 +33,9 @@ from Insight.app import server
 # other
 import requests
 import time
+import jinja2
+
+cache = SimpleCache(threshold=10, default_timeout=600)
 
 @server.route('/', methods=['GET'])
 @server.route('/index', methods=['GET'])
@@ -80,6 +84,25 @@ def special(ab='A'):
                            user_id=user_id,
                            posts=posts,
                            altJS=True)
+
+@server.route('/j/<filename>.js', methods=['GET'])
+@performance()
+def template_js(filename):
+    result = cache.get('template_js_'+filename)
+    if result is None:
+        print('cache miss template_js_'+filename)
+        try:
+            rendered = render_template('js/'+filename+'.js')
+            print('saving type: %s'% type(rendered))
+            cache.set('template_js_'+filename, rendered)
+            return rendered
+        except jinja2.exceptions.TemplateNotFound as tnf:
+            print('template exception. saving as \'\'')
+            cache.set('template_js_'+filename, '')
+            return ''
+    else:
+        print('cache hit template_js_'+filename)
+        return result
 
 @server.route('/fast', methods=['GET'])
 @performance()
