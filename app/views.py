@@ -59,7 +59,27 @@ def index(ab='A'):
                            user=user,
                            user_group=ab,
                            user_id=user_id,
-                           posts=posts)
+                           posts=posts,
+                           altJS=False)
+
+@server.route('/special', methods=['GET'])
+@performance()
+@user_handler
+@ab
+def special(ab='A'):
+    user = {'nickname': 'John'}
+    posts = []
+    user_id = 0
+    if 'user_id' in request.cookies:
+        user_id = request.cookies['user_id']
+
+    return render_template('index.html',
+                           title='Home',
+                           user=user,
+                           user_group=ab,
+                           user_id=user_id,
+                           posts=posts,
+                           altJS=True)
 
 @server.route('/fast', methods=['GET'])
 @performance()
