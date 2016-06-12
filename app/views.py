@@ -35,7 +35,8 @@ import requests
 import time
 import jinja2
 
-cache = SimpleCache(threshold=10, default_timeout=600)
+# timeout units are seconds
+cache = SimpleCache(threshold=10, default_timeout=5*60)
 
 @server.route('/', methods=['GET'])
 @server.route('/index', methods=['GET'])
