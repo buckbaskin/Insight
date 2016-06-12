@@ -17,16 +17,7 @@ function __setup__(window_, xhr_) {
 
 function loadm(document_, window_, xhr_, debug) {
   onMouseMove = __setup__(window_, xhr_);
-  console.log('loading click');
-  if (debug == undefined || !(debug)) {
-    console.log('replacing console.');
-    console = {
-      'log': function(toOutput) {}
-    };
-    console.log('no console output');
-  }
-
-  console.log('run setup.');
+  console.log('click.js: run setup.');
   document_.addEventListener("mousemove", onMouseMove);
 }
 
