@@ -38,11 +38,11 @@ def speed_test2(logging_name=None, http_request=False):
             result = func(*args, **kwargs)
             time_taken = time.time() - begin
             if logging_name is not None:
-                print('response time %f sec for %s' % (time_taken, logging_name))
+                print('response time %f ms for %s' % (time_taken*1000, logging_name))
             else:
-                print('response time %f sec for %s' % (time_taken, func.__name__))
+                print('response time %f ms for %s' % (time_taken*1000, func.__name__))
             if http_request:
-                print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
+                # print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
                 global counter
                 counter -= 1
             return result
