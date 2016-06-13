@@ -38,11 +38,11 @@ def speed_test2(logging_name=None, http_request=False):
             result = func(*args, **kwargs)
             time_taken = time.time() - begin
             if logging_name is not None:
-                print('response time %f sec for %s' % (time_taken, logging_name))
+                print('response time %f ms for %s' % (time_taken*1000, logging_name))
             else:
-                print('response time %f sec for %s' % (time_taken, func.__name__))
+                print('response time %f ms for %s' % (time_taken*1000, func.__name__))
             if http_request:
-                print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
+                # print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
                 global counter
                 counter -= 1
             return result
@@ -63,11 +63,11 @@ def mem_test():
         return mem_func
     return wrapper_decorator
 
-def speed_test(func):
-    def timer_func(*args, **kwargs):
-        begin = time.time()
-        result = func(*args, **kwargs)
-        print('response time for %s is %f' % (func.__name__, time.time() - begin))
-        return result
-    timer_func.__name__ = func.__name__
-    return timer_func
+# def speed_test(func):
+#     def timer_func(*args, **kwargs):
+#         begin = time.time()
+#         result = func(*args, **kwargs)
+#         print('response time for %s is %f' % (func.__name__, time.time() - begin))
+#         return result
+#     timer_func.__name__ = func.__name__
+#     return timer_func

@@ -33,21 +33,20 @@ from Insight.app import server
 import requests
 import time
 
-@server.route('/click', methods=['GET'])
+@server.route('/performance/jsload', methods=['GET'])
 @user_handler
-def cursordata():
+def jsLoadData():
     user_id = 0
     if 'user_id' in request.cookies:
         user_id = int(request.cookies['user_id'])
     
     try:
-        track_type = request.args['type']
         path = request.args['page']
-        mouse_x = int(request.args['x'])
-        mouse_y = int(request.args['y'])
-        time = int(float(request.args['t']))
+        module = request.args['m']
+        resp_time = int(float(request.args['resp']))
+        load_time = int(float(request.args['load']))
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
-    print('click: on page %s u %d %s (%d, %d) at time %d' % (path, user_id, track_type, mouse_x, mouse_y, time,))
+    print('js load: user %d on page %s, module %s response=%d load=%d' % (user_id, path, module, resp_time, load_time,))
     return make_response('OK', 200)
 

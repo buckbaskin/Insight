@@ -5,7 +5,8 @@ def automock(param, default, prod=None, stage=None, test=None, dev=None):
         def new_function(*args, **kwargs):
 
             # print('dec: %s,%s,%s' % (default, test, server.config['TESTING']))
-            print('dec3: prod %s stage %s test %s %s dev %s' % (prod is not None, stage is not None, test is not None, os.environ['STATUS'], dev is not None,))
+            # print('dec3: prod %s stage %s test %s %s dev %s' % (prod is not None, stage is not None, test is not None, os.environ['STATUS'], dev is not None,))
+            param_value = default
             if 'STATUS' in os.environ:
                 if prod is not None and os.environ['STATUS'] == 'PRODUCTION':
                     print('prod case')

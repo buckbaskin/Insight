@@ -23,14 +23,23 @@ def ab(func):
     the user id. It will then track all of the experiments, and click throughs
     and such. Or something like that.
     '''
-    def new_response():
+    def new_response(*args, **kwargs):
         user_group = 'A'
         if 'user_id' in request.cookies:
             user_id = request.cookies['user_id']
             if int(user_id) % 2 == 1:
+                print('user_id in request.cookies (B)')
                 user_group = 'B'
-
-        return func(ab=user_group)
+            else:
+                print('user_id in request.cookies (A)')
+        else:
+            print('user_id not in request.cookies')
+        kwargs['ab'] = user_group
+        try:
+            return func(*args, **kwargs)
+        except TypeError:
+            del kwargs['ab']
+            return func(*args, **kwargs)
     new_response.__name__ = func.__name__
     return new_response
 

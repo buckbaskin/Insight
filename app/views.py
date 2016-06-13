@@ -17,6 +17,7 @@ Copyright 2016 William Baskin
 # flask
 from flask import render_template, make_response
 from flask import request
+from werkzeug.contrib.cache import SimpleCache
 
 # decorators
 from Insight.abtests import ab
@@ -32,6 +33,10 @@ from Insight.app import server
 # other
 import requests
 import time
+import jinja2
+
+# timeout units are seconds
+cache = SimpleCache(threshold=10, default_timeout=5*60)
 
 @server.route('/', methods=['GET'])
 @server.route('/index', methods=['GET'])
@@ -59,7 +64,46 @@ def index(ab='A'):
                            user=user,
                            user_group=ab,
                            user_id=user_id,
-                           posts=posts)
+                           posts=posts,
+                           altJS=False)
+
+@server.route('/special', methods=['GET'])
+@performance()
+@user_handler
+@ab
+def special(ab='A'):
+    user = {'nickname': 'John'}
+    posts = []
+    user_id = 0
+    if 'user_id' in request.cookies:
+        user_id = request.cookies['user_id']
+
+    return render_template('index.html',
+                           title='Home',
+                           user=user,
+                           user_group=ab,
+                           user_id=user_id,
+                           posts=posts,
+                           altJS=True)
+
+@server.route('/j/<filename>.js', methods=['GET'])
+@performance()
+def template_js(filename):
+    result = cache.get('template_js_'+filename)
+    if result is None:
+        print('cache miss template_js_'+filename)
+        try:
+            rendered = render_template('js/'+filename+'.js')
+            print('saving type: %s'% type(rendered))
+            cache.set('template_js_'+filename, rendered)
+            return rendered
+        except jinja2.exceptions.TemplateNotFound as tnf:
+            print('template exception. saving as \'\'')
+            cache.set('template_js_'+filename, '')
+            return ''
+    else:
+        print('cache hit template_js_'+filename)
+        return result
 
 @server.route('/fast', methods=['GET'])
 @performance()

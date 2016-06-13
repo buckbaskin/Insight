@@ -11,9 +11,15 @@ response.text = 'This is mock text'
 mock_requests = Mock()
 def get_function(string_):
     print('special string thing')
+    print('s: '+string_)
+    print('s: '+'http://127.0.0.1:5001')
+    print('b? '+str(string_ == 'http://127.0.0.1:5001'))
     if string_ == 'http://127.0.0.1:5001':
+        response.text = 'This is mock text'
         return response
-    return response
+    else:
+        response.text = 'Default mock'
+        return response
 
 mock_requests.get = get_function
 

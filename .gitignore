@@ -1,3 +1,4 @@
+cover/
 raw/
 venv/
 *~
@@ -10,3 +11,6 @@ web_app/config/secret_config.py
 rethinkdb/
 web_app/config/app.db
 *.zip
+*.patch
+.coverage
+.coveragerc
