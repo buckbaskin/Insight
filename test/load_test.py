@@ -1,4 +1,5 @@
 #! venv/bin/python3
+import datetime
 import grequests
 import itertools
 from multiprocessing import Process, Queue
@@ -11,13 +12,16 @@ import time
 # qps > 0 - queries per second (uniform)
 # qps < 0 - approx. queries per second (random)
 # qps = 0 - no rate limit
-total_qps = -10
+total_qps = 0
 how_many = 999
 how_many_processes = 1
 how_many_per_process = how_many // how_many_processes
 qps = abs(float(total_qps)/how_many_processes)
 del how_many
 target_url = 'http://127.0.0.1:5000/index'
+
+sla_target = 300 # ms
+sla_target = sla_target/1000.0
 
 def uniform_yielder(iterable, rate):
     delay = 1.0/rate
@@ -40,12 +44,34 @@ def random_yielder(iterable, rate):
         time.sleep(delays[delays_index])
         delays_index += 1
 
+def new_imap(requests, size):
+    '''
+    Implementing a timed mock of grequests.imap to kill 200 status on sla fail
+    '''
+    from gevent.pool import Pool
+    pool = Pool(size)
+
+    def send(r):
+        start_time = datetime.datetime.now()
+        result = r.send(stream=False)
+        if (sla_target > 0.0 and
+            (datetime.datetime.now() - start_time).total_seconds() >
+                sla_target):
+            result.status_code = 408
+        return result
+
+    for request in pool.imap_unordered(send, requests):
+        if request.response is not None:
+            yield request.response
+
+    pool.join()
+
 def run(queue, how_many, time_generator, rate):
     success = 0
     urls = itertools.repeat(object=('GET', target_url,), times=how_many_per_process)
     requests = itertools.starmap(grequests.AsyncRequest, urls)
     timed_requests = time_generator(requests, rate)
-    responses = grequests.imap(requests=timed_requests, size=how_many_per_process)
+    responses = new_imap(requests=timed_requests, size=how_many_per_process)
     
     for gg in responses:
         if (gg.status_code == 200):
@@ -85,7 +111,6 @@ if __name__ == '__main__':
     requests_made = 0
     successful_requests = 0
     try:
-
         while True:
             result = q.get_nowait()
             requests_made += result[1]
