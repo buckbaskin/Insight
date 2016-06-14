@@ -18,7 +18,7 @@ node = None
 def setup_module():
     global node, ctx
     node = execjs.get(execjs.runtime_names.Node)
-    with open('app/static/js/click.js', 'r') as clickjs_file:
+    with open('app/templates/js/components/click.js', 'r') as clickjs_file:
         code = ''.join([str(line) for line in clickjs_file])
         test_code = ''
         with open('app/local/js/tests.js', 'r') as testjs_file:
@@ -46,7 +46,7 @@ def test_mocks_included():
     ok_(ctx.eval('window.location.pathname === "/"'))
 
 def test_js_setup():
-    ok_(ctx.eval('isFunction(c)'))
+    ok_(ctx.eval('isFunction(click.loadm)'))
 
 def test_ok_included():
     ok_(ctx.eval('isFunction(ok)'))
@@ -62,10 +62,11 @@ def test_small_compile():
 
 def test_demo_okjs_positive():
     # 0 is okay, 1 is assertion, -1 is other error
-    assert_equal(ctx.eval('ok(assert, true);'), 0)
+    assert_equal(ctx.eval('ok(assert.ok, true)'), 0)
 
 def test_demo_okjs_negative():
-    assert_equal(ctx.eval('ok(assert, false);'), 1)
+    assert_equal(ctx.eval('ok(assert.ok, false)'), 1)
 
 def test_demo_okjs_error():
-    assert_equal(ctx.eval('ok(assert, 1/0);'), -1)
+    assert_equal(ctx.eval('ok(function () { throw new Error("test fail") }, 0)'), -1)
+
