@@ -7,11 +7,6 @@
     <title>Welcome to Insight</title>
     {% endif %}
     
-    <script src="{{url_for('static', filename='js/loadme.js')}}" type="text/javascript"></script>
-    <script type="text/javascript">
-    loadjs(document, window, new XMLHttpRequest(), 'index', true);
-    </script>
-
   </head>
   <body>
     <div>
@@ -21,5 +16,10 @@
     <hr style="clear:both;">
     {% block content %}
     {% endblock %}
+    
+    <script src="{{url_for('static', filename='js/loadme.js')}}" type="text/javascript"></script>
+    <script type="text/javascript">
+    loadjs(document, window, new XMLHttpRequest(), 'index', true);
+    </script>
   </body>
 </html>
