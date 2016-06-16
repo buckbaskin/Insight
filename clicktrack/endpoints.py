@@ -33,6 +33,10 @@ from Insight.app import server
 import requests
 import time
 
+# tasks
+from Insight.sql.queues import qLow
+from Insight.clicktrack.tasks import mouse_move
+
 @server.route('/click', methods=['GET'])
 @user_handler
 def cursordata():
@@ -48,6 +52,7 @@ def cursordata():
         time = int(float(request.args['t']))
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
-    print('click: on page %s u %d %s (%d, %d) at time %d' % (path, user_id, track_type, mouse_x, mouse_y, time,))
+    # send off a job request, don't care about result
+    qLow.enqueue(mouse_move, user_id, path, track_type, mouse_x, mouse_y, time)
     return make_response('OK', 200)
 
