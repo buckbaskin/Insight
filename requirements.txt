@@ -51,6 +51,7 @@ pytools==2016.2.1
 pytz==2016.4
 redis==2.10.5
 requests==2.10.0
+rq==0.6.0
 six==1.10.0
 speaklater==1.3
 SQLAlchemy==1.0.13
