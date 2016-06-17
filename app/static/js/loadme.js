@@ -1,4 +1,5 @@
-function loadjs(document_, window_, xhr_, file_name, debug) {
+function loadjs(window_, xhr_, file_name, debug) {
+  document_ = window_.document;
   if (!window_.hasOwnProperty('__speedTest__')) {
     window_['__speedTest__'] = {}
   }
@@ -19,7 +20,7 @@ function loadjs(document_, window_, xhr_, file_name, debug) {
         return undefined;
       }
     }
-    window_[file_name].loadm(document_, window_, new XMLHttpRequest(), debug);
+    window_[file_name].loadm(window_, new XMLHttpRequest(), debug);
     var load_time = new Date().getTime() - window_['__speedTest__'][file_name+'_start'];
     console.log(file_name+' load time: '+load_time+' ms');
 

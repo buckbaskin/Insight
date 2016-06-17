@@ -35,9 +35,34 @@ import time
 
 # tasks
 from Insight.sql.queues import qLow
-from Insight.clicktrack.tasks import mouse_move
+from Insight.clicktrack.tasks import mouse_move, page_load
 
-@server.route('/click', methods=['GET'])
+@server.route('/click/l', methods=['GET'])
+@user_handler
+def pageloaddata():
+    '''
+    One time message for every page load that tells info about the page.
+    This will be the first information used to render the page as the user
+    saw it.
+    '''
+    user_id = 0
+    if 'user_id' in request.cookies:
+        user_id = int(request.cookies['user_id'])
+
+    try:
+        path = request.args['page']
+        screen_x = int(request.args['sx'])
+        screen_y = int(request.args['sy'])
+        window_x = int(request.args['wx'])
+        window_y = int(request.args['wy'])
+    except KeyError or ValueError:
+        return make_response('Bad Request', 400)
+    qLow.enqueue(page_load, user_id, path, 'load', screen_x, screen_y, 
+                 window_x, window_y)
+    return make_response('OK', 200)
+
+
+@server.route('/click/m', methods=['GET'])
 @user_handler
 def cursordata():
     user_id = 0
@@ -47,12 +72,15 @@ def cursordata():
     try:
         track_type = request.args['type']
         path = request.args['page']
-        mouse_x = int(request.args['x'])
-        mouse_y = int(request.args['y'])
+        scroll_x = int(request.args['sx'])
+        scroll_y = int(request.args['sy'])
+        mouse_x = int(request.args['mx'])
+        mouse_y = int(request.args['my'])
         time = int(float(request.args['t']))
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
     # send off a job request, don't care about result
-    qLow.enqueue(mouse_move, user_id, path, track_type, mouse_x, mouse_y, time)
+    qLow.enqueue(mouse_move, user_id, path, track_type, scroll_x, scroll_y, 
+                 mouse_x, mouse_y, time)
     return make_response('OK', 200)
 
