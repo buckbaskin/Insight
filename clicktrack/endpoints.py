@@ -30,6 +30,7 @@ render_template = speed_test2()(render_template) # measure time spent rendering
 from Insight.app import server
 
 # other
+import json
 import requests
 import time
 
@@ -50,15 +51,11 @@ def pageloaddata():
         user_id = int(request.cookies['user_id'])
 
     try:
-        path = request.args['page']
-        screen_x = int(request.args['sx'])
-        screen_y = int(request.args['sy'])
-        window_x = int(request.args['wx'])
-        window_y = int(request.args['wy'])
+        json_data = request.args['d']
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
-    qLow.enqueue(page_load, user_id, path, 'load', screen_x, screen_y, 
-                 window_x, window_y)
+#     qLow.enqueue(page_load, user_id, path, 'load', screen_x, screen_y, 
+#                  window_x, window_y)
     return make_response('OK', 200)
 
 
@@ -70,17 +67,11 @@ def cursordata():
         user_id = int(request.cookies['user_id'])
     
     try:
-        track_type = request.args['type']
-        path = request.args['page']
-        scroll_x = int(request.args['sx'])
-        scroll_y = int(request.args['sy'])
-        mouse_x = int(request.args['mx'])
-        mouse_y = int(request.args['my'])
-        time = int(float(request.args['t']))
+        json_data = request.args['d']
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
     # send off a job request, don't care about result
-    qLow.enqueue(mouse_move, user_id, path, track_type, scroll_x, scroll_y, 
-                 mouse_x, mouse_y, time)
-    return make_response('OK', 200)
+#     qLow.enqueue(mouse_move, user_id, path, track_type, scroll_x, scroll_y, 
+#                  mouse_x, mouse_y, time)
+    return make_response('OK?', 200)
 
