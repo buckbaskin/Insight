@@ -52,10 +52,13 @@ def pageloaddata():
 
     try:
         json_data = request.args['d']
+        data = json.loads(json_data)
+        path = data['page']
+        screen_x = data['screen_x']
+        screen_y = data['screen_y']
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
-#     qLow.enqueue(page_load, user_id, path, 'load', screen_x, screen_y, 
-#                  window_x, window_y)
+    qLow.enqueue(page_load, user_id, path, screen_x, screen_y)
     return make_response('OK', 200)
 
 
