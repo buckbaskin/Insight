@@ -35,7 +35,7 @@ import requests
 import time
 
 # tasks
-from Insight.sql.queues import qLow
+from Insight.sql.queues import UserEventQ
 from Insight.clicktrack.tasks import mouse_move, page_load
 
 @server.route('/click/l', methods=['GET'])
@@ -54,11 +54,16 @@ def pageloaddata():
         json_data = request.args['d']
         data = json.loads(json_data)
         path = data['page']
-        screen_x = data['screen_x']
-        screen_y = data['screen_y']
+        screen_w = data['screen_w']
+        screen_h = data['screen_h']
+        window_x = data['window_x']
+        window_y = data['window_y']
+        window_w = data['window_w']
+        window_h = data['window_h']
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
-    qLow.enqueue(page_load, user_id, path, screen_x, screen_y)
+    UserEventQ.enqueue(page_load, user_id, path, screen_w, screen_h,
+                       window_x, window_y, window_w, window_h)
     return make_response('OK', 200)
 
 
@@ -70,11 +75,21 @@ def cursordata():
         user_id = int(request.cookies['user_id'])
     
     try:
-        json_data = request.args['d']
+        data = json.loads(request.args['d'])
+        path = data['page']
+        window_x = data['window_x']
+        window_y = data['window_y']
+        window_w = data['window_w']
+        window_h = data['window_h']
+        scroll_x = data['scroll_x']
+        scroll_y = data['scroll_y']
+        mouse_x = data['mouse_x']
+        mouse_y = data['mouse_y']
+        time = data['time']
     except KeyError or ValueError:
         return make_response('Bad Request', 400)
     # send off a job request, don't care about result
-#     qLow.enqueue(mouse_move, user_id, path, track_type, scroll_x, scroll_y, 
-#                  mouse_x, mouse_y, time)
+    UserEventQ.enqueue(mouse_move, user_id, path, scroll_x, scroll_y, 
+                 mouse_x, mouse_y, time)
     return make_response('OK?', 200)
 
