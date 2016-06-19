@@ -11,6 +11,7 @@ def calculate_factorial(integer):
     return accum
 
 # temp use for managing workers
+from rq.worker import StopRequested
 
 def run_worker(worker):
     print('start run_worker')
@@ -23,7 +24,7 @@ def run_worker(worker):
 
 def kill_worker(worker_key):
     print('kill worker %s' % worker_key)
-    return worker_key
+    raise StopRequested()
 
 def fill_time(arg):
     print(arg)

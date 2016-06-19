@@ -41,6 +41,8 @@ class StoppableWorker(Worker):
                 return None
 
             job, queue = result
+            if 'kill' in job.func_name:
+                return False
             execute_result = self.execute_job(job, queue)
             print('er: %s' % (execute_result,))
             self.heartbeat()
@@ -49,7 +51,7 @@ class StoppableWorker(Worker):
         finally:
             if not self.is_horse:
                 self.register_death()
-        return result
+        return did_perform_work
 
 if __name__ == '__main__':
     import time
