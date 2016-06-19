@@ -6,10 +6,6 @@ from rq import Worker, Queue
 from rq.worker import StopRequested
 
 r = connection = StrictRedis(host='localhost', port=6379, db=0)
-workerQ = Queue('operateWorker', connection=r)
-userEventQ = Queue('userEvent', connection=r)
-
-from Insight.sql.sand_funcs import run_worker, kill_worker, fill_time
 
 class StoppableWorker(Worker):
 
@@ -41,7 +37,9 @@ class StoppableWorker(Worker):
                 return None
 
             job, queue = result
+            print('j>>>'+job.func_name)
             if 'kill' in job.func_name:
+                print('ending because of not-nice job func name')
                 return False
             execute_result = self.execute_job(job, queue)
             print('er: %s' % (execute_result,))
@@ -53,24 +51,29 @@ class StoppableWorker(Worker):
                 self.register_death()
         return did_perform_work
 
-if __name__ == '__main__':
-    import time
-    print('start??')
-    oneQ = Queue('1', connection=r)
-    s = StoppableWorker(['1', 'operateWorker', 'userEvent'])
-    
-    p = multiprocessing.Process(target=run_worker, args=(s,))
-    p.start()
-    print('start :)')
+# temp use for managing workers
+from rq.worker import StopRequested
 
-    time.sleep(5)
+def run_worker(worker):
+    print('start run_worker')
+    result = True
+    while result is not None and result:
+        print('worker loop...')
+        result = worker.workOnce(burst=False)
+        print('%s\n...worker loop' % (result,))
+    print('exiting working while loop :)')
 
-    userEventQ.enqueue(fill_time, 1)
-    oneQ.enqueue(kill_worker, s.key)
-    userEventQ.enqueue(fill_time, 1)
-    userEventQ.enqueue(fill_time, 1)
+def kill_worker(worker_key):
+    print('kill worker %s' % worker_key)
+    raise StopRequested()
 
-    print('join??')
-    p.join()
-    print('join :)')
+def kill_gen(key):
+    def killer(arg1):
+        pass
+    killer.func_name = 'kill'+key
+    killer.__name__ = 'kill'+key
+    return killer
 
+def fill_time(arg):
+    print(arg)
+    return arg
