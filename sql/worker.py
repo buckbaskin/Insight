@@ -5,11 +5,10 @@ from redis import StrictRedis
 from rq import Worker, Queue
 from rq.worker import StopRequested
 
-r = connection = StrictRedis(host='localhost', port=6379, db=0)
 
 class StoppableWorker(Worker):
 
-    def __init__(self, queues):
+    def __init__(self, queues, connection):
         super(StoppableWorker, self).__init__(queues=queues, connection=connection)
         self.register_birth()
 
@@ -38,12 +37,10 @@ class StoppableWorker(Worker):
                 return None
 
             job, queue = result
-            print('j>>>'+job.func_name)
             if 'kill' in job.func_name:
                 print('ending because of not-nice job func name')
                 return False
             execute_result = self.execute_job(job, queue)
-            print('er: %s' % (execute_result,))
             self.heartbeat()
 
             did_perform_work = True
@@ -55,8 +52,11 @@ class StoppableWorker(Worker):
 # temp use for managing workers
 from rq.worker import StopRequested
 
+r = StrictRedis(host='localhost', port=6379, db=0)
+
 def run_worker(qs):
-    worker = StoppableWorker(qs)
+    r = StrictRedis(host='localhost', port=6379, db=0)
+    worker = StoppableWorker(qs, r)
     print('start run_worker')
     result = True
     while result is not None and result:
@@ -79,3 +79,5 @@ def kill_gen(key):
 def fill_time(arg):
     print(arg)
     return arg
+
+del r

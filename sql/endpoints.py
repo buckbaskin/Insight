@@ -35,16 +35,18 @@ import time
 
 # tasks
 import redis
+from rq import Queue
 from rq.job import Job
-from Insight.sql.queues import qLow
+from Insight.sql.queues import LowQ, WorkerQ
 from Insight.sql.sand_funcs import calculate_factorial
+from Insight.sql.worker import run_worker, kill_worker
 
 conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 @server.route('/rq/demo/<int:number>', methods=['GET'])
 @user_handler
 def factorial_async(number):
-    job = qLow.enqueue(calculate_factorial, number)
+    job = LowQ.enqueue(calculate_factorial, number)
     return make_response(job.id, 200)
 
 @server.route('/rq/job/<job_id>', methods=['GET'])
@@ -57,3 +59,29 @@ def check_job_status(job_id):
     else:
         return make_response(('Job %s not yet done.' % job_id), 202)
 
+@server.route('/worker/add/<queue_id>')
+@user_handler
+@performance()
+def add_worker_to_queue(queue_id):
+    WorkerQ.enqueue(run_worker, [queue_id])
+    return make_response('OK', 200)
+
+@server.route('/worker/rm/<queue_id>')
+@user_handler
+@performance()
+def remove_worker_from_queue(queue_id):
+    if queue_id == 'createWorkers':
+        return make_response('OK', 200)
+    for queue in Queue.all(connection=conn):
+        if queue.name == queue_id:
+            queue.enqueue(kill_worker, 'arbitrary')
+            break
+    else:
+        return make_response('Invalid Queue', 400)
+    return make_response('OK', 200)
+
+@server.route('/worker/status')
+@user_handler
+@performance()
+def worker_status_page():
+    return make_response('OK', 200)
