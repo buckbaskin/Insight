@@ -13,15 +13,13 @@ userEventQ = Queue('userEvent', connection=r)
 if __name__ == '__main__':
     import time
     print('start??')
-    oneQ = Queue('1', connection=r)
-    twoQ = Queue('2', connection=r)
     
-    p = multiprocessing.Process(target=run_worker, args=(['1', 'createWorkers'],))
+    p = multiprocessing.Process(target=run_worker, args=(['createWorkers'],))
     p.start()
     print('start :)')
 
     # have the first worker create another worker for userEvents
-    workerQ.enqueue(run_worker, ['2', 'userEvent'])
+    workerQ.enqueue(run_worker, ['userEvent'])
 
     time.sleep(2)
 
@@ -32,9 +30,9 @@ if __name__ == '__main__':
     print('   and that was all the little piggies')
 
     # kill the second worker
-    twoQ.enqueue(kill_worker, 'arbitrary')
+    userEventQ.enqueue(kill_worker, 'arbitrary')
     # kill the first worker
-    oneQ.enqueue(kill_worker, 'arbitrary')
+    workerQ.enqueue(kill_worker, 'arbitrary')
 
     print('join??')
     p.join()
