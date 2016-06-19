@@ -11,6 +11,7 @@ class StoppableWorker(Worker):
 
     def __init__(self, queues):
         super(StoppableWorker, self).__init__(queues=queues, connection=connection)
+        self.register_birth()
 
     def work(self, burst=False, logging_level="INFO"):
         self.workOnce(burst, logging_level)
@@ -54,7 +55,8 @@ class StoppableWorker(Worker):
 # temp use for managing workers
 from rq.worker import StopRequested
 
-def run_worker(worker):
+def run_worker(qs):
+    worker = StoppableWorker(qs)
     print('start run_worker')
     result = True
     while result is not None and result:
