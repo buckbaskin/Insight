@@ -69,6 +69,16 @@ def kill_worker(worker_key):
     print('kill worker %s' % worker_key)
     raise StopRequested()
 
+def find_and_kill(queue_name):
+    if queue_id == 'createWorkers':
+        return 0
+    for queue in Queue.all(connection=conn):
+        if queue.name == queue_id:
+            queue.enqueue(kill_worker, 'arbitrary')
+            return 1
+    else:
+        return 0            
+
 def kill_gen(key):
     def killer(arg1):
         pass

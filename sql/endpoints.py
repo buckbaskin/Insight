@@ -39,7 +39,7 @@ from rq import Queue
 from rq.job import Job
 from Insight.sql.queues import LowQ, WorkerQ
 from Insight.sql.sand_funcs import calculate_factorial
-from Insight.sql.worker import run_worker, kill_worker
+from Insight.sql.worker import run_worker, kill_worker, find_and_kill
 
 conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -70,14 +70,7 @@ def add_worker_to_queue(queue_id):
 @user_handler
 @performance()
 def remove_worker_from_queue(queue_id):
-    if queue_id == 'createWorkers':
-        return make_response('OK', 200)
-    for queue in Queue.all(connection=conn):
-        if queue.name == queue_id:
-            queue.enqueue(kill_worker, 'arbitrary')
-            break
-    else:
-        return make_response('Invalid Queue', 400)
+    WorkerQ.enqueue(find_and_kill, queue_id)
     return make_response('OK', 200)
 
 @server.route('/worker/status')
