@@ -1,4 +1,5 @@
-function loadjs(document_, window_, xhr_, file_name, debug) {
+function loadjs(window_, xhr_, file_name, debug) {
+  document_ = window_.document;
   if (!window_.hasOwnProperty('__speedTest__')) {
     window_['__speedTest__'] = {}
   }
@@ -11,15 +12,15 @@ function loadjs(document_, window_, xhr_, file_name, debug) {
       window_.execScript(xhr_.responseText);
     } catch(err) {
       if (debug) { console.log('execScript had an error'); }
-      try {
+//      try {
         if (debug) { console.log('window.eval instead'); }
         window_.eval(xhr_.responseText);
-      } catch(err) {
-        if (debug) { console.log('all failed...'); }
-        return undefined;
-      }
+//      } catch(err) {
+//        if (debug) { console.log('all failed...'); console.log(err) }
+//        return undefined;
+//      }
     }
-    window_[file_name].loadm(document_, window_, new XMLHttpRequest(), debug);
+    window_[file_name].loadm(window_, new XMLHttpRequest(), debug);
     var load_time = new Date().getTime() - window_['__speedTest__'][file_name+'_start'];
     console.log(file_name+' load time: '+load_time+' ms');
 
@@ -27,6 +28,7 @@ function loadjs(document_, window_, xhr_, file_name, debug) {
         "&m="+file_name+
         "&resp="+Math.round(response_time)+
         "&load="+Math.round(load_time)+"#", true);
+    xhr_.onload = function(e) {};
     xhr_.send(null);
   }
   xhr_.onerror = function(e) {

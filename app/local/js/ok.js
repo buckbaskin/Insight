@@ -6,9 +6,11 @@
  * 1 = assertion found
  * -1 = other error
  */
+assert = require('assert')
+
 function ok(assertion, a, b, c, d) {
   try {
-    if (a === undefined) { return false; }
+    if (a === undefined) { return 1; }
     else if (b === undefined) { assertion(a); }
     else if (c === undefined) { assertion(a, b); }
     else if (d === undefined) { assertion(a, b, c); }
@@ -17,6 +19,8 @@ function ok(assertion, a, b, c, d) {
   } catch (err) {
     if (err.name == 'AssertionError') {
       return 1;
+    } else {
+      return -1;
     }
   }
   return -1;
