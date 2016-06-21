@@ -10,7 +10,9 @@ class StoppableWorker(Worker):
 
     def __init__(self, queues, connection):
         super(StoppableWorker, self).__init__(queues=queues, connection=connection)
+        print('register birth?')
         self.register_birth()
+        print('registed birth')
 
     def work(self, burst=False, logging_level="INFO"):
         self.workOnce(burst, logging_level)
@@ -62,6 +64,10 @@ def run_worker(qs):
         print('worker loop...')
         result = worker.workOnce(burst=False)
         print('%s\n...worker loop' % (result,))
+        print('this little piggy:')
+        for little_worker in Worker.all(r):
+            print(little_worker.key)
+        print('   and that was all the little piggies')
     print('exiting working while loop :)')
 
 def kill_worker(worker_key):
