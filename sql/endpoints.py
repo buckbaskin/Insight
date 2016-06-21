@@ -1,17 +1,17 @@
 '''
 Copyright 2016 William Baskin
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 '''
 
 # flask
@@ -35,13 +35,14 @@ import time
 
 # tasks
 import redis
-from rq import Queue
+from collections import defaultdict
+from rq import Queue, Worker
 from rq.job import Job
 from Insight.sql.queues import LowQ, WorkerQ
 from Insight.sql.sand_funcs import calculate_factorial
 from Insight.sql.worker import run_worker, kill_worker, find_and_stop
 
-conn = redis.StrictRedis(host='localhost', port=6379, db=0)
+r = conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 @server.route('/rq/demo/<int:number>', methods=['GET'])
 @user_handler
@@ -73,8 +74,23 @@ def remove_worker_from_queue(queue_id):
     find_and_stop(queue_id)
     return make_response('OK', 200)
 
+@server.route('/worker')
 @server.route('/worker/status')
 @user_handler
+@ab
 @performance()
-def worker_status_page():
-    return make_response('OK', 200)
+def worker_status_page(ab='A'):
+    workers_dict = defaultdict(list)
+    for worker in Worker.all(connection=r):
+        for queue in worker.queues:
+            workers_dict[queue.name].append(worker)
+    queue_list = Queue.all(connection=r)
+    queue_list = sorted(queue_list, key=lambda queue: queue.count, reverse=True)
+    print('status for %d found' % len(queue_list))
+    return render_template('worker_index.html',
+                           title='Worker Status',
+                           user_group=ab,
+                           altJS=True,
+                           queues=queue_list,
+                           workers=workers_dict)
+

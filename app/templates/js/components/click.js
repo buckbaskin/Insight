@@ -74,7 +74,7 @@ var click = {
           window_w: window_w,
           window_h: window_h,
       });
-      xhr_.open("GET", "click/l?d="+sendOut+"#", true);
+      xhr_.open("GET", "/click/l?d="+sendOut+"#", true);
       xhr_.send(null);
     }
     return onMouseMove;

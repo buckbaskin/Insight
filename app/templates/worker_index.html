@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+Hi, this is the worker status page. 
+<ul>
+  {% for queue in queues %}
+
+  <li>
+  <p>
+    {{ queue.name }} has {{ queue.count }} jobs and
+    {{ workers[queue.name].__len__() }} workers.
+  </p>
+  <p>
+    <button type="button" onclick="worker.add('{{ queue.name }}')">Add Worker to Queue</button>
+    <button type="button" onclick="worker.remove('{{ queue.name }}')">Remove Worker from Queue</button>
+    
+  </p>
+    <ul>
+      {% for worker in workers[queue.id] %}
+      <li>
+      <p>
+        Worker: {{ worker.name }}
+      </p>
+      </li>
+
+      {% endfor %}
+    </ul>
+  </li>
+
+  {% endfor %}
+</ul>
+
+
+<script src="{{url_for('static', filename='js/loadme.js')}}" type="text/javascript"></script>
+<script type="text/javascript">
+loadjs(window, new XMLHttpRequest(), 'worker', true);
+</script>
+
+{% endblock %}
