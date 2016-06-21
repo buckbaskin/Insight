@@ -38,7 +38,7 @@ class StoppableWorker(Worker):
 
             job, queue = result
             if 'kill' in job.func_name:
-                print('ending because of not-nice job func name')
+                print('ending '+str(self.queues)+' because of not-nice job func name')
                 return False
             execute_result = self.execute_job(job, queue)
             self.heartbeat()
@@ -55,7 +55,6 @@ from rq.worker import StopRequested
 r = StrictRedis(host='localhost', port=6379, db=0)
 
 def run_worker(qs):
-    r = StrictRedis(host='localhost', port=6379, db=0)
     worker = StoppableWorker(qs, r)
     print('start run_worker')
     result = True
@@ -69,11 +68,13 @@ def kill_worker(worker_key):
     print('kill worker %s' % worker_key)
     raise StopRequested()
 
-def find_and_kill(queue_name):
-    if queue_id == 'createWorkers':
+def find_and_stop(queue_name):
+    if queue_name == 'createWorkers':
+        print('can\'t kill this little piggy')
         return 0
-    for queue in Queue.all(connection=conn):
-        if queue.name == queue_id:
+    for queue in Queue.all(connection=r):
+        if queue.name == queue_name:
+            print('I found the queueueue')
             queue.enqueue(kill_worker, 'arbitrary')
             return 1
     else:
@@ -90,4 +91,3 @@ def fill_time(arg):
     print(arg)
     return arg
 
-del r

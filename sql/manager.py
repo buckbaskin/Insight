@@ -4,7 +4,7 @@ from redis import StrictRedis
 from rq import Queue, Worker
 
 from Insight.sql.worker import StoppableWorker
-from Insight.sql.worker import run_worker, kill_worker, kill_gen, fill_time
+from Insight.sql.worker import run_worker, kill_worker, fill_time
 
 r = StrictRedis(host='localhost', port=6379, db=0)
 workerQ = Queue('createWorkers', connection=r)
