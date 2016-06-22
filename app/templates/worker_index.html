@@ -15,7 +15,7 @@ Hi, this is the worker status page.
     
   </p>
     <ul>
-      {% for worker in workers[queue.id] %}
+      {% for worker in workers[queue.name] %}
       <li>
       <p>
         Worker: {{ worker.name }}
