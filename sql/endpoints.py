@@ -38,11 +38,10 @@ import redis
 from collections import defaultdict
 from rq import Queue, Worker
 from rq.job import Job
+from Insight.sql import r
 from Insight.sql.queues import LowQ, WorkerQ
 from Insight.sql.sand_funcs import calculate_factorial
 from Insight.sql.worker import run_worker, kill_worker, find_and_stop
-
-r = conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 @server.route('/rq/demo/<int:number>', methods=['GET'])
 @user_handler
@@ -54,7 +53,7 @@ def factorial_async(number):
 @user_handler
 @performance()
 def check_job_status(job_id):
-    job = Job.fetch(job_id, connection=conn)
+    job = Job.fetch(job_id, connection=r)
     if job.is_finished:
         return make_response(str(job.result), 200)
     else:

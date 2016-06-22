@@ -4,7 +4,7 @@ import multiprocessing
 from redis import StrictRedis
 from rq import Worker, Queue
 from rq.worker import StopRequested
-
+from Insight.sql import r
 
 class StoppableWorker(Worker):
 
@@ -50,11 +50,6 @@ class StoppableWorker(Worker):
             if not self.is_horse:
                 self.register_death()
         return did_perform_work
-
-# temp use for managing workers
-from rq.worker import StopRequested
-
-r = StrictRedis(host='localhost', port=6379, db=0)
 
 def run_worker(qs):
     worker = StoppableWorker(qs, r)

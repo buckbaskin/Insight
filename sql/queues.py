@@ -1,7 +1,7 @@
 import redis
+from Insight.sql import r
 from rq import Queue
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
 r.set('foo', 'bar')
 r.get('foo')
 qUserEvent = UserEventQ = Queue('userEvent', connection=r)
