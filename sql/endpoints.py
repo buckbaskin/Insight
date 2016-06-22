@@ -41,7 +41,7 @@ from rq.job import Job
 from Insight.sql import r
 from Insight.sql.queues import LowQ, WorkerQ
 from Insight.sql.sand_funcs import calculate_factorial
-from Insight.sql.worker import run_worker, kill_worker, find_and_stop
+from Insight.sql.tasks import run_worker, find_and_stop
 
 @server.route('/rq/demo/<int:number>', methods=['GET'])
 @user_handler
