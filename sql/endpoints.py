@@ -93,3 +93,27 @@ def worker_status_page(ab='A'):
                            queues=queue_list,
                            workers=workers_dict)
 
+@server.route('/worker/status/<queue_id>')
+@user_handler
+@ab
+@performance()
+def queue_specific_page(queue_id, ab='A'):
+    for queue_ in Queue.all(connection=r):
+        if queue_.name == queue_id:
+            queue = queue_
+            break
+    else:
+        return make_response('Invalid Queue.', 400)
+    workers = []
+    for worker in Worker.all(connection=r):
+        for queue_ in worker.queues:
+            if queue_.name == queue_id:
+                workers.append(worker)
+                break
+
+    return render_template('worker_queue_specific.html',
+                           title='Queue '+queue_id,
+                           user_group=ab,
+                           altJS=True,
+                           queue=queue,
+                           workers=workers)

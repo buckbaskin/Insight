@@ -8,6 +8,7 @@ Hi, this is the worker status page.
   <p>
     {{ queue.name }} has {{ queue.count }} jobs and
     {{ workers[queue.name].__len__() }} workers.
+    <a href="/worker/status/{{ queue.name }}">Details</a>
   </p>
   <p>
     <button type="button" onclick="worker.add('{{ queue.name }}')">Add Worker to Queue</button>
