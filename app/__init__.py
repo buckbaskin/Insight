@@ -9,4 +9,5 @@ from Insight.app import views
 from Insight.clicktrack import endpoints
 from Insight.performance import endpoints
 from Insight.sql import endpoints
+from Insight.twitter_api import endpoints
 

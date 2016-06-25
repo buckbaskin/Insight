@@ -38,12 +38,16 @@ def handle_rate_error(err):
 def screen_name_to_id(screen_name):
     if isinstance(screen_name, collections.Iterable):
         result = api.users.lookup(screen_name=','.join(screen_name), include_entities=False)
+        new_result = []
         for user in result:
-            yield user['id']
+            new_result.append(user['id'])
     else:
         result = api.users.lookup(screen_name=[screen_name])
+        new_result = []
         for user in result:
-            yield user['id']
+            new_result.append(user['id'])
+
+    return new_result
 
 
 def get_followers(user_id):
@@ -67,12 +71,12 @@ def get_followers(user_id):
 
 def get_followers_test(user_id):
     def sort_generator(iterable, condition):
-        for item in  sorted(iterable, key=condition):
-            yield item
+        return sorted(iterable, key=condition)
 
     count = 0
-    for user in sort_generator(get_followers(user_id), lambda user: user['followers_count']):
-        count += 1
-        print('%d %s has %d followers' % (count, user['name'], user['followers_count']))
+    return list(sort_generator(get_followers(user_id), lambda user: user['followers_count']))
+    # for user in sort_generator(get_followers(user_id), lambda user: user['followers_count']):
+    #     count += 1
+    #     print('%d %s has %d followers' % (count, user['name'], user['followers_count']))
 
 
