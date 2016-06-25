@@ -58,6 +58,7 @@ SQLAlchemy==1.0.13
 template-remover==0.1.9
 termcolor==1.1.0
 tornado==4.3
+twitter==1.17.1
 Werkzeug==0.11.10
 Whoosh==2.7.4
 wrapt==1.10.8
