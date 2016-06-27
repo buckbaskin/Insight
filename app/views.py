@@ -29,6 +29,7 @@ render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
 from Insight.app import server
+from Insight.app import requests_service
 
 # other
 import requests
@@ -119,8 +120,8 @@ def slow(time_module=time):
 
 @server.route('/service', methods=['GET'])
 @performance()
-@decorators.automock('requests_module', default=requests, test=mock_requests)
-def service(requests_module=requests):
+@decorators.automock('requests_module', default=requests_service, test=mock_requests)
+def service(requests_module=requests_service):
     requests_get = speed_test2(logging_name='requests.get')(requests_module.get)
     req_response = requests_get('http://127.0.0.1:5001/data')
     response = make_response(req_response.text, req_response.status_code)
