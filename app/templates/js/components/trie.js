@@ -4,23 +4,26 @@
  * where an object is passed through multiple constructors and it can behave
  * as two things at once.
  */
-function Trie(this_, depth) {
+ function Trie(this_, depth) {
+  if (this_ === undefined) { this_ = {}; }
   if (depth === undefined) { depth = 0; }
 
   /*
-   * at: word that is at this_ level in the trie
-   */
-   this_.at = null;
-   this_.depth = depth;
+  * at: word that is at this_ level in the trie
+  */
+  if (depth == 0 || this_.at === undefined) {
+    this_.at = null;
+  }
+  this_.depth = depth;
   /*
-   * this_.a through this_.z are reserved, they point to next words in the trie
-   */
+  * this_.a through this_.z are reserved, they point to next words in the trie
+  */
 
   // METHODS
   /*
-   * Insert a word into the trie. Returns true if it is successful
-   */
-   this_.add = function add(word, debug) {
+  * Insert a word into the trie. Returns true if it is successful
+  */
+  this_.add = function add(word, debug) {
     if (debug) {
       console.log('add('+word+','+word.charAt(this_.depth)+','+this_.depth+')');
     }
@@ -37,9 +40,9 @@ function Trie(this_, depth) {
     }
   }
   /*
-   * Return a boolean value to indicate if the trie has the word
-   */
-   this_.contains = function contains(word, debug) {
+  * Return a boolean value to indicate if the trie has the word
+  */
+  this_.contains = function contains(word, debug) {
     // improvement: iteration/looping via while loop to reduce recursion
     word = word.toLowerCase();
     if (depth == 0) {
@@ -58,10 +61,10 @@ function Trie(this_, depth) {
     }
   }
   /*
-   * Return a list of words that the word is a prefix of, out to a maximum
-   * length of the list of maxListLen
-   */
-   this_.prefixOf = function prefixOf(prefix, maxListLen, debug) {
+  * Return a list of words that the word is a prefix of, out to a maximum
+  * length of the list of maxListLen
+  */
+  this_.prefixOf = function prefixOf(prefix, maxListLen, debug) {
     // improvement: BFS to find words that are shortest in length
     // improvement: iteration/looping via while loop to reduce recursion
     prefix = prefix.toLowerCase();
@@ -143,5 +146,6 @@ function Trie(this_, depth) {
   // console.log('t.contains("'+word+'") '+t.contains(word));
   // console.log('t.serialize\n'+t.serialize());
   word2 = '';
-  console.log('> prefixOf("'+word2+'")\n'+t.prefixOf(word2, 2));
+  max_len = 5;
+  console.log('> prefixOf("'+word2+'", '+max_len+')\n'+t.prefixOf(word2, max_len));
 })();
