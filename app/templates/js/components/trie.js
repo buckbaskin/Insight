@@ -142,6 +142,6 @@ function Trie(this_, depth) {
   word = 'house';
   // console.log('t.contains("'+word+'") '+t.contains(word));
   // console.log('t.serialize\n'+t.serialize());
-  word2 = 'ax';
-  console.log('> prefixOf("'+word2+'")\n'+t.prefixOf(word2));
+  word2 = '';
+  console.log('> prefixOf("'+word2+'")\n'+t.prefixOf(word2, 2));
 })();
