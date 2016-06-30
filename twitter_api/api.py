@@ -1,7 +1,13 @@
+import Insight.alchemist as alchemist
 import os
 import twitter as it
 from twitter.api import TwitterHTTPError
 
+class TwitterAccessMock():
+    def __init__(self):
+        self.api = 1
+
+@alchemist.lead(gold=TwitterAccessMock)
 class TwitterAccess(object):
     def __init__(self):
         f = open('twitter_api/simile.smile', 'r')
