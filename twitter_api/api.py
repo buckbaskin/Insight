@@ -2,10 +2,21 @@ import os
 import twitter as it
 from twitter.api import TwitterHTTPError
 
+class TwitterAccessMock(object):
+    def __init__(self):
+        self.api = 1
+
+    def start(self):
+        return self
+
 class TwitterAccess(object):
     def __init__(self):
+        pass
+
+    def start(self):
         f = open('twitter_api/simile.smile', 'r')
         self.api = TwitterHandler(f.readline()[:-1], f.readline()[:-1], f.readline()[:-1], f.readline()).twitter_access
+        return self
 
 class TwitterHandler(object):
     def __init__(self, consumerKey, consumerSecret, accessToken, accessTokenSecret):
