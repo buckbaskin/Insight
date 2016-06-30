@@ -5,6 +5,6 @@ print(max_rate_limit())
 for user in screen_name_to_id(['beBaskin']):
     print(user)
 
-get_followers_test(next(screen_name_to_id(['beBaskin'])))
+get_followers_test(screen_name_to_id(['beBaskin'])[0])
 
 print(max_rate_limit())
