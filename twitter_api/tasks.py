@@ -1,12 +1,15 @@
 import Insight.alchemist as alchemist
 import collections
 import datetime
+import os
 import time
 from twitter.api import TwitterHTTPError
 from Insight.twitter_api.api import TwitterAccess, TwitterAccessMock
-TwitterAccess = alchemist.lead(gold=TwitterAccessMock)(TwitterAccess)
 
-api = TwitterAccess().api
+try:
+    api = TwitterAccess().start().api
+except FileNotFoundError:
+    api = TwitterAccessMock().start().api
 
 def max_rate_limit(output=False):
     min_remaining = 180
