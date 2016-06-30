@@ -7,7 +7,7 @@ class TwitterAccessMock(object):
         self.api = 1
 
     def start(self):
-        pass
+        return self
 
 class TwitterAccess(object):
     def __init__(self):
