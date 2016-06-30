@@ -1,8 +1,10 @@
+import Insight.alchemist as alchemist
 import collections
 import datetime
 import time
 from twitter.api import TwitterHTTPError
-from Insight.twitter_api.api import TwitterAccess
+from Insight.twitter_api.api import TwitterAccess, TwitterAccessMock
+TwitterAccess = alchemist.lead(gold=TwitterAccessMock)(TwitterAccess)
 
 api = TwitterAccess().api
 
