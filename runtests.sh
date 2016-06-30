@@ -1,4 +1,5 @@
-export STATUS=Testing
+export STATUS=TESTING
+echo $STATUS
 nosetests \
 --with-timer --timer-top-n 5 --timer-ok 250ms --timer-warning 500ms \
 --with-coverage --cover-erase --cover-package=Insight --cover-html --cover-branches
