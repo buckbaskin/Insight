@@ -40,7 +40,7 @@ class StoppableWorker(Worker):
 
             job, queue = result
             if 'kill' in job.func_name:
-                print('ending '+str(self.queues)+' because of not-nice job func name')
+                print('ending worker for '+str(self.queues)+' because of not-nice job func name')
                 return False
             execute_result = self.execute_job(job, queue)
             self.heartbeat()
