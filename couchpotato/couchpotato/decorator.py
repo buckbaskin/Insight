@@ -1,5 +1,5 @@
 class Lazily(object):
-    special_names = {'__LazilyValue__', '__evaluated', '_Lazily__evaluated', '_Lazily__func', '_Lazily__args', '_Lazily__value', '_Lazily__kwargs'}
+    special_names = {'__LazilyValue__', '_Lazily__evaluated', '_Lazily__func', '_Lazily__args', '_Lazily__value', '_Lazily__kwargs'}
     
     def __init__(self, func, args, kwargs):
         # print('as called __init__(%s, %s, %s)' % (func, args, kwargs,))
@@ -42,24 +42,10 @@ class Lazily(object):
         # base case, if I don't do anything, just return whatever getattr should
         # return object.__getattribute__(self, name)
 
-def my_boring_function(x, y, z):
-    print('types(%s, %s)' % (type(x), type(y),))
-    return x+y
-
-def my_special_function(a, b):
-    print('a '+str(a))
-    # b should never get evaluated in this function
-    return 10
-
 def lazify(func):
     def new_function(*args, **kwargs):
         # print('inside new_function: %s and %s' % (args, kwargs,))
         return Lazily(func, args, kwargs)
     new_function.__name__ = func.__name__
     return new_function
-
-if __name__ == '__main__':
-    # lazy add
-    ladd = lazify(print)
-    my_special_function(ladd(1, 2, 3), ladd(4, 5, 6))
 
