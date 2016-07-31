@@ -1,10 +1,50 @@
 from couchpotato import lazify
+from hypothesis import given
+from hypothesis.strategies import text, integers, booleans, floats, complex_numbers, tuples, characters, binary, fractions, decimals
 from nose.tools import assert_equal
 
-def multiply(a, b):
-    return a*b
+def pass_through(value):
+    return value
 
-def test_lazy_multiply():
-    multiply_lazy = lazify(multiply)
-    assert_equal(multiply(3, 4), multiply_lazy(3, 4))
+lazy_pass = lazify(pass_through)
+
+@given(text())
+def test_equal_output_text(s):
+    assert_equal(pass_through(s), lazy_pass(s))
+
+@given(integers())
+def test_equal_output_integers(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(booleans())
+def test_equal_output_booleans(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(floats())
+def test_equal_output_floats(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(complex_numbers())
+def test_equal_output_complex(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(tuples(integers(), integers(),))
+def test_equal_output_tuple(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(characters())
+def test_equal_output_char(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(binary())
+def test_equal_output_binary(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(fractions())
+def test_equal_output_fraction(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
+
+@given(decimals())
+def test_equal_output_decimal(arg):
+    assert_equal(pass_through(arg), lazy_pass(arg))
 

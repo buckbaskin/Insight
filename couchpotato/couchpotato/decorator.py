@@ -11,11 +11,11 @@ class Lazily(object):
 
     def __LazilyValue__(self):
         if not self.__evaluated:
-            print('now evaluating what the function call would be')
-            print('args: %s and %s' % (self.__args, self.__kwargs,))
+            # print('now evaluating what the function call would be')
+            # print('args: %s and %s' % (self.__args, self.__kwargs,))
             self.__value = self.__func.__call__(*(self.__args), **(dict(self.__kwargs)))
             self.__evaluated = True
-            print('value is now %s' % (self.__value,))
+            # print('value is now %s' % (self.__value,))
 
     def __eq__(self, other):
         self.__LazilyValue__()
