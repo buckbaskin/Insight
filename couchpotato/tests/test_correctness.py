@@ -1,3 +1,5 @@
+import math
+
 from couchpotato import lazify
 from hypothesis import given
 from hypothesis.strategies import text, integers, booleans, floats, complex_numbers, tuples, characters, binary, fractions, decimals
@@ -20,11 +22,11 @@ def test_equal_output_integers(arg):
 def test_equal_output_booleans(arg):
     assert_equal(pass_through(arg), lazy_pass(arg))
 
-@given(floats())
+@given(floats().filter(lambda x: not math.isnan(x)))
 def test_equal_output_floats(arg):
     assert_equal(pass_through(arg), lazy_pass(arg))
 
-@given(complex_numbers())
+@given(complex_numbers().filter(lambda x: not math.isnan(x.real) and not math.isnan(x.imag)))
 def test_equal_output_complex(arg):
     assert_equal(pass_through(arg), lazy_pass(arg))
 
@@ -44,7 +46,7 @@ def test_equal_output_binary(arg):
 def test_equal_output_fraction(arg):
     assert_equal(pass_through(arg), lazy_pass(arg))
 
-@given(decimals())
+@given(decimals().filter(lambda x: not math.isnan(x)))
 def test_equal_output_decimal(arg):
     assert_equal(pass_through(arg), lazy_pass(arg))
 
