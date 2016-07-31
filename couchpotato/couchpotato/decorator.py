@@ -21,6 +21,14 @@ class Lazily(object):
         self.__LazilyValue__()
         return self.__value == other
 
+    def __bool__(self):
+        self.__LazilyValue__()
+        return bool(self.__value)
+
+    def __nonzero__(self):
+        self.__LazilyValue__()
+        return bool(self.__value)
+
     def __str__(self):
         self.__LazilyValue__()
         return str(self.__value)
@@ -43,12 +51,8 @@ class Lazily(object):
         self.__LazilyValue__()
         return getattr(self.__value, name)
 
-        # base case, if I don't do anything, just return whatever getattr should
-        # return object.__getattribute__(self, name)
-
 def lazify(func):
     def new_function(*args, **kwargs):
-        # print('inside new_function: %s and %s' % (args, kwargs,))
         return Lazily(func, args, kwargs)
     new_function.__name__ = func.__name__
     return new_function
