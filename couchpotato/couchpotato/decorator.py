@@ -17,6 +17,10 @@ class Lazily(object):
             self.__evaluated = True
             print('value is now %s' % (self.__value,))
 
+    def __eq__(self, other):
+        self.__LazilyValue__()
+        return self.__value == other
+
     def __str__(self):
         self.__LazilyValue__()
         return str(self.__value)
