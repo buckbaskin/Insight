@@ -1,5 +1,7 @@
 var click = {
-  __setup__: function __setup__(window_, document_, screen_, xhr_) {
+  __setup__: function __setup__(window_, xhr_, debug) {
+    var document_ = window_.document;
+    var screen_ = window_.screen;
     var pagePath = window_.location.pathname;
 
     // information about the size of the user screen. send once
@@ -82,7 +84,7 @@ var click = {
 
   loadm: function loadm(window_, xhr_, debug) {
     console.log('click.js: loadm');
-    onMouseMove = click.__setup__(window_, window_.document, window_.screen, xhr_);
+    onMouseMove = click.__setup__(window_, xhr_, debug);
     document_.addEventListener("mousemove", onMouseMove);
   }
 }
