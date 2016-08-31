@@ -1,7 +1,7 @@
 #!venv/bin/python3
 import subprocess
 
-from flaskserver.app import server
+from app import server
 
 subprocess.Popen('python3 run_service.py', shell=True)
 print('running main server now')
