@@ -20,16 +20,16 @@ from flask import request
 from werkzeug.contrib.cache import SimpleCache
 
 # decorators
-from Insight.abtests import ab
-from Insight.automock import decorators, mock_requests, mock_time
-from Insight.performance import speed_test2, mem_test, performance
-from Insight.users import user_handler
+from abtests import ab
+from automock import decorators, mock_requests, mock_time
+from app.performance import speed_test2, mem_test, performance
+from users import user_handler
 
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from Insight.app import server
-from Insight.app import requests_service
+from app import server
+from app import requests_service
 
 # other
 import requests
