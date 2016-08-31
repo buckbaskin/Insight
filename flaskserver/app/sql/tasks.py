@@ -1,6 +1,6 @@
 from rq import Queue, Worker
-from Insight.sql import r
-from Insight.sql.worker import StoppableWorker
+from app.sql import r
+from app.sql.worker import StoppableWorker
 
 def run_worker(qs):
     worker = StoppableWorker(qs, r)

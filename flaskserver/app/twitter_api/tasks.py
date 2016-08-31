@@ -1,10 +1,10 @@
-import Insight.alchemist as alchemist
+import alchemist as alchemist
 import collections
 import datetime
 import os
 import time
 from twitter.api import TwitterHTTPError
-from Insight.twitter_api.api import TwitterAccess, TwitterAccessMock
+from app.twitter_api.api import TwitterAccess, TwitterAccessMock
 
 try:
     api = TwitterAccess().start().api

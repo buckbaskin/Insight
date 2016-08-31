@@ -19,15 +19,15 @@ from flask import render_template, make_response
 from flask import request
 
 # decorators
-from Insight.abtests import ab
-from Insight.automock import decorators, mock_requests
-from Insight.performance import speed_test2, mem_test, performance
-from Insight.users import user_handler
+from abtests import ab
+from automock import decorators, mock_requests
+from app.performance import speed_test2, mem_test, performance
+from users import user_handler
 
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from Insight.app import server
+from app import server
 
 # other
 import requests
@@ -38,10 +38,10 @@ import redis
 from collections import defaultdict
 from rq import Queue, Worker
 from rq.job import Job
-from Insight.sql import r
-from Insight.sql.queues import LowQ, WorkerQ
-from Insight.sql.sand_funcs import calculate_factorial
-from Insight.sql.tasks import run_worker, find_and_stop
+from app.sql import r
+from app.sql.queues import LowQ, WorkerQ
+from app.sql.sand_funcs import calculate_factorial
+from app.sql.tasks import run_worker, find_and_stop
 
 @server.route('/rq/demo/<int:number>', methods=['GET'])
 @user_handler

@@ -1,5 +1,5 @@
 import redis
-from Insight.sql import r
+from app.sql import r
 from rq import Queue
 
 r.set('foo', 'bar')

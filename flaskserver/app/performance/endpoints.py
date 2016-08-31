@@ -19,15 +19,15 @@ from flask import render_template, make_response
 from flask import request
 
 # decorators
-from Insight.abtests import ab
-from Insight.automock import decorators, mock_requests
-from Insight.performance import speed_test2, mem_test, performance
-from Insight.users import user_handler
+from abtests import ab
+from automock import decorators, mock_requests
+from app.performance import speed_test2, mem_test, performance
+from users import user_handler
 
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from Insight.app import server
+from app import server
 
 # other
 import requests

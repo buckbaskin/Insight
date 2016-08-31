@@ -4,7 +4,7 @@ import multiprocessing
 from redis import StrictRedis
 from rq import Worker, Queue
 from rq.worker import StopRequested
-from Insight.sql import r
+from app.sql import r
 
 class StoppableWorker(Worker):
 
