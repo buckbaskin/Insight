@@ -9,9 +9,9 @@ from app.simple_blueprint import simple_page
 
 server.register_blueprint(simple_page, url_prefix='/nicole')
 
-from Insight.app import endpoints
-from Insight.clicktrack import endpoints
-from Insight.performance import endpoints
-from Insight.sql import endpoints
-from Insight.twitter_api import endpoints
+from app.home import endpoints
+from app.clicktrack import endpoints
+from app.performance import endpoints
+from app.sql import endpoints
+from app.twitter_api import endpoints
 
