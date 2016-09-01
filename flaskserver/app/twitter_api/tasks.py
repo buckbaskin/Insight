@@ -1,4 +1,4 @@
-import alchemist as alchemist
+import app.alchemist as alchemist
 import collections
 import datetime
 import os
