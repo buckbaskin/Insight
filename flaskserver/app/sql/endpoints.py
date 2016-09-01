@@ -27,7 +27,7 @@ from app.users import user_handler
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from app.sql import blueprint as server
 
 # other
 import requests
@@ -86,7 +86,7 @@ def worker_status_page(ab='A'):
     queue_list = Queue.all(connection=r)
     queue_list = sorted(queue_list, key=lambda queue: queue.count, reverse=True)
     print('status for %d found' % len(queue_list))
-    return render_template('worker_index.html',
+    return render_template('sql/worker_index.html',
                            title='Worker Status',
                            user_group=ab,
                            altJS=True,
@@ -111,7 +111,7 @@ def queue_specific_page(queue_id, ab='A'):
                 workers.append(worker)
                 break
 
-    return render_template('worker_queue_specific.html',
+    return render_template('sql/worker_queue_specific.html',
                            title='Queue '+queue_id,
                            user_group=ab,
                            altJS=True,
