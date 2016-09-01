@@ -60,7 +60,7 @@ def index(ab='A'):
     if 'user_id' in request.cookies:
         user_id = request.cookies['user_id']
 
-    return render_template('index.html',
+    return render_template('home/index.html',
                            title='Home',
                            user=user,
                            user_group=ab,
