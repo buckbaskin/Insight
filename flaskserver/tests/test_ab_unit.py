@@ -6,8 +6,8 @@ performance see test/test_app_sla.
 import os
 
 from flask import request
-from Insight.app import server as flask_app
-from Insight.abtests.decorator import ab
+from app import server as flask_app
+from app.abtests.decorator import ab
 from nose.tools import ok_, assert_equal, assert_not_in, assert_in
 from nose.tools import timed
 

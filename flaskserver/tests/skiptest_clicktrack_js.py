@@ -4,10 +4,10 @@ Test the javascript functions that are being run on the client side
 import execjs
 import os
 
-from Insight.app import server as flask_app
-from Insight.service import server as flask_service
+from app import server as flask_app
+# from service import server as flask_service
 
-from Insight.automock import jsmock
+from app.automock import jsmock
 from nose.plugins.skip import SkipTest
 from nose.tools import ok_, assert_equal, assert_is_not_none
 from nose.tools import timed

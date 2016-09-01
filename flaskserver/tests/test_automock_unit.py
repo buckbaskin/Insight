@@ -5,9 +5,9 @@ more complicated as time goes on.
 import os
 
 from flask import request
-from Insight.app import server as flask_app
-from Insight.automock.decorator import automock
-from Insight.automock.mock_modules import mock_requests
+from app import server as flask_app
+from app.automock.decorator import automock
+from app.automock.mock_modules import mock_requests
 from nose.tools import ok_, assert_equal, assert_not_in, assert_in
 from nose.tools import timed
 

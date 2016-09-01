@@ -21,7 +21,7 @@ def handle_user_cookie(func):
     def inner_function(*args, **kwargs):
         if 'user_id' not in request.cookies:
             new_user_id = int(time.time())
-            redir = redirect(url_for('index'))
+            redir = redirect(url_for('home.index'))
             response = make_response(redir)
             response.set_cookie('user_id', value=str(new_user_id))
             return response
