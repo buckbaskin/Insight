@@ -27,7 +27,7 @@ from app.users import user_handler
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from app.twitter_api import blueprint as server
 
 # other
 import requests
@@ -42,7 +42,7 @@ from app.sql import r
 from app.sql.queues import TwitterLimitedQ
 from app.twitter_api.tasks import get_followers_test, screen_name_to_id
 
-@server.route('/twitter/demo', methods=['GET'])
+@server.route('/demo', methods=['GET'])
 @user_handler
 def twitter_example():
     job = TwitterLimitedQ.enqueue(get_followers_test, screen_name_to_id('beBaskin'))
