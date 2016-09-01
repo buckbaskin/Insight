@@ -6,10 +6,11 @@ server = Flask(__name__)
 server.config['SERVER_NAME'] = '127.0.0.1:5000'
 
 from app.simple_blueprint import simple_page
-from app.home import blueprint as home_blueprint
+from app import home, clicktrack
 
 server.register_blueprint(simple_page, url_prefix='/nicole')
-server.register_blueprint(home_blueprint, url_prefix='')
+server.register_blueprint(home.blueprint, url_prefix='')
+server.register_blueprint(clicktrack.blueprint, url_prefix='/click')
 
 print('app.url_map: %s' % (server.url_map,))
 

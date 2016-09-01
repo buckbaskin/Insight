@@ -27,7 +27,7 @@ from app.users import user_handler
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from app.clicktrack import blueprint as server
 
 # other
 import json
@@ -38,7 +38,7 @@ import time
 from app.sql.queues import UserEventQ
 from app.clicktrack.tasks import mouse_move, page_load
 
-@server.route('/click/l', methods=['GET'])
+@server.route('/l', methods=['GET'])
 @user_handler
 def pageloaddata():
     '''
@@ -67,7 +67,7 @@ def pageloaddata():
     return make_response('OK', 200)
 
 
-@server.route('/click/m', methods=['GET'])
+@server.route('/m', methods=['GET'])
 @user_handler
 def cursordata():
     user_id = 0
