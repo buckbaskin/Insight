@@ -6,7 +6,6 @@ performance see test/test_app_sla.
 import os
 
 from app import server as flask_app
-from service import server as flask_service
 from nose.tools import ok_, assert_equal
 from nose.tools import timed
 
@@ -16,12 +15,10 @@ service_client = None
 def setup_module():
     global flask_app, flask_service
     flask_app.config['TESTING'] = True
-    flask_service.config['TESTING'] = True
     if 'STATUS' not in os.environ:
         os.environ['STATUS'] = 'TESTING'
-    global app_client, service_client
+    global app_client
     app_client = flask_app.test_client()
-    service_client = flask_service.test_client()
 
 def teardown_module():
     pass
@@ -55,10 +52,6 @@ def test_slow_success():
 def test_slow_post_fail():
     res = app_client.post('/slow')
     assert_equal(405, res.status_code)
-
-def test_service_success():
-    res = app_client.get('/service')
-    assert_equal(200, res.status_code)
 
 def test_service_post_fail():
     res = app_client.post('/service')
