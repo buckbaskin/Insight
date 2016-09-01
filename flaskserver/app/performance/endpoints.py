@@ -27,13 +27,13 @@ from app.users import user_handler
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from app.performance import blueprint as server
 
 # other
 import requests
 import time
 
-@server.route('/performance/jsload', methods=['GET'])
+@server.route('/jsload', methods=['GET'])
 @user_handler
 def jsLoadData():
     user_id = 0
