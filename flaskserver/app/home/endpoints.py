@@ -28,7 +28,7 @@ from app.users import user_handler
 render_template = speed_test2()(render_template) # measure time spent rendering
 
 # more flask
-from app import server
+from app.home import blueprint as server
 from app import requests_service
 
 # other
