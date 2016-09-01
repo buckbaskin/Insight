@@ -1,4 +1,4 @@
-from service import server
+from app import server
 
 @server.route('/data')
 def data_response():
