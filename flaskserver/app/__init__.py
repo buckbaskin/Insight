@@ -9,7 +9,9 @@ from app.simple_blueprint import simple_page
 from app.home import blueprint as home_blueprint
 
 server.register_blueprint(simple_page, url_prefix='/nicole')
-server.register_blueprint(home_blueprint, url_prefix='/')
+server.register_blueprint(home_blueprint, url_prefix='')
+
+print('app.url_map: %s' % (server.url_map,))
 
 # from app.clicktrack import endpoints
 # from app.performance import endpoints
