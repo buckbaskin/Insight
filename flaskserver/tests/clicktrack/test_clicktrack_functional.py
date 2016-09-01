@@ -5,8 +5,8 @@ performance see test/test_app_sla.
 '''
 import os
 
-from Insight.app import server as flask_app
-from Insight.service import server as flask_service
+from app import server as flask_app
+# from Insight.service import server as flask_service
 from nose.tools import ok_, assert_equal
 from nose.tools import timed
 

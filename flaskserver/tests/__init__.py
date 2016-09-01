@@ -1,1 +1,1 @@
-from tests import abtests, automock
+from tests import abtests, automock, clicktrack
