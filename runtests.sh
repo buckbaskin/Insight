@@ -12,5 +12,6 @@ if [ $result != 0 ]; then
     echo $result
     exit 1
 else
+    codecov
     exit 0
 fi
