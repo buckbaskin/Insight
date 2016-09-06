@@ -9,3 +9,7 @@ master branch
 
 
 [![GitHub version](https://badge.fury.io/gh/buckbaskin%2FInsight.svg)](https://badge.fury.io/gh/buckbaskin%2FInsight)
+
+
+
+[![Code Climate](https://codeclimate.com/github/buckbaskin/Insight/badges/gpa.svg)](https://codeclimate.com/github/buckbaskin/Insight)
