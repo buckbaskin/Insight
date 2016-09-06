@@ -13,3 +13,7 @@ master branch
 
 
 [![Code Climate](https://codeclimate.com/github/buckbaskin/Insight/badges/gpa.svg)](https://codeclimate.com/github/buckbaskin/Insight)
+
+
+
+[![Requirements Status](https://requires.io/github/buckbaskin/Insight/requirements.svg?branch=master)](https://requires.io/github/buckbaskin/Insight/requirements/?branch=master)
