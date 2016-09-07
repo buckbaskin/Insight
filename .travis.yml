@@ -10,5 +10,5 @@ services:
   - memcached
   - redis-server
 # command to install dependencies
-install: "pip install -r requirements/test.txt"
+install: "pip install -r requirements/test.txt && pip install -r flaskserver/requirements.txt && pip install -r service1/requirements.txt"
 script: "./runtests.sh"
