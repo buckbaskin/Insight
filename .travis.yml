@@ -46,8 +46,8 @@ install:
       fi
   - pip install --upgrade pip setuptools
   - pip install -r requirements/test.txt
-  - pip install -r flaskserver/requirements.txt
-  - pip install -r service1/requirements.txt
+  - pip install -r requirements/flaskserver/requirements.txt
+  - pip install -r requirements/service1/requirements.txt
 script: "./runtests.sh"
 
 after-success:
