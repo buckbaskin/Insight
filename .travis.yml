@@ -51,6 +51,7 @@ install:
 script: "./runtests.sh"
 
 after-success:
+  - echo after-success running
   - pylint flaskserver
   - pylint service1
   - codecov
