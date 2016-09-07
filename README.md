@@ -3,7 +3,7 @@ lang:Python Make cool things with Flask (and maybe even Twitter)
 
 [![GitHub version](https://badge.fury.io/gh/buckbaskin%2FInsight.svg)](https://badge.fury.io/gh/buckbaskin%2FInsight)
 
-master branch
+requirements-reorg branch
 
 <git anchor>
 [![Build Status](https://travis-ci.org/buckbaskin/Insight.svg?branch=requirements-reorg)](https://travis-ci.org/buckbaskin/Insight)
