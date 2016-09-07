@@ -10,7 +10,7 @@ from app.wishlist import FileNotFoundError # 2->3 shim
 
 try:
     api = TwitterAccess().start().api
-except FileNotFoundError:
+except IOError:
     api = TwitterAccessMock().start().api
 
 def max_rate_limit(output=False):
