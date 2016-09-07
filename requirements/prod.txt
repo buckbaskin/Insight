@@ -1,0 +1,11 @@
+cryptography
+Flask
+html5lib
+Jinja2
+numpy
+pyOpenSSL
+redis
+requests
+rq
+twitter
+Werkzeug
