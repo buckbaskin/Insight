@@ -1,4 +1,3 @@
-from app import alchemist
 import collections
 import datetime
 import os
