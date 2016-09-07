@@ -1,7 +1,1 @@
-cryptography
-Flask
-html5lib
-Jinja2
-pyOpenSSL
-requests
-Werkzeug
+-r ../requirements/prod.txt

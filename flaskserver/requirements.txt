@@ -1,9 +1,4 @@
-cryptography
-Flask
-Jinja2
-Werkzeug
-pyOpenSSL
 redis
-requests
 rq
 twitter==1.17.1
+-r ../requirements/prod.txt
