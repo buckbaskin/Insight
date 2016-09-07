@@ -1,0 +1,9 @@
+autopep8
+html-linter
+jedi
+pep8
+pylint
+
+-r test.txt
+-r prod.txt
+

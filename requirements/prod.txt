@@ -1,0 +1,9 @@
+# Common dependencies for all apps
+cryptography
+Flask
+html5lib
+Jinja2
+pyOpenSSL
+requests
+setuptools>=18.5
+Werkzeug
