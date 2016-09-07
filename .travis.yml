@@ -6,7 +6,9 @@ python:
   - "3.5"
   - "nightly"
   - "pypy"
-  - "pypy3"
+# pypy3 support is indefinitely waiting I think
+#  - "pypy3"
+
 # save pip installs between runs
 cache: "pip"
 
@@ -47,3 +49,8 @@ install:
   - pip install -r flaskserver/requirements.txt
   - pip install -r service1/requirements.txt
 script: "./runtests.sh"
+
+after-success:
+  - pylint flaskserver
+  - pylint service1
+  - codecov
