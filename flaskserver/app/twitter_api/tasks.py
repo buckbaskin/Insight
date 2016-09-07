@@ -6,6 +6,8 @@ import time
 from twitter.api import TwitterHTTPError
 from app.twitter_api.api import TwitterAccess, TwitterAccessMock
 
+from app.wishlist import FileNotFoundError # 2->3 shim
+
 try:
     api = TwitterAccess().start().api
 except FileNotFoundError:
