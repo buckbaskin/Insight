@@ -1,4 +1,5 @@
 from rq import Queue, Worker
+from rq.worker import StopRequested
 from app.sql import r
 from app.sql.worker import StoppableWorker
 
