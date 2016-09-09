@@ -26,14 +26,9 @@ def performance(logging_name=None):
     inner_decorator.__name__ = 'performance'
     return inner_decorator
 
-counter = 0
-
 def speed_test2(logging_name=None, http_request=False):
     def wrapper_decorator(func):
         def timer_func(*args, **kwargs):
-            if http_request:
-                global counter
-                counter += 1
             begin = time.time()
             result = func(*args, **kwargs)
             time_taken = time.time() - begin
@@ -41,10 +36,6 @@ def speed_test2(logging_name=None, http_request=False):
                 print('response time %f ms for %s' % (time_taken*1000, logging_name))
             else:
                 print('response time %f ms for %s' % (time_taken*1000, func.__name__))
-            if http_request:
-                # print('estimated max queries per sec: %f' % (1.0/time_taken*counter))
-                global counter
-                counter -= 1
             return result
         timer_func.__name__ = func.__name__
         return timer_func
