@@ -15,3 +15,6 @@ master branch
 
 <!--- git anchor 3 -->
 [![Requirements Status](https://requires.io/github/buckbaskin/Insight/requirements.svg?branch=master)](https://requires.io/github/buckbaskin/Insight/requirements/?branch=master)
+
+<!--- git anchor 4 -->
+[![Code Health](https://landscape.io/github/buckbaskin/Insight/master/landscape.svg?style=flat)](https://landscape.io/github/buckbaskin/Insight/master)
