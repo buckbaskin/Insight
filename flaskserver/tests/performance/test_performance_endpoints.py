@@ -30,30 +30,10 @@ def test_jsload_happy():
         print(str(res.headers.items()))
     assert_equal(200, res.status_code)
 
-def skiptest_good_format_success():
-    data = {}
-    data['page'] = '/'
-    data['screen_w'] = 120
-    data['screen_h'] = 120
-    data['window_x'] = 0
-    data['window_y'] = 0
-    data['window_w'] = 120
-    data['window_h'] = 120
-    json_data = json.dumps(data)
-    res = app_client.get('/click/l?d='+quote(str(json_data)))
-    if (not res.status_code == 200):
-        print(str(res.data))
-        print(str(res.status_code))
-        print(str(list(res.headers.items())))
-    assert_equal(200, res.status_code)
-
-def skiptest_bad_format_fail():
-    data = {}
-    data['key'] = 'value'
-    json_data = json.dumps(data)
-    res = app_client.get('/click/l?d='+quote(str(json_data)))
+def test_jsload_missing():
+    res = app_client.get('/performance/jsload?page=/&m=jane')
     if (not res.status_code == 400):
         print(str(res.data))
         print(str(res.status_code))
-        print(str(list(res.headers.items())))
+        print(str(res.headers.items()))
     assert_equal(400, res.status_code)
