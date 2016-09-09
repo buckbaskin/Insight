@@ -3,7 +3,11 @@ Test that each of the expected code paths functions without error. This will get
 more complicated as time goes on. For tests about response time/latency
 performance see test/test_app_sla.
 '''
+import json
 import os
+import urllib
+
+from urllib.parse import quote
 
 from app import server as flask_app
 # from Insight.service import server as flask_service
@@ -20,22 +24,27 @@ def setup_module():
         os.environ['STATUS'] = 'TESTING'
     global app_client
     app_client = flask_app.test_client()
+    app_client.set_cookie('127.0.0.1', 'user_id', str(42))
 
 def teardown_module():
     pass
 
-def test_click_fail():
+def skiptest_click_fail():
+    # trying to get the /click endpoint should fail (endpoint not found)
     res = app_client.get('/click')
-    if (not res.status_code == 400):
+    if (not res.status_code == 404):
         print(str(res.data))
-    # assert_equal(400, res.status_code)
-
-def test_click_success():
-    res = app_client.get('/click?type=move&page=/jefferson&x=615&y=70&t=505620')
-    if not res.status_code == 200:
-        print(str(res.data))
-    assert_equal(200, res.status_code)
+        print(str(res.status_code))
+        print(str(res.headers.items()))
+    assert_equal(404, res.status_code)
 
 def test_bad_format_fail():
-    res = app_client.get('/click?type=move')
+    data = {}
+    data['key'] = 'value'
+    json_data = json.dumps(data)
+    res = app_client.get('/click/l?d='+quote(str(json_data)))
+    if (not res.status_code == 400):
+        print(str(res.data))
+        print(str(res.status_code))
+        print(str(list(res.headers.items())))
     assert_equal(400, res.status_code)
