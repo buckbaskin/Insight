@@ -7,7 +7,10 @@ import json
 import os
 import urllib
 
-from urllib.parse import quote
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 from app import server as flask_app
 # from Insight.service import server as flask_service
