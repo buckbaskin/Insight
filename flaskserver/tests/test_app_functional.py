@@ -37,6 +37,9 @@ def test_index_post_fail():
     res = app_client.post('/index')
     assert_equal(405, res.status_code)
 
+def test_special_succcess():
+    assert_equal(app_client.get('/special').status_code, 200)
+
 def test_fast_success():
     res = app_client.get('/fast')
     assert_equal(200, res.status_code)
