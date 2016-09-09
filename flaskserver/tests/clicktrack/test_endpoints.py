@@ -89,3 +89,14 @@ def test_mouse_success():
         print(str(list(res.headers.items())))
     assert_equal(200, res.status_code)
 
+def test_mouse_fail():
+    data = {}
+    data['key'] = 'value'
+    json_data = json.dumps(data)
+    res = app_client.get('/click/m?d='+quote(str(json_data)))
+    if (not res.status_code == 400):
+        print(str(res.data))
+        print(str(res.status_code))
+        print(str(list(res.headers.items())))
+    assert_equal(400, res.status_code)
+
